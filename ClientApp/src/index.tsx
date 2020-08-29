@@ -1,4 +1,9 @@
-import 'bootstrap/dist/css/bootstrap.css';
+//import 'bootstrap/dist/css/bootstrap.css';
+import 'materialize-css/dist/js/materialize.js';
+
+///// to use icons:
+///// npm install @material-ui/icons @material-ui/core
+//import DeleteIcon from "@material-ui/icons/Delete"
 
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';

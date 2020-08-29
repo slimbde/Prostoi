@@ -1,4 +1,6 @@
+@import "~materialize-css/dist/css/materialize.min.css";
 /* Provide sufficient contrast against white background */
+
 a {
   color: #0366d6;
 }

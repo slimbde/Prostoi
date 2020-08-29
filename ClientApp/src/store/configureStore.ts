@@ -21,7 +21,7 @@ export default function configureStore(history: History, initialState?: Applicat
         : window as any;
 
     if (windowIfDefined && windowIfDefined.__REDUX_DEVTOOLS_EXTENSION__) {
-        enhancers.push(windowIfDefined.__REDUX_DEVTOOLS_EXTENSION__());
+        enhancers.push(windowIfDefined.__REDUX_DEVTOOLS_EXTENSION__() as never)
     }
 
     return createStore(
