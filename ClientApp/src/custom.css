@@ -1,6 +1,4 @@
 @import "~materialize-css/dist/css/materialize.min.css";
-/* Provide sufficient contrast against white background */
-
 a {
   color: #0366d6;
 }
@@ -13,4 +11,31 @@ code {
   color: #fff;
   background-color: #1b6ec2;
   border-color: #1861ac;
+}
+
+.empty-layout {
+  background: #999999;
+  display: flex;
+  height: 100vh;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.auth-card {
+  width: 500px;
+  margin-top: 100px;
+}
+
+.helper-text.invalid {
+  color: red !important;
+}
+
+.card-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.card-action>div>a {
+  margin-right: 0 !important;
 }

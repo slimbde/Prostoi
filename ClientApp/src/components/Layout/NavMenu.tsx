@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import './NavMenu.css';
 import MenuIcon from "@material-ui/icons/Menu"
 import CashIcon from '@material-ui/icons/Euro'
 import CardIcon from '@material-ui/icons/CreditCard'
 import OverallIcon from '@material-ui/icons/Save'
 import M from 'materialize-css/dist/js/materialize.js'
 
-class NavMenu extends React.PureComponent<{ location: any }, {}> {
+class NavMenu extends React.PureComponent<{ location: any, logout: any }, {}> {
   private sideNav: any
 
   componentDidMount() {
@@ -39,6 +38,8 @@ class NavMenu extends React.PureComponent<{ location: any }, {}> {
               <li id="cash"><Link to="/cash"><CashIcon className="menu-icon" />НАЛИЧНЫЕ</Link></li>
               <li id="credit"><Link to="/credit"><CardIcon className="menu-icon" />КАРТА</Link></li>
               <li id="overall"><Link to="/overall"><OverallIcon className="menu-icon" />СВОДНАЯ</Link></li>
+              <li id="login"><Link to="/user">user</Link></li>
+              <li id="logout"><Link to="/" onClick={() => this.props.logout()} >ВЫЙТИ</Link></li>
             </ul>
           </div>
         </nav>

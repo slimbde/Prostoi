@@ -1,16 +1,83 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { Route } from 'react-router';
+import EmptyLayout from './components/EmptyLayout'
 import Layout from './components/Layout';
+import SignInCard from './components/EmptyLayout/SignInCard'
 import Home from './components/Home';
 import Counter from './components/Counter';
 import FetchData from './components/FetchData';
+import { ApplicationState } from './store';
+import * as AuthenticateStore from './store/Authenticate'
 
 import './custom.css'
 
-export default () => (
-    <Layout>
+
+interface IAppProps {
+  logged: boolean
+  login: any
+  password: any
+  requestAuthenticate: (login: string, password: string) => Promise<any>,
+  requestLogout: () => Promise<any>
+}
+
+
+class App extends React.Component<IAppProps> {
+  constructor(props: IAppProps) {
+    super(props)
+
+    const authCache = localStorage.getItem("authCache")
+    if (authCache) {
+      const data = JSON.parse(authCache)
+      this.props.requestAuthenticate(data.login, data.password)
+    }
+  }
+
+  logout = () => {
+    localStorage.removeItem("authCache")
+    this.props.requestLogout()
+  }
+
+
+  render() {
+    if (this.props.logged)
+      localStorage.setItem("authCache", JSON.stringify({ login: this.props.login, password: this.props.password }))
+
+
+    return this.props.logged
+      ? <Layout logout={this.logout}>
         <Route exact path='/' component={Home} />
         <Route path='/counter' component={Counter} />
         <Route path='/fetch-data/:startDateIndex?' component={FetchData} />
-    </Layout>
-);
+      </Layout >
+
+      : <EmptyLayout>
+        <Route exact path='/' component={() =>
+          <SignInCard
+            title="ВХОД В СИСТЕМУ"
+            btnText="ВОЙТИ"
+            hintText="Нет акканута?"
+            hintBtnText="ЗАРЕГИСТРИРОВАТЬСЯ"
+            mode="login" />}
+        />
+        <Route exact path='/register' component={() =>
+          <SignInCard
+            title="РЕГИСТРАЦИЯ"
+            btnText="ЗАРЕГИСТРИРОВАТЬСЯ"
+            hintText="Есть акканут?"
+            hintBtnText="ВОЙТИ"
+            mode="register" />}
+        />
+      </EmptyLayout>
+  }
+
+}
+
+export default connect(
+  (state: ApplicationState) => ({
+    logged: state.authenticate!.logged,
+    login: state.authenticate!.login,
+    password: state.authenticate!.password,
+  }),
+  AuthenticateStore.actionCreators
+)(App as any);
