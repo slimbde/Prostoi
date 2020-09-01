@@ -15,18 +15,19 @@ namespace react_ts.Controllers
     public UserController(IUserRepository repo) : base(repo) { _auth = repo; }
 
 
-    ///// GET: api/User/Authenticate?Email=...&Password=...
+    ///// GET: api/User/Authenticate?Login=...&Password=...
     [HttpGet("Authenticate")]
-    public async Task<IActionResult> Authenticate(string Email, string Password)
+    public async Task<IActionResult> Authenticate(string Login, string Password)
     {
       var users = await _repo.GetList();
 
       try
       {
-        var user = users.First(u => u.Email == Email && u.Password == Password);
-        return Ok(user);
+        var user = users.First(u => u.Login == Login && u.Password == Password);
+        var role = await _auth.GetUserRole(user.Id);
+        return Ok(new { user = user, role = role });
       }
-      catch (Exception ex) { return BadRequest(ex.Message); }
+      catch (Exception ex) { return BadRequest(new { error = $"Authenticate: {ex.Message }" }); }
     }
 
 
@@ -39,7 +40,7 @@ namespace react_ts.Controllers
         var role = await _auth.GetUserRole(id);
         return Ok(role);
       }
-      catch (Exception ex) { return BadRequest(ex.Message); }
+      catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
     }
 
 
@@ -52,7 +53,7 @@ namespace react_ts.Controllers
         var roles = await _auth.GetRoles();
         return Ok(roles);
       }
-      catch (Exception ex) { return BadRequest(ex.Message); }
+      catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
     }
 
 
@@ -65,7 +66,7 @@ namespace react_ts.Controllers
         var result = await _auth.SetUserRole(UserId, RoleId);
         return Ok(result);
       }
-      catch (Exception ex) { return BadRequest(ex.Message); }
+      catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
     }
   }
 }

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { ApplicationState } from '../../store'
 import * as AuthenticateStore from '../../store/Authenticate';
+import errorHandler from '../utils/errorHandler';
 
 interface ISignInProps {
   title: string,
@@ -63,7 +64,7 @@ class SignInCard extends React.Component<ISignInProps> {
 
   render() {
     if (!this.state.loginError && !this.state.passwordError && this.props.authError)
-      this.toast = setTimeout(() => M.toast({ html: this.props.authError }), 50)
+      this.toast = setTimeout(() => M.toast({ html: errorHandler(this.props.authError) }), 50)
 
     const link = this.props.mode === "login" ? "/register" : "/"
 

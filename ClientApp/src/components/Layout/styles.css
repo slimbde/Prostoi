@@ -21,3 +21,9 @@ nav, .sidenav-trigger {
   vertical-align: text-top;
   margin-right: 0.5rem;
 }
+
+.dropdown-content {
+  width: auto !important;
+  position: fixed !important;
+  top: 40px !important;
+}
