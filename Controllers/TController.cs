@@ -27,9 +27,9 @@ namespace react_ts.Controllers
       var obj = await _repo.Get(id);
 
       if (obj == null)
-        return NotFound($"No user has id '{id}'");
+        return NotFound(new { error = $"No user has id '{id}'" });
 
-      return obj;
+      return Ok(obj);
     }
 
 
@@ -46,11 +46,11 @@ namespace react_ts.Controllers
           id = await _repo.Put(obj);
           return Ok(id);
         }
-        catch (Exception ex) { return BadRequest(ex.Message); }
+        catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
 
       }
 
-      return BadRequest(ModelState);
+      return BadRequest(new { error = ModelState });
     }
 
 
@@ -64,9 +64,9 @@ namespace react_ts.Controllers
         if (numChanged > 0)
           return Ok(numChanged);
       }
-      catch (Exception ex) { return BadRequest(ex.Message); }
+      catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
 
-      return BadRequest("Something's gone wrong");
+      return BadRequest(new { error = "Something's gone wrong" });
     }
 
 
@@ -78,7 +78,7 @@ namespace react_ts.Controllers
       if (numDeleted > 0)
         return Ok(numDeleted);
 
-      return NotFound($"No user has id '{id}'");
+      return NotFound(new { error = $"No user has id '{id}'" });
     }
 
   }

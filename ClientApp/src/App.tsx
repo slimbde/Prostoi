@@ -15,9 +15,9 @@ import './custom.css'
 
 interface IAppProps {
   logged: boolean
-  login: any
-  password: any
+  authData: AuthenticateStore.IAuthData,
   requestAuthenticate: (login: string, password: string) => Promise<any>,
+  requestLogin: (loginData: AuthenticateStore.IAuthData) => Promise<any>,
   requestLogout: () => Promise<any>
 }
 
@@ -28,8 +28,8 @@ class App extends React.Component<IAppProps> {
 
     const authCache = localStorage.getItem("authCache")
     if (authCache) {
-      const data = JSON.parse(authCache)
-      this.props.requestAuthenticate(data.login, data.password)
+      const loginData = JSON.parse(authCache)
+      this.props.requestLogin(loginData)
     }
   }
 
@@ -41,11 +41,14 @@ class App extends React.Component<IAppProps> {
 
   render() {
     if (this.props.logged)
-      localStorage.setItem("authCache", JSON.stringify({ login: this.props.login, password: this.props.password }))
+      localStorage.setItem(
+        "authCache",
+        JSON.stringify(this.props.authData)
+      )
 
 
     return this.props.logged
-      ? <Layout logout={this.logout}>
+      ? <Layout logout={this.logout} userName={this.props.authData.user.name}>
         <Route exact path='/' component={Home} />
         <Route path='/counter' component={Counter} />
         <Route path='/fetch-data/:startDateIndex?' component={FetchData} />
@@ -76,8 +79,7 @@ class App extends React.Component<IAppProps> {
 export default connect(
   (state: ApplicationState) => ({
     logged: state.authenticate!.logged,
-    login: state.authenticate!.login,
-    password: state.authenticate!.password,
+    authData: state.authenticate!.authData,
   }),
   AuthenticateStore.actionCreators
 )(App as any);

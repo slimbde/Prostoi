@@ -2,98 +2,101 @@ import { Action, Reducer } from 'redux';
 import { AppThunkAction } from './';
 
 
-// -----------------
-// STATE - This defines the type of data maintained in the Redux store.
+/////////////////// STATE 
+// This defines the type of data maintained in the Redux store.
 
-interface IAuthData {
+export interface IAuthData {
   user: any,
-  userRole: any,
-  error: string | null
+  role: any,
+  error: string | null,
 }
 
 export interface AuthenticateState {
   logged: boolean,
-  login: string | null,
-  password: string | null,
   authData: IAuthData,
 }
 
+const initialdState: AuthenticateState = {
+  logged: false,
+  authData: {
+    user: null,
+    role: null,
+    error: null,
+  },
+};
 
-// -----------------
-// ACTIONS - These are serializable (hence replayable) descriptions of state transitions.
+
+//////////////////// ACTIONS 
+// These are serializable (hence replayable) descriptions of state transitions.
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 
 interface RequestAuthenticateAction {
   type: 'REQUEST_AUTHENTICATE';
-  payload: {
-    login: string,
-    password: string,
-  }
 }
 
 interface ReceiveAuthenticateAction {
   type: 'RECEIVE_AUTHENTICATE';
-  payload: {
-    login: string,
-    password: string,
-    user: any,
-    userRole: any,
-    error: string | null,
-  }
+  payload: IAuthData
 }
 
-interface RequestLogout {
+interface RequestLogoutAction {
   type: 'REQUEST_LOGOUT'
+}
+
+interface RequestLoginAction {
+  type: 'REQUEST_LOGIN',
+  payload: IAuthData
 }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = RequestAuthenticateAction | ReceiveAuthenticateAction | RequestLogout;
+type KnownAction = RequestAuthenticateAction | ReceiveAuthenticateAction | RequestLogoutAction | RequestLoginAction;
 
-// ----------------
-// ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
+
+/////////////////// ACTION CREATORS 
+// These are functions exposed to UI components that will trigger a state transition.
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
   requestAuthenticate: (login: string, password: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
-    //// appState is of type ApplicationState(look into index.ts)
+
+    // appState is of type ApplicationState(look into index.ts)
     const appState = getState();
 
     // Only load data if it's something we don't already have (and are not already loading)
     if (appState && appState.authenticate) {
-      fetch(`weatherforecast?login=${login}&password=${password}`)
+      fetch(`/api/user/authenticate?login=${login}&password=${password}`)
         .then(response => (response.json() as Promise<IAuthData>))
-        .then(data => dispatch({
-          type: 'RECEIVE_AUTHENTICATE',
-          payload: {
-            login: login,
-            password: password,
-            user: !data.error && data.user,
-            userRole: !data.error && data.userRole,
-            error: data.error || null,
-          }
-        }))
+        .then(data => {
+          dispatch({
+            type: 'RECEIVE_AUTHENTICATE',
+            payload: {
+              user: data.user,
+              role: data.role,
+              error: data.error,
+            }
+          })
+        })
 
-      dispatch({ type: 'REQUEST_AUTHENTICATE', payload: { login: login, password: password } });
+      dispatch({ type: 'REQUEST_AUTHENTICATE' });
     }
   },
-  requestLogout: (): AppThunkAction<KnownAction> => (dispatch, getState) => dispatch({ type: 'REQUEST_LOGOUT' })
+  requestLogin: (data: IAuthData): AppThunkAction<KnownAction> => (dispatch, getState) =>
+    dispatch({
+      type: 'REQUEST_LOGIN',
+      payload: {
+        user: data.user,
+        role: data.role,
+        error: null
+      }
+    }),
+  requestLogout: (): AppThunkAction<KnownAction> => (dispatch, getState) =>
+    dispatch({ type: 'REQUEST_LOGOUT' })
 
 };
 
-// ----------------
-// REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
-
-const initialdState: AuthenticateState = {
-  logged: false,
-  login: null,
-  password: null,
-  authData: {
-    user: null,
-    userRole: null,
-    error: null
-  },
-};
+////////////////////// REDUCER 
+// For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
 
 export const reducer: Reducer<AuthenticateState> = (state: AuthenticateState | undefined, incomingAction: Action): AuthenticateState => {
   if (state === undefined)
@@ -102,25 +105,25 @@ export const reducer: Reducer<AuthenticateState> = (state: AuthenticateState | u
   const action = incomingAction as KnownAction;
   switch (action.type) {
     case 'REQUEST_AUTHENTICATE':
-      return {
-        ...state,
-        login: action.payload.login,
-        password: action.payload.password
-      };
+      return state;
+
     case 'RECEIVE_AUTHENTICATE':
-      //if (action.payload.login === state.login && action.payload.password === state.password) {
       return {
         logged: action.payload.user ? true : false,
-        login: action.payload.login,
-        password: action.payload.password,
         authData: {
           user: action.payload.user,
-          userRole: action.payload.userRole,
-          error: action.payload.error
+          role: action.payload.role,
+          error: action.payload.error,
         },
       };
-    //}
-    //break;
+
+    case 'REQUEST_LOGIN':
+      return {
+        ...state,
+        logged: true,
+        authData: action.payload,
+      };
+
     case 'REQUEST_LOGOUT':
       return {
         ...state,
