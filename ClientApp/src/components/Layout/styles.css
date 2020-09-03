@@ -1,0 +1,29 @@
+.container {
+  width: 90% !important;
+}
+
+.brand-logo {
+  text-transform: uppercase;
+  font-size: large !important;
+  font-weight: 600;
+}
+
+.nav-wrapper {
+  padding: 0 1rem;
+}
+
+nav, .sidenav-trigger {
+  line-height: 2.5rem !important;
+  height: 2.5rem !important;
+}
+
+.menu-icon {
+  vertical-align: text-top;
+  margin-right: 0.5rem;
+}
+
+.dropdown-content {
+  width: auto !important;
+  position: fixed !important;
+  top: 40px !important;
+}
