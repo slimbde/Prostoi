@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { Route } from 'react-router';
 import EmptyLayout from './components/EmptyLayout'
 import Layout from './components/Layout';
-import SignInCard from './components/EmptyLayout/SignInCard'
+import LoginCard from './components/EmptyLayout/LoginCard'
+import RegisterCard from './components/EmptyLayout/RegisterCard'
 import Home from './components/Home';
 import Counter from './components/Counter';
 import FetchData from './components/FetchData';
@@ -46,26 +47,6 @@ class App extends React.Component<IAppProps> {
         JSON.stringify(this.props.authData)
       )
 
-
-    // to pass on props one should merge them with the rest props of a component
-    // using spread operator for instance
-    const loginProps = {
-      title: "ВХОД В СИСТЕМУ",
-      btnText: "ВОЙТИ",
-      hintText: "Нет акканута?",
-      hintBtnText: "ЗАРЕГИСТРИРОВАТЬСЯ",
-      mode: "login",
-    }
-
-    const registerProps = {
-      title: "РЕГИСТРАЦИЯ",
-      btnText: "ЗАРЕГИСТРИРОВАТЬСЯ",
-      hintText: "Есть акканут?",
-      hintBtnText: "ВОЙТИ",
-      mode: "register",
-    }
-
-
     return this.props.logged
       ? <Layout logout={this.logout} userName={this.props.authData.user.name}>
         <Route exact path='/' component={Home} />
@@ -74,8 +55,8 @@ class App extends React.Component<IAppProps> {
       </Layout >
 
       : <EmptyLayout>
-        <Route exact path='/' component={() => <SignInCard {...loginProps} />} />
-        <Route exact path='/register' component={() => <SignInCard {...registerProps} />} />
+        <Route exact path='/' component={LoginCard} />
+        <Route exact path='/register' component={RegisterCard} />
       </EmptyLayout>
   }
 
