@@ -65,7 +65,7 @@ export const actionCreators = {
 
     // Only load data if it's something we don't already have (and are not already loading)
     if (appState && appState.authenticate) {
-      fetch(`/api/user/authenticate?login=${login}&password=${password}`)
+      fetch(`api/user/authenticate?login=${login}&password=${password}`)
         .then(response => (response.json() as Promise<IAuthData>))
         .then(data => {
           dispatch({

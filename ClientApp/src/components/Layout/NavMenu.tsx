@@ -9,7 +9,15 @@ import AccountIcon from '@material-ui/icons/AccountCircle'
 import AssignmentReturn from '@material-ui/icons/AssignmentReturn'
 import M from 'materialize-css/dist/js/materialize.js'
 
-class NavMenu extends React.PureComponent<{ location: any, logout: any, userName: string }, {}> {
+
+interface NavMenuProps {
+  location: any
+  logout: any
+  userName: string
+}
+
+
+class NavMenu extends React.PureComponent<NavMenuProps> {
   private sideNav: any;
   private profileMenu: any
 
