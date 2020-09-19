@@ -7,11 +7,12 @@ import { ApplicationState } from '../../store'
 import * as AuthenticateStore from '../../store/Authenticate';
 import errorHandler from '../utils/errorHandler';
 
+
 interface IRegisterProps {
-  requestAuthenticate: (login: string, password: string) => Promise<any>,
-  authError: any,
+  requestLogin: (data: AuthenticateStore.IAuthData) => void,
   history: any,
 }
+
 
 class RegisterCard extends React.Component<IRegisterProps> {
 
@@ -23,12 +24,11 @@ class RegisterCard extends React.Component<IRegisterProps> {
     cPasswordError: null,
   }
 
-  toast: any  ////// fucking toast!!!!
 
   validate = (e: { preventDefault: () => void }) => {
     e.preventDefault();
 
-    const elements = {
+    const elements: { [key: string]: HTMLInputElement } = {
       name: document.getElementById("name") as HTMLInputElement,
       login: document.getElementById("login") as HTMLInputElement,
       email: document.getElementById("email") as HTMLInputElement,
@@ -37,7 +37,7 @@ class RegisterCard extends React.Component<IRegisterProps> {
     }
 
 
-    const error = elements.name.value === ""
+    const error: { [key: string]: string } | null = elements.name.value === ""
       ? { nameError: "Вы не указали имя" }
       : elements.login.value === ""
         ? { loginError: "Вы не указали логин" }
@@ -49,7 +49,7 @@ class RegisterCard extends React.Component<IRegisterProps> {
               ? { cPasswordError: "Пароль и подтверждение не совпадают" }
               : null
 
-    const errorState = {}
+    const errorState: { [key: string]: string | null } = {}
     if (error) {
       for (let key in elements)
         elements[key].classList.remove("invalid")
@@ -60,7 +60,6 @@ class RegisterCard extends React.Component<IRegisterProps> {
         if (key in error) {
           errorState[key] = error[key]
           elements[key.slice(0, -5)].classList.add("invalid")
-          //break;
         }
       }
 
@@ -75,7 +74,7 @@ class RegisterCard extends React.Component<IRegisterProps> {
       elements.password.value
     )
 
-    fetch("/api/user", {
+    fetch("api/user", {
       method: "PUT",
       headers: {
         "Accept": "application/json",
@@ -83,23 +82,19 @@ class RegisterCard extends React.Component<IRegisterProps> {
       },
       body: JSON.stringify(user)
     })
-      .then(response => {
-        response.json()
-          .then(data => {
-            if (!response.ok) {
-              this.toast = M.toast({ html: errorHandler(data.error) })
-              return this.toast
-            }
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          M.updateTextFields()
+          return M.toast({ html: errorHandler(data.error) })
+        }
 
-            this.props.requestAuthenticate(user.login, user.password)
-            this.props.history.push("/");
-          })
+        this.props.requestLogin({ user: user, role: null, error: null })
+        M.toast({ html: "Вы зарегистрировались и вошли в систему" })
+        this.props.history.push("/")
       })
   }
 
-  componentWillUnmount() {
-    this.toast && this.toast.dispose()
-  }
 
   render() {
 

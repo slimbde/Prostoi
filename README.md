@@ -10,3 +10,10 @@
 ***THE PROPS ISSUE***
 - to pass on props one should merge them with the rest props of a component
   using spread operator for instance
+
+
+***THE IMPLICIT ANY ISSUE***
+- to avoid ts errors about implicit any and it didn't find a file
+  1. Create index.d.ts in ClientApp folder
+  2. Add there *declare module ...*
+  3. Add "index.d.ts" in "include" section of the package.json

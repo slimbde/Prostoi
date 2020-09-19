@@ -2,7 +2,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Route } from 'react-router';
 import EmptyLayout from './components/EmptyLayout'
-import Layout from './components/Layout';
+import Layout from './components/Layout'
+import M from 'materialize-css/dist/js/materialize.js'
 import LoginCard from './components/EmptyLayout/LoginCard'
 import RegisterCard from './components/EmptyLayout/RegisterCard'
 import Home from './components/Home';
@@ -17,9 +18,8 @@ import './custom.css'
 interface IAppProps {
   logged: boolean
   authData: AuthenticateStore.IAuthData,
-  requestAuthenticate: (login: string, password: string) => Promise<any>,
-  requestLogin: (loginData: AuthenticateStore.IAuthData) => Promise<any>,
-  requestLogout: () => Promise<any>
+  requestLogin: (loginData: AuthenticateStore.IAuthData) => void,
+  requestLogout: () => void
 }
 
 
@@ -30,22 +30,25 @@ class App extends React.Component<IAppProps> {
     const authCache = localStorage.getItem("authCache")
     if (authCache) {
       const loginData = JSON.parse(authCache)
-      this.props.requestLogin(loginData)
+      props.requestLogin(loginData)
     }
   }
+
+
+  componentDidUpdate = (prevProps: IAppProps) => {
+    if (this.props.logged && !prevProps.logged)
+      localStorage.setItem("authCache", JSON.stringify(this.props.authData))
+  }
+
 
   logout = () => {
     localStorage.removeItem("authCache")
     this.props.requestLogout()
+    M.toast({ html: "Вы вышли из системы" })
   }
 
 
   render() {
-    if (this.props.logged)
-      localStorage.setItem(
-        "authCache",
-        JSON.stringify(this.props.authData)
-      )
 
     return this.props.logged
       ? <Layout logout={this.logout} userName={this.props.authData.user.name}>
