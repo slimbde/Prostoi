@@ -5,28 +5,28 @@ import { History } from 'history';
 import { ApplicationState, reducers } from './';
 
 export default function configureStore(history: History, initialState?: ApplicationState) {
-    const middleware = [
-        thunk,
-        routerMiddleware(history)
-    ];
+  const middleware = [
+    thunk,
+    routerMiddleware(history)
+  ];
 
-    const rootReducer = combineReducers({
-        ...reducers,
-        router: connectRouter(history)
-    });
+  const rootReducer = combineReducers({
+    ...reducers,
+    router: connectRouter(history)
+  });
 
-    const enhancers = [];
-    const windowIfDefined = typeof window === 'undefined'
-        ? null
-        : window as any;
+  const enhancers: never[] = [];
+  const windowIfDefined = typeof window === 'undefined'
+    ? null
+    : window as any;
 
-    if (windowIfDefined && windowIfDefined.__REDUX_DEVTOOLS_EXTENSION__) {
-        enhancers.push(windowIfDefined.__REDUX_DEVTOOLS_EXTENSION__() as never)
-    }
+  if (windowIfDefined && windowIfDefined.__REDUX_DEVTOOLS_EXTENSION__) {
+    enhancers.push(windowIfDefined.__REDUX_DEVTOOLS_EXTENSION__() as never)
+  }
 
-    return createStore(
-        rootReducer,
-        initialState,
-        compose(applyMiddleware(...middleware), ...enhancers)
-    );
+  return createStore(
+    rootReducer,
+    initialState,
+    compose(applyMiddleware(...middleware), ...enhancers)
+  );
 }

@@ -2,26 +2,31 @@ import * as React from 'react'
 import M from 'materialize-css/dist/js/materialize.js'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { ApplicationState } from '../../store'
-import * as AuthenticateStore from '../../store/Authenticate';
-import errorHandler from '../utils/errorHandler';
+import * as AuthenticateStore from '../../store/Authenticate'
+import errorHandler from '../utils/errorHandler'
+
 
 interface ILoginProps {
-  requestAuthenticate: (login: string, password: string) => Promise<any>,
-  authError: any,
+  requestLogin: (data: AuthenticateStore.IAuthData) => void,
 }
 
-class LoginCard extends React.Component<ILoginProps> {
+interface ILoginState {
+  loginError: string | null
+  passwordError: string | null
+}
+
+
+
+class LoginCard extends React.Component<ILoginProps, ILoginState> {
 
   state = {
     loginError: null,
     passwordError: null,
   }
 
-  toast: any  ////// fucking toast!!!!
 
-  validate = async (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
+  validate = (e: { preventDefault: () => void; }) => {
+    e.preventDefault()
     const login = document.getElementById("login") as HTMLInputElement
     const password = document.getElementById("password") as HTMLInputElement
 
@@ -35,31 +40,38 @@ class LoginCard extends React.Component<ILoginProps> {
     }
 
     if (password.value === "") {
-      password.classList.add("invalid");
+      password.classList.add("invalid")
       this.setState({ passwordError: "Вы не указали пароль", loginError: null })
       return
     }
 
     if (password.value.length < 6) {
-      password.classList.add("invalid");
+      password.classList.add("invalid")
       this.setState({ passwordError: "Длина пароля должна быть больше 6 символов", loginError: null })
       return
     }
 
-    this.props.requestAuthenticate(login.value, password.value);
+    fetch(`api/user/authenticate?login=${login.value}&password=${password.value}`)
+      .then(response => (response.json() as Promise<AuthenticateStore.IAuthData>))
+      .then(data => {
+        if (data.error) {
+          M.toast({ html: errorHandler(data.error) })
+          login.value = ""
+          password.value = ""
+          M.updateTextFields()
+          this.setState({ loginError: null, passwordError: null })
+          return
+        }
 
-    login.value = ""
-    password.value = ""
-    this.setState({ loginError: null, passwordError: null })
+        this.props.requestLogin({ user: data.user, role: data.role, error: null })
+        M.toast({ html: "Вы успешно вошли в систему" })
+      })
   }
 
-  componentWillUnmount() {
-    this.toast && clearTimeout(this.toast);
-  }
 
+  /////////////////////// RENDER
   render() {
-    if (!this.state.loginError && !this.state.passwordError && this.props.authError)
-      this.toast = setTimeout(() => M.toast({ html: errorHandler(this.props.authError) }), 50)
+    //console.log("Login-render")
 
     return (
       <form onSubmit={this.validate} className="card auth-card" >
@@ -87,6 +99,6 @@ class LoginCard extends React.Component<ILoginProps> {
 
 
 export default connect(
-  (state: ApplicationState) => ({ authError: state.authenticate!.authData.error }),
+  null,
   AuthenticateStore.actionCreators
-)(LoginCard as any)
+)(LoginCard)
