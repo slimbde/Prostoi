@@ -17,4 +17,4 @@
 - to avoid ts errors about implicit any and it didn't find a file
   1. Create index.d.ts in ClientApp folder
   2. Add there *declare module ...*
-  3. Add "index.d.ts" in "include" section of the package.json
+  3. Add "index.d.ts" in "include" section of the tsconfig.json
