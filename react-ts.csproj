@@ -15,6 +15,7 @@
     <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.7.1"/>
     <PackageReference Include="System.Security.Cryptography.Cng" Version="4.5.0"/>
     <PackageReference Include="Microsoft.IdentityModel.Logging" Version="6.7.1"/>
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.3"/>
   </ItemGroup>
   <ItemGroup>
     <Content Remove="$(SpaRoot)**"/>

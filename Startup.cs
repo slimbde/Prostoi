@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using react_ts.Models.Repositories;
+using rest_ts_react_template.Models.Repositories;
 
 namespace react_ts
 {
@@ -13,12 +14,12 @@ namespace react_ts
     public IConfiguration Configuration { get; }
     public Startup(IConfiguration configuration) => Configuration = configuration;
 
-
-
     public void ConfigureServices(IServiceCollection services)
     {
       var conString = Configuration.GetConnectionString("LocalDb");
+      var oraString = Configuration.GetConnectionString("Bunker");
       services.AddScoped<IUserRepository, UserRepository>(provider => new UserRepository(conString));
+      services.AddScoped<IIdleRepository, IdleRepository>(provider => new IdleRepository(oraString));
 
       services.AddControllersWithViews();
 
@@ -27,7 +28,6 @@ namespace react_ts
         configuration.RootPath = "ClientApp/build";
       });
     }
-
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
@@ -49,8 +49,8 @@ namespace react_ts
       app.UseEndpoints(endpoints =>
       {
         endpoints.MapControllerRoute(
-                  name: "default",
-                  pattern: "{controller}/{action=Index}/{id?}");
+          name: "default",
+          pattern: "{controller}/{action=Index}/{id?}");
       });
 
       app.UseSpa(spa =>

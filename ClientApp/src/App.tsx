@@ -24,43 +24,49 @@ interface IAppProps {
 
 
 class App extends React.Component<IAppProps> {
-  constructor(props: IAppProps) {
-    super(props)
+  // constructor(props: IAppProps) {
+  //   super(props)
 
-    const authCache = localStorage.getItem("authCache")
-    if (authCache) {
-      const loginData = JSON.parse(authCache)
-      props.requestLogin(loginData)
-    }
-  }
-
-
-  componentDidUpdate = (prevProps: IAppProps) => {
-    if (this.props.logged && !prevProps.logged)
-      localStorage.setItem("authCache", JSON.stringify(this.props.authData))
-  }
+  //   const authCache = localStorage.getItem("authCache")
+  //   if (authCache) {
+  //     const loginData = JSON.parse(authCache)
+  //     props.requestLogin(loginData)
+  //   }
+  // }
 
 
-  logout = () => {
-    localStorage.removeItem("authCache")
-    this.props.requestLogout()
-    M.toast({ html: "Вы вышли из системы" })
-  }
+  // componentDidUpdate = (prevProps: IAppProps) => {
+  //   if (this.props.logged && !prevProps.logged)
+  //     localStorage.setItem("authCache", JSON.stringify(this.props.authData))
+  // }
+
+
+  // logout = () => {
+  //   localStorage.removeItem("authCache")
+  //   this.props.requestLogout()
+  //   M.toast({ html: "Вы вышли из системы" })
+  // }
 
 
   render() {
 
-    return this.props.logged
-      ? <Layout logout={this.logout} userName={this.props.authData.user.name}>
-        <Route exact path='/' component={Home} />
-        <Route path='/counter' component={Counter} />
-        <Route path='/fetch-data/:startDateIndex?' component={FetchData} />
-      </Layout >
+    return <Layout>
+      <Route exact path='/' component={Home} />
+      <Route path='/counter' component={Counter} />
+      <Route path='/fetch-data/:startDateIndex?' component={FetchData} />
+    </Layout >
 
-      : <EmptyLayout>
-        <Route exact path='/' component={LoginCard} />
-        <Route exact path='/register' component={RegisterCard} />
-      </EmptyLayout>
+    // return this.props.logged
+    //   ? <Layout logout={this.logout} userName={this.props.authData.user.name}>
+    //     <Route exact path='/' component={Home} />
+    //     <Route path='/counter' component={Counter} />
+    //     <Route path='/fetch-data/:startDateIndex?' component={FetchData} />
+    //   </Layout >
+
+    //   : <EmptyLayout>
+    //     <Route exact path='/' component={LoginCard} />
+    //     <Route exact path='/register' component={RegisterCard} />
+    //   </EmptyLayout>
   }
 
 }
