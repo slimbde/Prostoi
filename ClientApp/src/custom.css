@@ -1,4 +1,23 @@
 @import "~materialize-css/dist/css/materialize.min.css";
+* {
+	scrollbar-width: thin;
+}
+
+body {
+  overflow: hidden;
+}
+
+::-webkit-scrollbar {
+	width: 6px;
+	background: whitesmoke;
+}
+
+::-webkit-scrollbar-thumb {
+	border: 1px solid rgb(185, 185, 185);
+	background: gray;
+	border-radius: 3px;
+}
+
 a {
   color: #0366d6;
 }
@@ -38,4 +57,29 @@ code {
 
 .card-action>div>a {
   margin-right: 0 !important;
+}
+
+.container {
+  position: absolute;
+  max-width: 100%;
+  width: 100%;
+  height: 100% !important;
+  overflow: scroll !important;
+}
+
+.navbar-fixed {
+  margin-bottom: 0;
+  height: 46px;
+  width: 100% !important;
+  overflow: hidden !important;
+}
+
+.loading {
+  height: 50px;
+  width: 150px;
+  margin-left: 0.5rem;
+  margin-top: 0.5rem;
+  position: absolute;
+  opacity: 0;
+  transition: all .5s;
 }

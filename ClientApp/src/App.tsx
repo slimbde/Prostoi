@@ -1,80 +1,49 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Route } from 'react-router';
-import EmptyLayout from './components/EmptyLayout'
+import { Redirect, Route } from 'react-router';
 import Layout from './components/Layout'
-import M from 'materialize-css/dist/js/materialize.js'
-import LoginCard from './components/EmptyLayout/LoginCard'
-import RegisterCard from './components/EmptyLayout/RegisterCard'
-import Home from './components/Home';
-import Counter from './components/Counter';
-import FetchData from './components/FetchData';
+import Gant from './components/Gant';
+import Efficiency from './components/Efficiency';
 import { ApplicationState } from './store';
-import * as AuthenticateStore from './store/Authenticate'
+import * as GantStore from './store/Gant';
 
 import './custom.css'
 
 
-interface IAppProps {
-  logged: boolean
-  authData: AuthenticateStore.IAuthData,
-  requestLogin: (loginData: AuthenticateStore.IAuthData) => void,
-  requestLogout: () => void
+interface AppState {
+  shops: string[]
+  setShops: (data: string[]) => void,
 }
 
 
-class App extends React.Component<IAppProps> {
-  // constructor(props: IAppProps) {
-  //   super(props)
 
-  //   const authCache = localStorage.getItem("authCache")
-  //   if (authCache) {
-  //     const loginData = JSON.parse(authCache)
-  //     props.requestLogin(loginData)
-  //   }
-  // }
+class App extends React.Component<AppState> {
 
+  constructor(props: AppState) {
+    super(props)
 
-  // componentDidUpdate = (prevProps: IAppProps) => {
-  //   if (this.props.logged && !prevProps.logged)
-  //     localStorage.setItem("authCache", JSON.stringify(this.props.authData))
-  // }
+    if (props.shops.length === 0) {
+      fetch(`api/idle/getshops`)
+        .then(resp => resp.json() as Promise<string[]>)
+        .then(data => props.setShops(data))
+    }
+  }
 
-
-  // logout = () => {
-  //   localStorage.removeItem("authCache")
-  //   this.props.requestLogout()
-  //   M.toast({ html: "Вы вышли из системы" })
-  // }
 
 
   render() {
+    //console.log(this.props)
 
     return <Layout>
-      <Route exact path='/' component={Home} />
-      <Route path='/counter' component={Counter} />
-      <Route path='/fetch-data/:startDateIndex?' component={FetchData} />
+      <Route exact path='/'><Redirect to='/gant' /></Route>
+      <Route exact path='/gant' component={Gant} />
+      <Route path='/efficiency' component={Efficiency} />
     </Layout >
 
-    // return this.props.logged
-    //   ? <Layout logout={this.logout} userName={this.props.authData.user.name}>
-    //     <Route exact path='/' component={Home} />
-    //     <Route path='/counter' component={Counter} />
-    //     <Route path='/fetch-data/:startDateIndex?' component={FetchData} />
-    //   </Layout >
-
-    //   : <EmptyLayout>
-    //     <Route exact path='/' component={LoginCard} />
-    //     <Route exact path='/register' component={RegisterCard} />
-    //   </EmptyLayout>
   }
-
 }
 
 export default connect(
-  (state: ApplicationState) => ({
-    logged: state.authenticate!.logged,
-    authData: state.authenticate!.authData,
-  }),
-  AuthenticateStore.actionCreators
+  (state: ApplicationState) => state.gant,
+  GantStore.actionCreators
 )(App as any);
