@@ -1,0 +1,100 @@
+.brand-logo {
+  text-transform: uppercase;
+  font-size: large !important;
+  font-weight: 600;
+  margin-right: 1rem;
+  margin-left: 1rem;
+}
+
+.nav-wrapper {
+  padding: 0 1rem;
+  background: #3b678c;
+}
+
+nav, .sidenav-trigger {
+  line-height: 3rem !important;
+  height: 3rem !important;
+}
+
+.menu-icon {
+  vertical-align: text-top;
+  margin-right: 0.5rem;
+}
+
+.dropdown-content {
+  width: 400px !important;
+  position: fixed !important;
+  height: unset !important;
+  top: 40px !important;
+  background: darkgrey !important;
+}
+
+
+.dropdown-content li {
+  min-height: 1rem !important;
+  background: #3b678c;
+  margin-top: 1px;
+  padding: 0.5rem;
+  color: white !important;
+}
+
+.dropdown-content li:hover {
+  color: black !important;
+}
+
+nav .input-field {
+  line-height: 3rem !important;
+  padding-left: 1rem;
+  max-width: 140px !important;
+}
+
+nav .input-field input {
+  color: white;
+  height: 1.5rem !important;
+  line-height: 1.5rem !important;
+  cursor: pointer;
+}
+
+.datepicker-date-display {
+    background-color:#3b678c !important;
+}
+
+.datepicker-table-wrapper, .datepicker-controls input {
+  color:#3b678c !important;
+}
+
+nav .input-field label {
+  padding-left: 1rem;
+  color: white;
+  line-height: 1.5rem;
+}
+
+nav .input-field label.active {
+  transform: translateY(0px) scale(0.7) !important;
+  padding-left: 1.5rem !important;
+}
+
+.select-dropdown li {
+  padding: 0;
+}
+
+.select-dropdown li span {
+  color: white !important;
+}
+
+.sidenav {
+  background: #3b678c !important;
+  width: 350px !important;
+}
+
+.sidenav li {
+  width: 100%;
+}
+
+.sidenav a {
+  color: white !important;
+}
+
+#chartdiv {
+  overflow: unset;
+}

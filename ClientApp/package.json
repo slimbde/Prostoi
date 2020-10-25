@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@amcharts/amcharts4": "^4.10.8",
+    "@amcharts/amcharts4-fonts": "^4.0.1",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "bootstrap": "^4.3.1",
@@ -11,6 +13,7 @@
     "jquery": "^3.5.1",
     "materialize-css": "^1.0.0-rc.2",
     "merge": "1.2.1",
+    "moment": "^2.29.1",
     "popper.js": "^1.16.0",
     "react": "16.11.0",
     "react-dom": "16.11.0",
@@ -26,6 +29,7 @@
   "devDependencies": {
     "@types/history": "4.7.3",
     "@types/jest": "24.0.19",
+    "@types/materialize-css": "^1.0.8",
     "@types/node": "12.11.6",
     "@types/react": "16.9.9",
     "@types/react-dom": "16.9.2",
