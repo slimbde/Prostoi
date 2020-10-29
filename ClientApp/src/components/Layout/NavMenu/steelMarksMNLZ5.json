@@ -1,0 +1,136 @@
+[
+  {
+    "width": 200,
+    "thickness": 200,
+    "Default": 1.44,
+    "Marks": [
+      {
+        "Name": "Св-08а",
+        "Quotient": 1.51
+      },
+      {
+        "Name": "1кп",
+        "Quotient": 1.51
+      },
+      {
+        "Name": "08кп",
+        "Quotient": 1.51
+      },
+      {
+        "Name": "СТ3ПС/СП",
+        "Quotient": 1.46
+      },
+      {
+        "Name": "1пс",
+        "Quotient": 1.46
+      },
+      {
+        "Name": "Ст10-35",
+        "Quotient": 1.53
+      },
+      {
+        "Name": "10пс",
+        "Quotient": 1.53
+      },
+      {
+        "Name": "20х",
+        "Quotient": 1.53
+      },
+      {
+        "Name": "Ст40-50",
+        "Quotient": 1.37
+      },
+      {
+        "Name": "09г2с",
+        "Quotient": 1.37
+      },
+      {
+        "Name": "ш1",
+        "Quotient": 1.37
+      },
+      {
+        "Name": "60с2а",
+        "Quotient": 1.45
+      },
+      {
+        "Name": "50хгфа",
+        "Quotient": 1.45
+      },
+      {
+        "Name": "С45R",
+        "Quotient": 1.32
+      },
+      {
+        "Name": "S255R",
+        "Quotient": 1.32
+      },
+      {
+        "Name": "S355R",
+        "Quotient": 1.32
+      },
+      {
+        "Name": "60-85",
+        "Quotient": 1.41
+      },
+      {
+        "Name": "ш2-5",
+        "Quotient": 1.41
+      },
+      {
+        "Name": "У7А",
+        "Quotient": 1.41
+      }
+    ]
+  },
+  {
+    "width": 300,
+    "thickness": 360,
+    "Default": 0.5,
+    "Marks": [
+      {
+        "Name": "09Г2С",
+        "Quotient": 0.56
+      },
+      {
+        "Name": "СТ5СП",
+        "Quotient": 0.59
+      },
+      {
+        "Name": "С255",
+        "Quotient": 0.59
+      },
+      {
+        "Name": "12Г2ФД",
+        "Quotient": 0.59
+      },
+      {
+        "Name": "С355",
+        "Quotient": 0.52
+      },
+      {
+        "Name": "К76Ф",
+        "Quotient": 0.54
+      },
+      {
+        "Name": "С45R",
+        "Quotient": 0.52
+      },
+      {
+        "Name": "45",
+        "Quotient": 0.6
+      },
+      {
+        "Name": "55Ф",
+        "Quotient": 0.6
+      },
+      {
+        "Name": "85-1",
+        "Quotient": 0.6
+      },
+      {
+        "Name": "60",
+        "Quotient": 0.6
+      }
+    ]
+  }
+]

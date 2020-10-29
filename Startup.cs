@@ -18,8 +18,10 @@ namespace react_ts
     {
       var conString = Configuration.GetConnectionString("LocalDb");
       var oraString = Configuration.GetConnectionString("Bunker");
+      var ccml2String = Configuration.GetConnectionString("CCML2");
       services.AddScoped<IUserRepository, UserRepository>(provider => new UserRepository(conString));
       services.AddScoped<IIdleRepository, IdleRepository>(provider => new IdleRepository(oraString));
+      services.AddScoped<IL2Repository, L2Repository>(provider => new L2Repository(ccml2String));
 
       services.AddControllersWithViews();
 
@@ -40,7 +42,7 @@ namespace react_ts
         app.UseHsts();
       }
 
-      app.UseHttpsRedirection();
+      //app.UseHttpsRedirection();
       app.UseStaticFiles();
       app.UseSpaStaticFiles();
 
