@@ -9,13 +9,12 @@ body {
 
 ::-webkit-scrollbar {
 	width: 6px;
-	background: whitesmoke;
+	background: #3b688c33;
 }
 
 ::-webkit-scrollbar-thumb {
-	border: 1px solid rgb(185, 185, 185);
-	background: gray;
-	border-radius: 3px;
+	background: #3b688c2d;
+	border-radius: 1px;
 }
 
 a {
@@ -81,5 +80,5 @@ code {
   margin-top: 0.5rem;
   position: absolute;
   opacity: 0;
-  transition: all .5s;
+  transition: all .3s;
 }

@@ -32,9 +32,13 @@ export interface SetIdles {
   payload: IdleSet
 }
 
+export interface ClearIdles {
+  type: "CLEAR_IDLES"
+}
+
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-export type KnownAction = SetShops | SetIdles
+export type KnownAction = SetShops | SetIdles | ClearIdles
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -42,7 +46,8 @@ export type KnownAction = SetShops | SetIdles
 
 export const actionCreators = {
   setShops: (shopList: string[]) => ({ type: 'SET_SHOPS', payload: shopList } as SetShops),
-  setIdles: (idles: IdleSet) => ({ type: 'SET_IDLES', payload: idles } as SetIdles)
+  setIdles: (idles: IdleSet) => ({ type: 'SET_IDLES', payload: idles } as SetIdles),
+  clearIdles: () => ({ type: "CLEAR_IDLES" })
 };
 
 // ----------------
@@ -59,12 +64,16 @@ export const reducer: Reducer<GantState> = (state: GantState | undefined, incomi
       return {
         ...state,
         shops: action.payload
-      };
-
+      }
     case 'SET_IDLES':
       return {
         ...state,
         idles: action.payload
+      }
+    case "CLEAR_IDLES":
+      return {
+        ...state,
+        idles: null
       }
 
     default:

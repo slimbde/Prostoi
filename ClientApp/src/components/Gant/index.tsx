@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { ApplicationState } from '../../store';
 import { drawChart } from './drawChart';
@@ -13,27 +13,17 @@ type GantProps = {
 
 
 
-class Gant extends Component<GantProps> {
+const Gant: React.FC<GantProps> = (props: GantProps) => {
+  useEffect(() => {
+    if (!props.idles)
+      return
 
-  componentDidUpdate(prevProps: GantProps, prevState: ApplicationState) {
-    if (prevProps.idles !== this.props.idles && !!this.props.idles) {
-      am4core.disposeAllCharts()
-      drawChart(this.props.idles)
+    drawChart(props.idles)
 
-      setTimeout(() => {
-        const loading = document.getElementById("loading") as HTMLElement
-        loading.style.opacity = "0"
-      }, 500)
-    }
-  }
+    return () => am4core.disposeAllCharts()
+  }, [props.idles])
 
-  componentWillUnmount = () => am4core.disposeAllCharts()
-
-  render() {
-    //console.log(this.props)
-
-    return <div id="chartdiv"></div>
-  }
+  return <div id="chartdiv"></div>
 };
 
 export default connect(

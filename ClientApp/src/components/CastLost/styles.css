@@ -1,0 +1,63 @@
+.losts-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  box-sizing: border-box;
+  width: 100%;
+  opacity: 0;
+  transition: all .1s;
+}
+
+.losts-wrapper table {
+  max-width: 170px;
+  margin-top: 1rem;
+  margin-right: 1rem;
+}
+
+.losts-wrapper table thead {
+  border-bottom: 2px solid lightgray;
+}
+
+.losts-wrapper table thead, .losts-wrapper table tbody tr {
+  display: block;
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.losts-wrapper table tbody {
+  display: block;
+  max-height: 550px;
+  overflow-y: auto;
+}
+
+
+.losts-wrapper table th {
+  padding: .5rem 0.2rem;
+  font-size: smaller;
+  border-radius: 0 !important;
+}
+
+.losts-wrapper table td {
+  padding: .2rem 0.2rem;
+  font-size: smaller;
+}
+
+
+#chartdiv-loss {
+  height: 700px;
+  max-width: 1900px;
+  margin-right: 2rem;
+  margin-top: 1rem;
+  margin-left: 1rem;
+  transition: all .1s;
+}
+
+.main-field {
+  background: #3b688c33;
+}
+
+.table-header {
+  background: #3b688cce;
+  color: white;
+}

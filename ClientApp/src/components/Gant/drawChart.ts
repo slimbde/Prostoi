@@ -144,6 +144,8 @@ export const drawChart = (idles: IdleSet) => {
   series1.columns.template.strokeOpacity = 1;
   series1.columns.template.cursorOverStyle = am4core.MouseCursorStyle.pointer;
 
+  series1.defaultState.transitionDuration = 300
+
   let seriesEvents = series1.columns.template.events;
 
   seriesEvents.on('over', (ev: any) => {
@@ -164,19 +166,14 @@ export const drawChart = (idles: IdleSet) => {
 
   //seriesEvents.on("hit", hitHandler);
 
-  //chart.scrollbarX = new am4core.Scrollbar();
-
   chart.events.on('ready', function () {
-    // setTimeout(function () {
-    //   $('#btn').prop('disabled', false);
-    //   $('#btn').css({ 'border': '1px solid white', 'color': 'white' });
-    //   $('#btn').mouseenter(function () { $('#btn').css({ 'color': 'wheat', 'border': '1px solid wheat' }); });
-    //   $('#btn').mouseleave(function () { $('#btn').css({ 'color': 'white', 'border': '1px solid white' }); });
-    //   $('#btn').html('Показать');
-
-    //   $('#loading').css({ 'opacity': 0 });
-    // }, 1000);
+    setTimeout(function () {
+      const loading = document.getElementById("loading") as HTMLElement
+      loading.style.opacity = "0"
+    }, 300);
   });
+
+  //chart.scrollbarX = new am4core.Scrollbar();
 }
 
 

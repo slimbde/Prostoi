@@ -1,10 +1,12 @@
 import * as Gant from './Gant';
+import * as CastLost from './CastLost'
 import * as Authenticate from './Authenticate';
 
 // The top-level state object
 export interface ApplicationState {
-  gant: Gant.GantState;
-  authenticate: Authenticate.AuthenticateState | undefined;
+  gant: Gant.GantState
+  castLost: CastLost.CastLostState
+  authenticate: Authenticate.AuthenticateState | undefined
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
@@ -12,6 +14,7 @@ export interface ApplicationState {
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
   gant: Gant.reducer,
+  castLost: CastLost.reducer,
   authenticate: Authenticate.reducer
 };
 

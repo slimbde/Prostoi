@@ -3,23 +3,23 @@ import { connect } from 'react-redux';
 import { Redirect, Route } from 'react-router';
 import Layout from './components/Layout'
 import Gant from './components/Gant';
-import Efficiency from './components/Efficiency';
+import CastLost from './components/CastLost';
 import { ApplicationState } from './store';
 import * as GantStore from './store/Gant';
 
 import './custom.css'
 
 
-interface AppState {
+interface AppProps {
   shops: string[]
-  setShops: (data: string[]) => void,
+  setShops: (data: string[]) => void
 }
 
 
 
-class App extends React.Component<AppState> {
+class App extends React.Component<AppProps> {
 
-  constructor(props: AppState) {
+  constructor(props: AppProps) {
     super(props)
 
     if (props.shops.length === 0) {
@@ -37,11 +37,13 @@ class App extends React.Component<AppState> {
     return <Layout>
       <Route exact path='/'><Redirect to='/gant' /></Route>
       <Route exact path='/gant' component={Gant} />
-      <Route path='/efficiency' component={Efficiency} />
+      <Route path='/castlost' component={CastLost} />
     </Layout >
 
   }
 }
+
+
 
 export default connect(
   (state: ApplicationState) => state.gant,
