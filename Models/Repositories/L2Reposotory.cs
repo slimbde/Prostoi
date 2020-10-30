@@ -43,7 +43,7 @@ namespace rest_ts_react_template.Models.Repositories
           L2PRD.CCM_GENERAL_PROGRAM_VARS.NUMERIC_VALUE as density,	
           L2PRD.REP_CCM_PRODUCT_ORDERS.WIDTH as width,						
           L2PRD.REP_CCM_PRODUCT_ORDERS.THICKNESS as thickness,					
-          ROUND(DELAYS.timeinterval * 5, 0) as count
+          CASE WHEN DELAYS.timeinterval < 0 THEN 0 else ROUND(DELAYS.timeinterval * 5, 0) end as count
         FROM ( 
           SELECT 
             STOP_DATE,

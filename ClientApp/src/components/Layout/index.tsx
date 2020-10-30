@@ -1,5 +1,6 @@
 import * as React from 'react';
 import NavMenu from './NavMenu'
+import Footer from './Footer'
 import './styles.css'
 
 
@@ -15,5 +16,6 @@ export default (props: NavMenuProps) => {
     <div className="container">
       {props.children}
     </div>
+    <Footer />
   </React.Fragment>
 }

@@ -82,3 +82,10 @@ code {
   opacity: 0;
   transition: all .3s;
 }
+
+.footer {
+  position: absolute;
+  bottom: .5rem;
+  right: 1.5rem;
+  font-size: xx-small;
+}

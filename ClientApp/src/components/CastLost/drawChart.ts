@@ -58,7 +58,7 @@ export const drawChart = (data: LostIdle[]) => {
     // Configure columns
     series.columns.template.width = am4core.percent(80);
     series.columns.template.tooltipPosition = "pointer"
-    series.columns.template.tooltipText = "Не долито\nпо простоям:[font-size:14px] [bold]{valueY}[/] т.\n[font-size:12px]{dateX.formatDate('dd.MM.yyyy')}[/]";
+    series.columns.template.tooltipText = "Не долито\nПо простоям:[font-size:14px] [bold]{valueY}[/] т.\n[font-size:12px]{dateX.formatDate('dd.MM.yyyy')}[/]";
 
     // Add label
     let labelBullet = series.bullets.push(new am4charts.LabelBullet());

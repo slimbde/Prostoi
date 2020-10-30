@@ -9,7 +9,7 @@
 }
 
 .losts-wrapper table {
-  max-width: 170px;
+  max-width: 200px;
   margin-top: 1rem;
   margin-right: 1rem;
 }
@@ -36,11 +36,18 @@
   padding: .5rem 0.2rem;
   font-size: smaller;
   border-radius: 0 !important;
+  border-bottom: unset !important;
+  border-top: unset !important;
+}
+
+.losts-wrapper table thead tr {
+  border: unset !important;
 }
 
 .losts-wrapper table td {
-  padding: .2rem 0.2rem;
+  padding: .2rem .2rem;
   font-size: smaller;
+  border-radius: 0 !important;
 }
 
 
@@ -57,7 +64,13 @@
   background: #3b688c33;
 }
 
+.outcome {
+  background: #3b688c33;
+  font-weight: 500;
+}
+
 .table-header {
   background: #3b688cce;
   color: white;
+  border-bottom: unset !important;
 }

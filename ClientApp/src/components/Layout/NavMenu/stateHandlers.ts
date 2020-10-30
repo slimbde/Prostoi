@@ -112,8 +112,8 @@ export class GantNavHandler extends INavMenuStateHandler {
     super(nav)
     console.log("it's me, ganthandler")
 
-    this.beginDate = moment().subtract(1, "day").toDate()
-    this.endDate = moment().subtract(1, "day").toDate()
+    this.beginDate = moment().toDate()
+    this.endDate = moment().toDate()
 
     setTimeout(() => {
       const dropdown = document.querySelector(".dropdown-trigger") as HTMLSelectElement

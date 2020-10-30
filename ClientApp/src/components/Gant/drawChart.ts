@@ -90,7 +90,7 @@ export const drawChart = (idles: IdleSet) => {
   let hour = 60 * minute;
   let day = 24 * hour;
   let shiftOffset = ceh === 'Аглопроизводство'
-    ? 3 * hour + 30 * minute
+    ? 4 * hour
     : 4 * hour + 30 * minute
 
   dateAxis.dateFormats.setKey("hour", "HH:mm");
@@ -139,6 +139,7 @@ export const drawChart = (idles: IdleSet) => {
   series1.dataFields.culprit = "culprit";
   series1.dataFields.categoryY = "name";
   series1.columns.template.height = am4core.percent(30);
+  series1.columns.template.tooltipPosition = "pointer"
   series1.columns.template.propertyFields.fill = "color"; // get color from data
   series1.columns.template.stroke = am4core.color("#000000");
   series1.columns.template.strokeOpacity = 1;

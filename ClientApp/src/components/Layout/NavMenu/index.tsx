@@ -64,7 +64,7 @@ class NavMenu extends React.Component<NavMenuProps, NavMenuState> {
       <header className="navbar-fixed">
         <nav>
           <div className="nav-wrapper z-depth-5">
-            <div className="right">{moment().format("DD.MM.YYYY  HH:mm")}</div>
+            <div className="right" style={{ fontSize: "smaller" }}>{moment().format("DD.MM.YYYY  HH:mm")}</div>
             <Link to="#" data-target="mobile-demo" className="sidenav-trigger"><MenuIcon className="menu-icon" /></Link>
             <ul className="hide-on-med-and-down">
               <li id="gant" className="active"><Link to="/gant">ДИАГРАММА ГАНТА</Link></li>
