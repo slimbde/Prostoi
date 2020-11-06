@@ -1,20 +1,22 @@
 import { NavMenuProps, NavMenuState } from '.';
 import * as GantStore from '../../../store/Gant';
-import * as CastStore from '../../../store/CastLost'
+import * as CastStore from '../../../store/LostCast'
 import steelMarksMNLZ5 from './steelMarksMNLZ5.json'
 import M from 'materialize-css/dist/js/materialize.js'
 import moment from "moment"
 
 
-type CastLostResponse = {
+type LostCastResponse = {
   day: Date,
   mark: string,
   pid: string,
   density: number,
   width: number,
   thickness: number,
-  count: number
+  count: number,
+  undercastLength: number
 }
+
 
 type MenuStateHandler = {
   stateHandler: INavMenuStateHandler
@@ -76,7 +78,7 @@ export abstract class INavMenuStateHandler {
 
 
   public didMount() {
-    console.log("abstract did mount")
+    //console.log("abstract did mount")
     this.datePickerBegin = M.Datepicker.init(document.getElementById("bDate"), { ...this.datepickerOptions, defaultDate: this.beginDate })
     this.datePickerEnd = M.Datepicker.init(document.getElementById("eDate"), { ...this.datepickerOptions, defaultDate: this.endDate })
 
@@ -85,12 +87,12 @@ export abstract class INavMenuStateHandler {
     const datepickerDoneBtns = document.querySelectorAll('.datepicker-done')
     datepickerDoneBtns.forEach(el => el.addEventListener("click", () => this.datePick()))
 
-    this.nav.state.firstLoad && this.nav.setState({ firstLoad: false })
-
     if (this instanceof GantNavHandler)
       this.clickShop()
     else
       this.datePick()
+
+    this.nav.state.firstLoad && this.nav.setState({ firstLoad: false })
   }
 
   public abstract didUpdate(prevProps: NavMenuProps): void
@@ -132,7 +134,7 @@ export class GantNavHandler extends INavMenuStateHandler {
       this.loading!.style.opacity = "1"
       fetch(`api/Idle/GetIdles?bDate=${bDate}&eDate=${eDate}&ceh=${selectedShop}`)
         .then(resp => resp.json() as Promise<GantStore.IdleSet>)
-        .then(data => this.nav.props.setIdles(data))
+        .then(data => setTimeout(() => this.nav.props.setIdles(data), 100))
     }
   }
 
@@ -154,11 +156,11 @@ export class GantNavHandler extends INavMenuStateHandler {
   }
 
   public didUpdate(prevProps: NavMenuProps) {
-    console.log("ganthandler did update")
+    //console.log("ganthandler did update")
     const prevPath = prevProps.location.pathname
     const thisPath = this.nav.props.location.pathname
 
-    if (prevPath !== thisPath) {
+    if (prevPath !== thisPath && prevPath !== "/") {
       this.dropdown.destroy()
       this.nav.props.clearIdles()
       this.nav.setState({ currentShop: "" })
@@ -190,39 +192,70 @@ export class CastLostNavHandler extends INavMenuStateHandler {
     if (bDate! <= eDate!) {
       this.loading!.style.opacity = "1"
       fetch(`api/Idle/GetMNLZ5LostIdles?bDate=${bDate}&eDate=${eDate}`)
-        .then(resp => resp.json() as Promise<CastLostResponse[]>)
+        .then(resp => resp.json() as Promise<LostCastResponse[]>)
         .then(data => {
-          const result: CastStore.LostIdle[] = data.map(clr => {
-            const profile = steelMarksMNLZ5.find(profile => profile.width === clr.width && profile.thickness === clr.thickness) || steelMarksMNLZ5[0]
+          const result: CastStore.LostCast[] = data.map(lcr => {
+            // ищу нужный профиль из предоставленного Яшей .json файла:
+            const profile = steelMarksMNLZ5.find(profile => profile.width === lcr.width && profile.thickness === lcr.thickness) || steelMarksMNLZ5[0]
 
-            const existedMark = profile.Marks.find(pm => pm.Name === clr.mark)
+            // ищу марку с названием из SQL запроса в профиле из .json файла
+            const existedMark = profile.Marks.find(pm => pm.Name === lcr.mark)
+
+            // если марка не задана, то беру из поля default профиля, иначе - заданное значение
             const speed = (existedMark ? profile.Marks[existedMark.Quotient] : profile.Default) as number
 
-            const length = speed * clr.count
-            const transientVal = (300 / 1000) * (360 / 1000)
-            const lostMetalVolume = length * transientVal
-            const weight = lostMetalVolume * clr.density / 1000
+            // считаю длину - скорость умножить на количество минут (по таблице)
+            const idleBeamLengthMeters = speed * lcr.count / 1000
 
-            return { date: moment(clr.day).format("YYYY-MM-DD"), lostMetal: Math.round(weight) }
+            // константа "промежуточное значение" из таблицы
+            const transientVal = (300 / 1000) * (360 / 1000)
+
+            // считаю объем неотлитого металла по формуле из таблицы - длина * промежуточное значение
+            const lostIdleMetalVolume = idleBeamLengthMeters * transientVal
+
+            // считаю вес - объем неотлитого металла * плотность из запроса
+            const idleWeight = lostIdleMetalVolume * lcr.density / 1000   ///////////// значение по Простоям
+
+            // 
+            const lostEfficiencyLengthMeters = lcr.undercastLength / 1000
+
+            //
+            const lostEfficiencyMetalVolume = lostEfficiencyLengthMeters * transientVal
+
+            //
+            const efficiencyWeight = lostEfficiencyMetalVolume * lcr.density / 1000 ///////////// значение по Эффективности
+
+            // расчет долей
+            const sumLost = idleWeight + efficiencyWeight
+            const idlePercent = idleWeight / sumLost * 100
+            const efficiencyPercent = efficiencyWeight / sumLost * 100
+
+            return {
+              date: moment(lcr.day).format("YYYY-MM-DD"),
+              lostIdle: Math.round(idleWeight),
+              lostEfficiency: Math.round(efficiencyWeight),
+              lostIdlePercent: Math.round(idlePercent),
+              lostEfficiencyPercent: Math.round(efficiencyPercent)
+            }
           })
 
-          this.nav.props.setLostIdles(result)
+          setTimeout(() => this.nav.props.setLostCasts(result), 200)
         })
         .catch(error => {
           this.loading!.style.opacity = "0"
           console.error(error)
-          alert(`Не могу отобразить данные из-за ошибки в базе данных\nза одну из дат интервала ${bDate} ... ${eDate}\nПожалуйста, выберите другой интервал`)
+          alert(error)
         })
     }
   }
 
   public didUpdate(prevProps: NavMenuProps) {
-    console.log("casthandler did update")
+    //console.log("casthandler did update")
     const prevPath = prevProps.location.pathname
     const thisPath = this.nav.props.location.pathname
 
     if (prevPath !== thisPath) {
-      this.nav.props.clearLostIdles()
+      this.nav.props.clearLostCasts()
       this.switchState("gant")
     }
   }

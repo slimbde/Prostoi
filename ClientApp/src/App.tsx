@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect, Route } from 'react-router';
 import Layout from './components/Layout'
 import Gant from './components/Gant';
-import CastLost from './components/CastLost';
+import CastLost from './components/LostCast';
 import { ApplicationState } from './store';
 import * as GantStore from './store/Gant';
 

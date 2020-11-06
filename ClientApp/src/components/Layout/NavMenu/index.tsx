@@ -3,11 +3,11 @@ import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux'
 import { ApplicationState } from '../../../store';
 import * as GantStore from '../../../store/Gant';
-import * as CastStore from '../../../store/CastLost'
+import * as CastStore from '../../../store/LostCast'
 import MenuIcon from "@material-ui/icons/Menu"
 import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
 import moment from 'moment'
-import { CastLostNavHandler, GantNavHandler, INavMenuStateHandler } from './stateHandlers';
+import { GantNavHandler, INavMenuStateHandler } from './stateHandlers';
 import { bindActionCreators } from 'redux';
 
 
@@ -15,8 +15,8 @@ export interface NavMenuProps {
   location: any,
   shops: string[]
   setIdles: (idleSet: GantStore.IdleSet) => void
-  setLostIdles: (data: CastStore.LostIdle[]) => void
-  clearLostIdles: () => void,
+  setLostCasts: (data: CastStore.LostCast[]) => void
+  clearLostCasts: () => void,
   clearIdles: () => void
 }
 
@@ -28,9 +28,8 @@ export interface NavMenuState {
 
 
 class NavMenu extends React.Component<NavMenuProps, NavMenuState> {
-  public stateHandler: INavMenuStateHandler = this.props.location.pathname.slice(1) === "gant"
-    ? new GantNavHandler(this)
-    : new CastLostNavHandler(this)
+  public stateHandler: INavMenuStateHandler = new GantNavHandler(this)
+
 
   state: NavMenuState = {
     firstLoad: true,
@@ -109,7 +108,7 @@ const mapDispatchToProps = (dispatch: any) => bindActionCreators({ ...GantStore.
 
 const showTheLocationWithRouter = withRouter(NavMenu as any)
 export default connect(
-  (state: ApplicationState) => ({ ...state.gant, ...state.castLost }),
+  (state: ApplicationState) => ({ ...state.gant, ...state.lostCast }),
   mapDispatchToProps
 )(showTheLocationWithRouter)
 
