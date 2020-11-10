@@ -184,9 +184,9 @@ namespace rest_ts_react_template.Models.Repositories
               outtr.STOP_DATE,
               --outtr.steel_grade_id, 
               --outtr.practice_id, 
-              --CCM_GENERAL_PROGRAM_VARS.NUMERIC_VALUE DENSITY,
-              --REP_CCM_PRODUCT_ORDERS.WIDTH,
-              --REP_CCM_PRODUCT_ORDERS.THICKNESS,
+              CCM_GENERAL_PROGRAM_VARS.NUMERIC_VALUE DENSITY,
+              REP_CCM_PRODUCT_ORDERS.WIDTH,
+              REP_CCM_PRODUCT_ORDERS.THICKNESS,
               case when DELAYS.Undercast_length < 0 then 0 else ROUND(DELAYS.Undercast_length, 15) end as UNDERCAST_LENGTH --(mm)
           FROM (   
               SELECT STOP_DATE,
@@ -274,10 +274,18 @@ namespace rest_ts_react_template.Models.Repositories
         {
           DateTime date = Convert.ToDateTime(reader["STOP_DATE"]);
           double length = Convert.ToDouble(reader["UNDERCAST_LENGTH"]);
+          int width = Convert.ToInt32(reader["WIDTH"]);
+          int thickness = Convert.ToInt32(reader["THICKNESS"]);
+          int density = Convert.ToInt32(reader["DENSITY"]);
 
           LostIdle idle = result.Find(li => li.Day == date);
           if (idle != null)
+          {
             idle.UndercastLength = length;
+            idle.UndercastWidth = width;
+            idle.UndercastThickness = thickness;
+            idle.UndercastDensity = density;
+          }
         }
 
         return result;

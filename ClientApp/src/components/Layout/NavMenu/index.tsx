@@ -7,7 +7,7 @@ import * as CastStore from '../../../store/LostCast'
 import MenuIcon from "@material-ui/icons/Menu"
 import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
 import moment from 'moment'
-import { GantNavHandler, INavMenuStateHandler } from './stateHandlers';
+import { CastLostNavHandler, GantNavHandler, INavMenuStateHandler } from './stateHandlers';
 import { bindActionCreators } from 'redux';
 
 
@@ -28,7 +28,17 @@ export interface NavMenuState {
 
 
 class NavMenu extends React.Component<NavMenuProps, NavMenuState> {
-  public stateHandler: INavMenuStateHandler = new GantNavHandler(this)
+  public stateHandler: INavMenuStateHandler
+
+
+  constructor(props: NavMenuProps) {
+    super(props)
+
+    const path = props.location.pathname.slice(1)
+    this.stateHandler = path === "gant"
+      ? new GantNavHandler(this)
+      : new CastLostNavHandler(this)
+  }
 
 
   state: NavMenuState = {

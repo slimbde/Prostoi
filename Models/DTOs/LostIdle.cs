@@ -26,7 +26,10 @@ namespace rest_ts_react_template.Models.DTOs
     [Column("COUNT")]
     public ulong Count { get; set; }
 
-    [Column("UNDERCAST_LENGTH")]
+
     public double UndercastLength { get; set; }
+    public int UndercastWidth { get; set; }
+    public int UndercastThickness { get; set; }
+    public int UndercastDensity { get; set; }
   }
 }

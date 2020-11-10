@@ -14,7 +14,10 @@ type LostCastResponse = {
   width: number,
   thickness: number,
   count: number,
-  undercastLength: number
+  undercastLength: number,
+  undercastWidth: number,
+  undercastThickness: number,
+  undercastDensity: number,
 }
 
 
@@ -208,7 +211,7 @@ export class CastLostNavHandler extends INavMenuStateHandler {
             const idleBeamLengthMeters = speed * lcr.count / 1000
 
             // константа "промежуточное значение" из таблицы
-            const transientVal = (300 / 1000) * (360 / 1000)
+            const transientVal = (lcr.thickness / 1000) * (lcr.width / 1000) || 0.04  // если в базе нули - то 200х200
 
             // считаю объем неотлитого металла по формуле из таблицы - длина * промежуточное значение
             const lostIdleMetalVolume = idleBeamLengthMeters * transientVal
@@ -216,14 +219,17 @@ export class CastLostNavHandler extends INavMenuStateHandler {
             // считаю вес - объем неотлитого металла * плотность из запроса
             const idleWeight = lostIdleMetalVolume * lcr.density / 1000   ///////////// значение по Простоям
 
-            // 
+            ///// ВТОРАЯ ЧАСТЬ - СНИЖЕНИЕ ПРОИЗВОДИТЕЛЬНОСТИ. перевожу длину в метры
             const lostEfficiencyLengthMeters = lcr.undercastLength / 1000
 
-            //
-            const lostEfficiencyMetalVolume = lostEfficiencyLengthMeters * transientVal
+            // константа "промежуточное значение" для снижения (тут другой профиль может оказаться)
+            const undercastTransientVal = (lcr.undercastThickness / 1000) * (lcr.undercastWidth / 1000) || 0.04
 
-            //
-            const efficiencyWeight = lostEfficiencyMetalVolume * lcr.density / 1000 ///////////// значение по Эффективности
+            // считаю объем неотлитого металла
+            const lostEfficiencyMetalVolume = lostEfficiencyLengthMeters * undercastTransientVal
+
+            // читаю вес - объем неотлитого металла * плотность из запроса
+            const efficiencyWeight = lostEfficiencyMetalVolume * lcr.undercastDensity / 1000 ///////////// значение по Эффективности
 
             // расчет долей
             const sumLost = idleWeight + efficiencyWeight
