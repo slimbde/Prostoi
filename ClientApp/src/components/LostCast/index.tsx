@@ -6,6 +6,7 @@ import { ApplicationState } from '../../store';
 import * as CastStore from '../../store/LostCast';
 import { CastLostTable } from './table';
 import './styles.css'
+import { errorHandler } from '../utils/errorHandler';
 
 
 type CastLostProps = {
@@ -17,6 +18,11 @@ const CastLost: React.FC<CastLostProps> = (props: CastLostProps) => {
   React.useEffect(() => {
     if (!props.lostCasts)
       return
+
+    if ("error" in props.lostCasts) {
+      errorHandler(props.lostCasts)
+      return
+    }
 
     drawChart(props.lostCasts)
     const chartDiv = document.querySelector(".losts-wrapper") as HTMLDivElement

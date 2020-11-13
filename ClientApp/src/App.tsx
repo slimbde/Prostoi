@@ -24,8 +24,14 @@ class App extends React.Component<AppProps> {
 
     if (props.shops.length === 0) {
       fetch(`api/idle/getshops`)
-        .then(resp => resp.json() as Promise<string[]>)
-        .then(data => props.setShops(data))
+        .then(resp => resp.json() as Promise<any>)
+        .then(data => {
+          if ("error" in data)
+            alert("Не могу получить список цехов...")
+          else
+            props.setShops(data)
+        })
+        .catch(error => console.error(error))
     }
   }
 

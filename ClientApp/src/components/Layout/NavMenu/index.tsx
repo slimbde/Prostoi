@@ -35,7 +35,8 @@ class NavMenu extends React.Component<NavMenuProps, NavMenuState> {
     super(props)
 
     const path = props.location.pathname.slice(1)
-    this.stateHandler = path === "gant"
+
+    this.stateHandler = path === "gant" || path === ""
       ? new GantNavHandler(this)
       : new CastLostNavHandler(this)
   }
@@ -69,6 +70,7 @@ class NavMenu extends React.Component<NavMenuProps, NavMenuState> {
     const liS = document.getElementById(path + "S")!
     li && li.classList.add("active")
     liS && liS.classList.add("active")
+
     return (
       <header className="navbar-fixed">
         <nav>
@@ -93,7 +95,7 @@ class NavMenu extends React.Component<NavMenuProps, NavMenuState> {
                     <a className="dropdown-trigger" href="#!" data-target="dropdown1">ЦЕХ<ArrowDownIcon className="menu-icon" /></a>
 
                     <ul id="dropdown1" className="dropdown-content z-depth-5">
-                      {this.props.shops.map(shop => <li key={shop} onClick={e => this.stateHandler.clickShop(e)}>{shop}</li>)}
+                      {Array.isArray(this.props.shops) && this.props.shops.map(shop => <li key={shop} onClick={e => this.stateHandler.clickShop(e)}>{shop}</li>)}
                     </ul>
                   </li>
                 </ul>}
