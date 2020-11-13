@@ -40,6 +40,7 @@ export const drawChart = (data: LostCast[]) => {
   valueAxis.renderer.inside = false;
   valueAxis.fontSize = 12
   valueAxis.min = 0;
+  valueAxis.max = 102
 
 
   // Create series
@@ -80,8 +81,8 @@ export const drawChart = (data: LostCast[]) => {
   chart.colors.next()
   chart.colors.next()
   chart.colors.next()
-  createSeries("lostIdle", "lostIdlePercent", "Простои");
   createSeries("lostEfficiency", "lostEfficiencyPercent", "Снижение производительности");
+  createSeries("lostIdle", "lostIdlePercent", "Простои");
 
   // Legend
   chart.legend = new am4charts.Legend()

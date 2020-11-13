@@ -11,8 +11,8 @@ type CastLostTableProps = {
 export const CastLostTable: React.FC<CastLostTableProps> = (props: CastLostTableProps) => {
   const data = props.lostCasts
     ? props.lostCasts.map(lc => <tr key={lc.date + lc.lostIdle}>
-      <td style={{ background: "#eee9db" }}>{lc.lostIdle.toLocaleString()}</td>
-      <td style={{ background: "#cececd" }}>{lc.lostEfficiency.toLocaleString()}</td>
+      <td style={{ background: "#cececd" }}>{lc.lostIdle.toLocaleString()}</td>
+      <td style={{ background: "#eee9db" }}>{lc.lostEfficiency.toLocaleString()}</td>
       <td className="main-field">{moment(lc.date).format("DD.MM.YYYY")}</td>
     </tr>)
     : <tr><td></td><td></td><td></td></tr>
@@ -36,8 +36,8 @@ export const CastLostTable: React.FC<CastLostTableProps> = (props: CastLostTable
       <tbody>
         {data}
         <tr>
-          <td style={{ background: "#dbd7ca", fontWeight: 600 }}>{totalIdle.toLocaleString()}</td>
-          <td style={{ background: "#bbbbbb", fontWeight: 600 }}>{totalEfficiency.toLocaleString()}</td>
+          <td style={{ background: "#bbbbbb", fontWeight: 600 }}>{totalIdle.toLocaleString()}</td>
+          <td style={{ background: "#dbd7ca", fontWeight: 600 }}>{totalEfficiency.toLocaleString()}</td>
           <td style={{ background: "#3b688c7e", fontWeight: 600 }}>ИТОГО</td>
         </tr>
       </tbody>
