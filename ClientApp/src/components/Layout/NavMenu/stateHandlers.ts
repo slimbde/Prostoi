@@ -30,7 +30,8 @@ type ManagedNavMenu = React.Component<NavMenuProps, NavMenuState> & MenuStateHan
 
 ///////////////////////////////////////////////////////////////////// SUPER ABSTRACT NAV HANDLER
 export abstract class INavMenuStateHandler {
-  protected sideNav: any;
+  protected dropdown: any
+  protected sideNav: any
   protected beginDate: Date | undefined
   protected endDate: Date | undefined
 
@@ -90,10 +91,7 @@ export abstract class INavMenuStateHandler {
     const datepickerDoneBtns = document.querySelectorAll('.datepicker-done')
     datepickerDoneBtns.forEach(el => el.addEventListener("click", () => this.datePick()))
 
-    if (this instanceof GantNavHandler)
-      this.clickShop()
-    else
-      this.datePick()
+    this.clickShop()
 
     this.nav.state.firstLoad && this.nav.setState({ firstLoad: false })
   }
@@ -111,7 +109,6 @@ export abstract class INavMenuStateHandler {
 
 ///////////////////////////////////////////////////////////////////// GANT NAV HANDLER
 export class GantNavHandler extends INavMenuStateHandler {
-  protected dropdown: any
 
   constructor(nav: ManagedNavMenu) {
     super(nav)
@@ -183,10 +180,19 @@ export class CastLostNavHandler extends INavMenuStateHandler {
     this.beginDate = moment().subtract(14, "day").toDate()
     this.endDate = moment().subtract(1, "day").toDate()
 
+    setTimeout(() => {
+      const dropdown = document.querySelector(".dropdown-trigger") as HTMLSelectElement
+      this.dropdown = M.Dropdown.init(dropdown)
+    }, 0)
+
     nav.state && !nav.state.firstLoad && this.didMount()
   }
 
-  clickShop(e?: React.MouseEvent<HTMLLIElement, MouseEvent>) { }
+  clickShop(e?: React.MouseEvent<HTMLLIElement, MouseEvent>) {
+    const selectedShop = e ? (e.target as HTMLElement).textContent! : "МНЛЗ-3"
+
+    this.nav.setState({ currentShop: selectedShop }, () => this.datePick())
+  }
 
   public datePick = () => {
     const bDate = moment((document.getElementById("bDate") as HTMLInputElement).value, "DD.MM.YYYY").format("YYYY-MM-DD")

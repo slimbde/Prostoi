@@ -10,11 +10,11 @@ namespace react_ts.Controllers
   public class IdleController : ControllerBase
   {
     private readonly IIdleRepository _repo;
-    private readonly IL2Repository _l2Repo;
-    public IdleController(IIdleRepository repo, IL2Repository l2Repo)
+    private readonly ICCMRepository _ccmRepo;
+    public IdleController(IIdleRepository repo, ICCMRepository ccmRepo)
     {
       _repo = repo;
-      _l2Repo = l2Repo;
+      _ccmRepo = ccmRepo;
     }
 
     ///// GET: api/Idle/GetMinMaxDates
@@ -59,7 +59,7 @@ namespace react_ts.Controllers
     {
       try
       {
-        var lostIdles = await _l2Repo.GetMNLZ5LostIdles(bDate, eDate);
+        var lostIdles = await _ccmRepo.GetMNLZ5LostIdles(bDate, eDate);
         return Ok(lostIdles);
       }
       catch (Exception ex) { return BadRequest(new { error = ex.Message }); }

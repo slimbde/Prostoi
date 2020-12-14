@@ -71,6 +71,10 @@ class NavMenu extends React.Component<NavMenuProps, NavMenuState> {
     li && li.classList.add("active")
     liS && liS.classList.add("active")
 
+    const shops = Array.isArray(this.props.shops) && path === "gant"
+      ? this.props.shops.map(shop => <li key={shop} onClick={e => this.stateHandler.clickShop(e)}>{shop}</li>)
+      : ["МНЛЗ-3", "МНЛЗ-4", "МНЛЗ-5"].map(shop => <li key={shop} onClick={e => this.stateHandler.clickShop(e)}>{shop}</li>)
+
     return (
       <header className="navbar-fixed">
         <nav>
@@ -90,18 +94,15 @@ class NavMenu extends React.Component<NavMenuProps, NavMenuState> {
                   <input type="text" className="datepicker" id="eDate" />
                   <label htmlFor="eDate">Дата окончания</label>
                 </li>
-                {path === "gant" && <ul className="hide-on-small-and-down">
+                <ul className="hide-on-small-and-down">
                   <li>
                     <a className="dropdown-trigger" href="#!" data-target="dropdown1">ЦЕХ<ArrowDownIcon className="menu-icon" /></a>
-
-                    <ul id="dropdown1" className="dropdown-content z-depth-5">
-                      {Array.isArray(this.props.shops) && this.props.shops.map(shop => <li key={shop} onClick={e => this.stateHandler.clickShop(e)}>{shop}</li>)}
-                    </ul>
+                    <ul id="dropdown1" className="dropdown-content z-depth-5">{shops}</ul>
                   </li>
-                </ul>}
+                </ul>
               </form>
             </ul>
-            <div className="brand-logo">{path === "gant" ? this.state.currentShop : "МНЛЗ-5"}</div>
+            <div className="brand-logo">{this.state.currentShop}</div>
           </div>
           <div id="loading" className="loading"><img src="loading4.gif" height="50px" width="62px" alt="Loading.." /></div>
         </nav>

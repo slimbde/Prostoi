@@ -8,15 +8,26 @@ using rest_ts_react_template.Models.DTOs;
 
 namespace rest_ts_react_template.Models.Repositories
 {
-  public interface IL2Repository : IRepository<LostIdle>
+  ////////////////////////////////////////////////////////// ICCMRepository
+  public interface ICCMRepository : IRepository<LostIdle>
   {
     Task<IEnumerable<LostIdle>> GetMNLZ5LostIdles(string begin, string end);
   }
 
-  public class L2Repository : IL2Repository
+
+
+  ///////////////////////////////////////////////////////// CCMRepository
+  public class CCMRepository : ICCMRepository
   {
-    protected OracleConnection _db;
-    public L2Repository(string conString) => _db = new OracleConnection(conString);
+    protected OracleConnection _db5;
+    protected OracleConnection _db2;
+
+
+    public CCMRepository(string ccm5L2String, string ccm2L2String)
+    {
+      _db5 = new OracleConnection(ccm5L2String);
+      _db2 = new OracleConnection(ccm2L2String);
+    }
 
     public Task<int> Delete(Guid id) =>
       throw new NotImplementedException();
@@ -150,9 +161,9 @@ namespace rest_ts_react_template.Models.Repositories
 
       try
       {
-        await _db.OpenAsync();
+        await _db5.OpenAsync();
 
-        var cmd = new OracleCommand(stmt, _db);
+        var cmd = new OracleCommand(stmt, _db5);
         cmd.Parameters.Add("bDate", begin);
         cmd.Parameters.Add("eDate", end);
 
@@ -294,7 +305,7 @@ namespace rest_ts_react_template.Models.Repositories
 
         return result;
       }
-      finally { await _db.CloseAsync(); }
+      finally { await _db5.CloseAsync(); }
     }
 
     public Task<int> Post(LostIdle obj) =>
