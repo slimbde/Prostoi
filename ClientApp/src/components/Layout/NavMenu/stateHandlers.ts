@@ -1,23 +1,29 @@
 import { NavMenuProps, NavMenuState } from '.';
 import * as GantStore from '../../../store/Gant';
 import * as CastStore from '../../../store/LostCast'
-import steelMarksMNLZ5 from './steelMarksMNLZ5.json'
+import mnlz5Config from './mnlz5-config.json'
+import mnlz2Config from './mnlz2-config.json'
+import mnlz2Density from './mnlz2-markDensity.json'
 import M from 'materialize-css/dist/js/materialize.js'
 import moment from "moment"
 
 
+type DensityList = {
+  [index: string]: number
+}
+
+
 type LostCastResponse = {
-  day: Date,
+  day: string,
   mark: string,
   pid: string,
-  density: number,
+  profile: string,
   width: number,
   thickness: number,
   count: number,
   undercastLength: number,
   undercastWidth: number,
   undercastThickness: number,
-  undercastDensity: number,
 }
 
 
@@ -189,7 +195,7 @@ export class CastLostNavHandler extends INavMenuStateHandler {
   }
 
   clickShop(e?: React.MouseEvent<HTMLLIElement, MouseEvent>) {
-    const selectedShop = e ? (e.target as HTMLElement).textContent! : "МНЛЗ-3"
+    const selectedShop = e ? (e.target as HTMLElement).textContent! : "МНЛЗ-2"
 
     this.nav.setState({ currentShop: selectedShop }, () => this.datePick())
   }
@@ -198,20 +204,33 @@ export class CastLostNavHandler extends INavMenuStateHandler {
     const bDate = moment((document.getElementById("bDate") as HTMLInputElement).value, "DD.MM.YYYY").format("YYYY-MM-DD")
     const eDate = moment((document.getElementById("eDate") as HTMLInputElement).value, "DD.MM.YYYY").format("YYYY-MM-DD")
 
+    const shop = this.nav.state.currentShop
+
+    let api
+    switch (shop) {
+      case "МНЛЗ-2": api = "GetMNLZ2LostIdles"; break
+      case "МНЛЗ-5": api = "GetMNLZ5LostIdles"; break
+
+      default:
+        break
+    }
+
     if (bDate! <= eDate!) {
       this.loading!.style.opacity = "1"
-      fetch(`api/Idle/GetMNLZ5LostIdles?bDate=${bDate}&eDate=${eDate}`)
+      fetch(`api/Idle/${api}?bDate=${bDate}&eDate=${eDate}`)
         .then(resp => resp.json() as Promise<LostCastResponse[]>)
         .then(data => {
-          const result: CastStore.LostCast[] = data.map(lcr => {
-            // ищу нужный профиль из предоставленного Яшей .json файла:
-            const profile = steelMarksMNLZ5.find(profile => profile.width === lcr.width && profile.thickness === lcr.thickness) || steelMarksMNLZ5[0]
+          const result: CastStore.LostCast[] = data.map((lcr: LostCastResponse) => {
+            // ищу нужный профиль
+            const profile = shop === "МНЛЗ-5"
+              ? mnlz5Config.find(profile => profile.width === lcr.width && profile.thickness === lcr.thickness) || mnlz5Config[0]
+              : mnlz2Config.find(profile => profile.Name === lcr.profile.split("X")[0]) || mnlz2Config[0]
 
-            // ищу марку с названием из SQL запроса в профиле из .json файла
-            const existedMark = profile.Marks.find(pm => pm.Name === lcr.mark)
+            // ищу пару марка-скорость
+            const markSpeed = profile.Marks.find(pm => pm.Name.toUpperCase() === lcr.mark.toUpperCase())
 
             // если марка не задана, то беру из поля default профиля, иначе - заданное значение
-            const speed = (existedMark ? profile.Marks[existedMark.Quotient] : profile.Default) as number
+            const speed = (markSpeed ? markSpeed.Quotient : profile.Default) as number
 
             // считаю длину - скорость умножить на количество минут (по таблице)
             const idleBeamLengthMeters = speed * lcr.count / 1000
@@ -222,8 +241,12 @@ export class CastLostNavHandler extends INavMenuStateHandler {
             // считаю объем неотлитого металла по формуле из таблицы - длина * промежуточное значение
             const lostIdleMetalVolume = idleBeamLengthMeters * transientVal
 
+            const density = shop === "МНЛЗ-5"
+              ? 7800
+              : (mnlz2Density as DensityList)[lcr.mark.toUpperCase()]
+
             // считаю вес - объем неотлитого металла * плотность из запроса
-            const idleWeight = lostIdleMetalVolume * lcr.density / 1000   ///////////// значение по Простоям
+            const idleWeight = lostIdleMetalVolume * (density ? density : 7800) / 1000   ///////////// значение по Простоям
 
             ///// ВТОРАЯ ЧАСТЬ - СНИЖЕНИЕ ПРОИЗВОДИТЕЛЬНОСТИ. перевожу длину в метры
             const lostEfficiencyLengthMeters = lcr.undercastLength / 1000
@@ -234,8 +257,8 @@ export class CastLostNavHandler extends INavMenuStateHandler {
             // считаю объем неотлитого металла
             const lostEfficiencyMetalVolume = lostEfficiencyLengthMeters * undercastTransientVal
 
-            // читаю вес - объем неотлитого металла * плотность из запроса
-            const efficiencyWeight = lostEfficiencyMetalVolume * lcr.undercastDensity / 1000 ///////////// значение по Эффективности
+            // считаю вес - объем неотлитого металла * плотность из запроса
+            const efficiencyWeight = lostEfficiencyMetalVolume * density / 1000 ///////////// значение по Эффективности
 
             // расчет долей
             const sumLost = idleWeight + efficiencyWeight

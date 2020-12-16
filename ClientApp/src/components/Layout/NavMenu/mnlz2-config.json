@@ -1,0 +1,208 @@
+[
+  {
+    "Name": "170",
+    "Default": 1.03,
+    "Marks": [
+      {
+        "Name": "SAE 1005",
+        "Quotient": 1.24
+      },
+      {
+        "Name": "Cт 1кп",
+        "Quotient": 1.24
+      },
+      {
+        "Name": "СП",
+        "Quotient": 1.24
+      },
+      {
+        "Name": "ПС",
+        "Quotient": 1.24
+      },
+      {
+        "Name": "08Ю",
+        "Quotient": 1.24
+      },
+      {
+        "Name": "Cт 10",
+        "Quotient": 1.24
+      },
+      {
+        "Name": "08ПС",
+        "Quotient": 1.24
+      },
+      {
+        "Name": "СТ3СП",
+        "Quotient": 1.26
+      },
+      {
+        "Name": "Cт 20",
+        "Quotient": 1.26
+      },
+      {
+        "Name": "C255",
+        "Quotient": 1.26
+      },
+      {
+        "Name": "70ВК",
+        "Quotient": 1.01
+      },
+      {
+        "Name": "80-1",
+        "Quotient": 1.01
+      },
+      {
+        "Name": "50РА",
+        "Quotient": 1.01
+      },
+      {
+        "Name": "ОС",
+        "Quotient": 1.01
+      },
+      {
+        "Name": "30ХГCA",
+        "Quotient": 1.21
+      },
+      {
+        "Name": "15XГЮА",
+        "Quotient": 1.21
+      },
+      {
+        "Name": "10ХСНД",
+        "Quotient": 1.21
+      },
+      {
+        "Name": "09Г2С",
+        "Quotient": 1.03
+      },
+      {
+        "Name": "C345",
+        "Quotient": 1.03
+      },
+      {
+        "Name": "S235JR+N",
+        "Quotient": 1.03
+      }
+    ]
+  },
+  {
+    "Name": "250",
+    "Default": 0.79,
+    "Marks": [
+      {
+        "Name": "SAE 1005",
+        "Quotient": 0.90
+      },
+      {
+        "Name": "Cт 1кп",
+        "Quotient": 0.90
+      },
+      {
+        "Name": "СП",
+        "Quotient": 0.90
+      },
+      {
+        "Name": "ПС",
+        "Quotient": 0.90
+      },
+      {
+        "Name": "08Ю",
+        "Quotient": 0.90
+      },
+      {
+        "Name": "Cт 10",
+        "Quotient": 0.90
+      },
+      {
+        "Name": "08ПС",
+        "Quotient": 0.90
+      },
+      {
+        "Name": "СТ3СП",
+        "Quotient": 0.90
+      },
+      {
+        "Name": "Cт 20",
+        "Quotient": 0.90
+      },
+      {
+        "Name": "C255",
+        "Quotient": 0.90
+      },
+      {
+        "Name": "70ВК",
+        "Quotient": 0.90
+      },
+      {
+        "Name": "80-1",
+        "Quotient": 0.90
+      },
+      {
+        "Name": "50РА",
+        "Quotient": 0.90
+      },
+      {
+        "Name": "ОС",
+        "Quotient": 0.90
+      },
+      {
+        "Name": "09Г2С",
+        "Quotient": 0.79
+      },
+      {
+        "Name": "C345",
+        "Quotient": 0.79
+      },
+      {
+        "Name": "S235JR+N",
+        "Quotient": 0.79
+      }
+    ]
+  },
+  {
+    "Name": "270",
+    "Default": 0.66,
+    "Marks": [
+      {
+        "Name": "СТ3СП",
+        "Quotient": 0.66
+      },
+      {
+        "Name": "Cт 20",
+        "Quotient": 0.66
+      },
+      {
+        "Name": "C255",
+        "Quotient": 0.66
+      },
+      {
+        "Name": "70ВК",
+        "Quotient": 0.80
+      },
+      {
+        "Name": "80-1",
+        "Quotient": 0.80
+      },
+      {
+        "Name": "50РА",
+        "Quotient": 0.80
+      },
+      {
+        "Name": "ОС",
+        "Quotient": 0.80
+      },
+      {
+        "Name": "09Г2С",
+        "Quotient": 0.67
+      },
+      {
+        "Name": "C345",
+        "Quotient": 0.67
+      },
+      {
+        "Name": "S235JR+N",
+        "Quotient": 0.67
+      }
+    ]
+  }
+]

@@ -64,5 +64,17 @@ namespace react_ts.Controllers
       }
       catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
     }
+
+    ///// GET: api/Idle/GetMNLZ2LostIdles?bDate=...&eDate=...
+    [HttpGet("GetMNLZ2LostIdles")]
+    public async Task<IActionResult> GetMNLZ2LostIdles(string bDate, string eDate)
+    {
+      try
+      {
+        var lostIdles = await _ccmRepo.GetMNLZ2LostIdles(bDate, eDate);
+        return Ok(lostIdles);
+      }
+      catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
+    }
   }
 }

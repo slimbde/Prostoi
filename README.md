@@ -20,4 +20,11 @@
   3. Add "index.d.ts" in "include" section of the tsconfig.json
 
 
+***UNDEFINED MARKS***
+- correct mark names are at Excel file (right outta DB) - `ExcelToJson`
+- mnlz2 densities are taken from `mnlz2-markDensity`
+- config files are: `mnlz2-config, mnlz5-config`
+- mnlz5 densities are `7800` by default
+
+---
 - To build production run [dotnet publish -r win10-x64 -c Release --self-contained false]

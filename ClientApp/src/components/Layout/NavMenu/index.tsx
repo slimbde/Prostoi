@@ -73,7 +73,7 @@ class NavMenu extends React.Component<NavMenuProps, NavMenuState> {
 
     const shops = Array.isArray(this.props.shops) && path === "gant"
       ? this.props.shops.map(shop => <li key={shop} onClick={e => this.stateHandler.clickShop(e)}>{shop}</li>)
-      : ["МНЛЗ-3", "МНЛЗ-4", "МНЛЗ-5"].map(shop => <li key={shop} onClick={e => this.stateHandler.clickShop(e)}>{shop}</li>)
+      : ["МНЛЗ-2", "МНЛЗ-5"].map(shop => <li key={shop} onClick={e => this.stateHandler.clickShop(e)}>{shop}</li>)
 
     return (
       <header className="navbar-fixed">
