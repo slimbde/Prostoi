@@ -15,8 +15,9 @@ am4core.useTheme(am4themes_kelly)
 
 
 export const drawChart = (idles: IdleSet) => {
+  debugger
   const bDate = moment((document.getElementById("bDate") as HTMLInputElement).value, "DD.MM.YYYY")
-  const eDate = moment((document.getElementById("eDate") as HTMLInputElement).value, "DD.MM.YY")
+  const eDate = moment((document.getElementById("eDate") as HTMLInputElement).value, "DD.MM.YYYY")
 
   const chart = am4core.create("chartdiv", am4charts.XYChart);
   chart.hiddenState.properties.opacity = 0.2; // this creates initial fade-in
