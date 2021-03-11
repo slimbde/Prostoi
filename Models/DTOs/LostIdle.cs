@@ -14,8 +14,8 @@ namespace rest_ts_react_template.Models.DTOs
     [Column("PID")]
     public string PId { get; set; }
 
-    [Column("DENSITY")]
-    public int Density { get; set; }
+    [Column("PROFILE")]
+    public string Profile { get; set; }
 
     [Column("WIDTH")]
     public int Width { get; set; }
@@ -25,5 +25,10 @@ namespace rest_ts_react_template.Models.DTOs
 
     [Column("COUNT")]
     public ulong Count { get; set; }
+
+
+    public double UndercastLength { get; set; }
+    public int UndercastWidth { get; set; }
+    public int UndercastThickness { get; set; }
   }
 }

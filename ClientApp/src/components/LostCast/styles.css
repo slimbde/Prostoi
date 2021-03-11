@@ -9,7 +9,7 @@
 }
 
 .losts-wrapper table {
-  max-width: 170px;
+  max-width: 220px;
   margin-top: 1rem;
   margin-right: 1rem;
 }
@@ -31,18 +31,23 @@
   overflow-y: auto;
 }
 
-
 .losts-wrapper table th {
-  padding: .5rem 0.2rem;
+  padding: .5rem .2rem;
   font-size: smaller;
   border-radius: 0 !important;
+  border-bottom: unset !important;
+  border-top: unset !important;
+}
+
+.losts-wrapper table thead tr {
+  border: unset !important;
 }
 
 .losts-wrapper table td {
-  padding: .2rem 0.2rem;
+  padding: .2rem .1rem;
   font-size: smaller;
+  border-radius: 0 !important;
 }
-
 
 #chartdiv-loss {
   height: 700px;
@@ -60,4 +65,5 @@
 .table-header {
   background: #3b688cce;
   color: white;
+  border-bottom: unset !important;
 }

@@ -3,7 +3,7 @@ import M from 'materialize-css/dist/js/materialize.js'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import * as AuthenticateStore from '../../store/Authenticate'
-import errorHandler from '../utils/errorHandler'
+import { errorHandler } from '../utils/errorHandler'
 
 
 interface ILoginProps {

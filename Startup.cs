@@ -18,10 +18,13 @@ namespace react_ts
     {
       var conString = Configuration.GetConnectionString("LocalDb");
       var oraString = Configuration.GetConnectionString("Bunker");
-      var ccml2String = Configuration.GetConnectionString("CCML2");
+      var ccm5L2String = Configuration.GetConnectionString("CCM5L2");
+      var ccm2L2String = Configuration.GetConnectionString("CCM2L2");
+
+
       services.AddScoped<IUserRepository, UserRepository>(provider => new UserRepository(conString));
       services.AddScoped<IIdleRepository, IdleRepository>(provider => new IdleRepository(oraString));
-      services.AddScoped<IL2Repository, L2Repository>(provider => new L2Repository(ccml2String));
+      services.AddScoped<ICCMRepository, CCMRepository>(provider => new CCMRepository(ccm5L2String, ccm2L2String));
 
       services.AddControllersWithViews();
 

@@ -24,8 +24,8 @@ namespace rest_ts_react_template.Models.Repositories
       try
       {
         var query = @"SELECT 
-                          MIN(TEH_SUT) min,
-                          MAX(TEH_SUT) +1 max
+                          MIN(TEH_SUT)      min,
+                          MAX(TEH_SUT) +1   max
                       FROM KEEPER.PROSTOI";
 
         var cmd = new OracleCommand(query, _db);
@@ -69,39 +69,43 @@ namespace rest_ts_react_template.Models.Repositories
     ////////////////// GET IDLES
     public async Task<Dictionary<string, SortedDictionary<string, List<Idle>>>> GetIdles(string begin, string end, string ceh)
     {
-      var stmt = String.Format(@"
-                with t as (
-	                select 
-                    to_date('{0}','yyyy-MM-dd')  start_point, 
-                    to_date('{1}','yyyy-MM-dd')  end_point,
-                    '{2}'                        ceh
-                  from dual
+      var stmt = @"
+                WITH t AS (
+	                SELECT 
+                    to_date(:bDate,'yyyy-MM-dd')  start_point, 
+                    to_date(:eDate,'yyyy-MM-dd')  end_point,
+                    :ceh                          ceh
+                  FROM dual
                 ),
-                temp as (
-                  select distinct
+                temp AS (
+                  SELECT DISTINCT
                     nam_ceh, pltxt, eauszt, opertext, proiz,
                     teh_sut	+ to_char(auztv,'hh24')/24 + to_char(auztv,'mi')/24/60              sPoint,
                     decode(nam_ceh, 'Аглопроизводство', teh_sut + 20/24, teh_sut + 19.5/24)     smEnd
-                  from keeper.prostoi, t
-                  where
+                  FROM keeper.prostoi, t
+                  WHERE
                     nam_ceh = t.ceh
                     and teh_sut	between t.start_point and t.end_point
                 )
-                select
+                SELECT
                   nam_ceh, pltxt, eauszt, opertext, proiz,
                   case when smEnd - sPoint > 0 then sPoint else sPoint-1 end                                                  sPoint,
                   case when smEnd - sPoint > 0 then sPoint + eauszt/24/60 else (sPoint-1) + eauszt/24/60 end                  ePoint,
                   to_char( case when smEnd - sPoint > 0 then sPoint else sPoint-1 end , 'dd.MM.yyyy HH24:mi')                 sPointCorrect,
                   to_char( case when smEnd - sPoint > 0 then sPoint else sPoint-1 end + eauszt/24/60 , 'dd.MM.yyyy HH24:mi')  ePointCorrect
-                from temp
-                order by sPoint", begin, end, ceh);
+                FROM temp
+                ORDER BY sPoint";
 
       var result = new Dictionary<string, SortedDictionary<string, List<Idle>>>();
 
       try
       {
-        await _db.OpenAsync();
         var cmd = new OracleCommand(stmt, _db);
+        cmd.Parameters.Add("bDate", begin);
+        cmd.Parameters.Add("eDate", end);
+        cmd.Parameters.Add("ceh", ceh);
+
+        await _db.OpenAsync();
         var reader = cmd.ExecuteReader();
 
         while (reader.Read())

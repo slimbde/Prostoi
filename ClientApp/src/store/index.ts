@@ -1,11 +1,11 @@
 import * as Gant from './Gant';
-import * as CastLost from './CastLost'
+import * as LostCast from './LostCast'
 import * as Authenticate from './Authenticate';
 
 // The top-level state object
 export interface ApplicationState {
   gant: Gant.GantState
-  castLost: CastLost.CastLostState
+  lostCast: LostCast.LostCastState
   authenticate: Authenticate.AuthenticateState | undefined
 }
 
@@ -14,7 +14,7 @@ export interface ApplicationState {
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
   gant: Gant.reducer,
-  castLost: CastLost.reducer,
+  lostCast: LostCast.reducer,
   authenticate: Authenticate.reducer
 };
 

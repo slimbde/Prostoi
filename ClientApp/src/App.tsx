@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Redirect, Route } from 'react-router';
 import Layout from './components/Layout'
 import Gant from './components/Gant';
-import CastLost from './components/CastLost';
+import CastLost from './components/LostCast';
 import { ApplicationState } from './store';
 import * as GantStore from './store/Gant';
 
@@ -24,8 +24,14 @@ class App extends React.Component<AppProps> {
 
     if (props.shops.length === 0) {
       fetch(`api/idle/getshops`)
-        .then(resp => resp.json() as Promise<string[]>)
-        .then(data => props.setShops(data))
+        .then(resp => resp.json() as Promise<any>)
+        .then(data => {
+          if ("error" in data)
+            alert("Не могу получить список цехов...")
+          else
+            props.setShops(data)
+        })
+        .catch(error => console.error(error))
     }
   }
 

@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { User } from './User'
 import { ApplicationState } from '../../store'
 import * as AuthenticateStore from '../../store/Authenticate';
-import errorHandler from '../utils/errorHandler';
+import { errorHandler } from '../utils/errorHandler';
 
 
 interface IRegisterProps {

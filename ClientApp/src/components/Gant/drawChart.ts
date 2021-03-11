@@ -15,8 +15,9 @@ am4core.useTheme(am4themes_kelly)
 
 
 export const drawChart = (idles: IdleSet) => {
+  debugger
   const bDate = moment((document.getElementById("bDate") as HTMLInputElement).value, "DD.MM.YYYY")
-  const eDate = moment((document.getElementById("eDate") as HTMLInputElement).value, "DD.MM.YY")
+  const eDate = moment((document.getElementById("eDate") as HTMLInputElement).value, "DD.MM.YYYY")
 
   const chart = am4core.create("chartdiv", am4charts.XYChart);
   chart.hiddenState.properties.opacity = 0.2; // this creates initial fade-in
@@ -90,7 +91,7 @@ export const drawChart = (idles: IdleSet) => {
   let hour = 60 * minute;
   let day = 24 * hour;
   let shiftOffset = ceh === 'Аглопроизводство'
-    ? 3 * hour + 30 * minute
+    ? 4 * hour
     : 4 * hour + 30 * minute
 
   dateAxis.dateFormats.setKey("hour", "HH:mm");
@@ -139,6 +140,7 @@ export const drawChart = (idles: IdleSet) => {
   series1.dataFields.culprit = "culprit";
   series1.dataFields.categoryY = "name";
   series1.columns.template.height = am4core.percent(30);
+  series1.columns.template.tooltipPosition = "pointer"
   series1.columns.template.propertyFields.fill = "color"; // get color from data
   series1.columns.template.stroke = am4core.color("#000000");
   series1.columns.template.strokeOpacity = 1;
