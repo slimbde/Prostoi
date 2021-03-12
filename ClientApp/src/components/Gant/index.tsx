@@ -4,11 +4,12 @@ import { ApplicationState } from '../../store';
 import { drawChart } from './drawChart';
 import * as GantStore from '../../store/GantStore';
 import * as am4core from "@amcharts/amcharts4/core";
+import { IdleSet } from "../../models/types/gant";
 
 
 
 type GantProps = {
-  idles: GantStore.IdleSet
+  idles: IdleSet
 }
 
 
@@ -17,11 +18,6 @@ const Gant: React.FC<GantProps> = (props: GantProps) => {
   useEffect(() => {
     if (!props.idles)
       return
-
-    //if ("error" in props.idles) {
-    //errorHandler(props.idles)
-    //  return
-    //}
 
     drawChart(props.idles)
 

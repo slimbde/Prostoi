@@ -1,5 +1,5 @@
+import { LostCast } from "../../models/types/lostCast"
 import * as React from 'react'
-import { LostCast } from '../../store/LostCastStore'
 import moment from 'moment'
 
 

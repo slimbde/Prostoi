@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { ApplicationState } from '../../../store';
-import * as GantStore from '../../../store/GantStore';
-import * as CastStore from '../../../store/LostCastStore'
-import MenuIcon from "@material-ui/icons/Menu"
-import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
-import { CastLostNavHandler, GantNavHandler, INavMenuStateHandler } from './NavStateHandlers';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import { IdleSet } from "../../../models/types/gant";
 import { LostCast } from "../../../models/types/lostCast";
+import { CastLostNavHandler, GantNavHandler, INavMenuStateHandler } from './NavStateHandlers';
+import * as CastStore from '../../../store/LostCastStore'
+import * as GantStore from '../../../store/GantStore';
+import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
+import MenuIcon from "@material-ui/icons/Menu"
 import moment from 'moment'
 
 
@@ -22,60 +22,55 @@ export interface NavMenuProps {
   clearIdles: () => GantStore.KnownAction
 }
 
-export interface NavMenuState {
-  firstLoad: boolean
-  currentShop: string
-}
+
+///////////////////////// NAV MENU CLASS
+class NavMenu extends React.Component<NavMenuProps> {
+  public stateHandler: INavMenuStateHandler | undefined
+  private path = this.props.location.pathname.slice(1)
+  private liEls: HTMLLIElement[] | undefined
 
 
+  componentDidMount = () => {
+    this.liEls = Array.from(document.getElementsByTagName("li"))
+    this.stateHandler = this.getNavHandler(this.path)
+  }
 
-class NavMenu extends React.Component<NavMenuProps, NavMenuState> {
-  public stateHandler: INavMenuStateHandler
+  componentDidUpdate = (prevProps: NavMenuProps) => {
+    this.path = this.props.location.pathname.slice(1) || "brand-logo"
 
+    this.liEls!.forEach(ul => ul.classList.remove("active"))
+    document.getElementById(this.path)!.classList.add("active")
+    document.getElementById(this.path + "S")!.classList.add("active")
 
-  constructor(props: NavMenuProps) {
-    super(props)
+    const prevPath = prevProps.location.pathname
+    const thisPath = this.props.location.pathname
 
-    const path = props.location.pathname.slice(1)
-
-    this.stateHandler = path === "gant" || path === ""
-      ? new GantNavHandler(this)
-      : new CastLostNavHandler(this)
+    if (prevPath !== thisPath) {
+      this.stateHandler!.dispose()
+      this.stateHandler = this.getNavHandler(this.path)
+    }
   }
 
 
-  state: NavMenuState = {
-    firstLoad: true,
-    currentShop: "",
+
+  getNavHandler = (path: string): INavMenuStateHandler => {
+    if (path === "gant" || path === "")
+      return new GantNavHandler(this)
+
+    return new CastLostNavHandler(this)
   }
-
-
-  componentDidMount = () => this.stateHandler.didMount()
-
-  componentDidUpdate = (prevProps: NavMenuProps) => this.stateHandler.didUpdate(prevProps)
-
-  componentWillUnmount = () => this.stateHandler.willUnmount()
-
-
+  assembleShops = (shops: string[]) => shops.map(shop => <li key={shop} onClick={e => (this.stateHandler!.clickShop(e))}>{shop}</li>)
 
 
   ////////////////////////////// RENDER
   public render() {
-    //console.log("nav-render", this.props)
+    //console.log("nav-render", this.props.shops)
 
-    const previousActive = document.querySelectorAll("ul > li.active")!
-    previousActive.forEach(p => p.classList.remove("active"))
-
-    const path = this.props.location.pathname.slice(1) || "brand-logo"
-
-    const li = document.getElementById(path)!
-    const liS = document.getElementById(path + "S")!
-    li && li.classList.add("active")
-    liS && liS.classList.add("active")
-
-    const shops = Array.isArray(this.props.shops) && path === "gant"
-      ? this.props.shops.map(shop => <li key={shop} onClick={e => this.stateHandler.clickShop(e)}>{shop}</li>)
-      : ["МНЛЗ-2", "МНЛЗ-5"].map(shop => <li key={shop} onClick={e => this.stateHandler.clickShop(e)}>{shop}</li>)
+    const shops = this.path === "gant"
+      ? this.props.shops.length > 0
+        ? this.assembleShops(this.props.shops)
+        : <></>
+      : this.assembleShops(["МНЛЗ-2", "МНЛЗ-5"])
 
     return (
       <header className="navbar-fixed">
@@ -104,7 +99,7 @@ class NavMenu extends React.Component<NavMenuProps, NavMenuState> {
                 </ul>
               </form>
             </ul>
-            <div className="brand-logo">{this.state.currentShop}</div>
+            <div className="brand-logo">{this.stateHandler && this.stateHandler.currentShop}</div>
           </div>
           <div id="loading" className="loading"><img src="loading4.gif" height="50px" width="62px" alt="Loading.." /></div>
         </nav>
@@ -122,6 +117,7 @@ class NavMenu extends React.Component<NavMenuProps, NavMenuState> {
 const mapDispatchToProps = (dispatch: any) => bindActionCreators({ ...GantStore.actionCreators, ...CastStore.actionCreators }, dispatch)
 
 const showTheLocationWithRouter = withRouter(NavMenu as any)
+
 export default connect(
   (state: ApplicationState) => ({ ...state.gant, ...state.lostCast }),
   mapDispatchToProps
