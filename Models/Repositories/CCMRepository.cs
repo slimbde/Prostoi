@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Threading.Tasks;
 using Oracle.ManagedDataAccess.Client;
-using react_ts.Models.Repositories;
-using rest_ts_react_template.Models.DTOs;
+using react_ts.Models.DTOs;
 
-namespace rest_ts_react_template.Models.Repositories
+namespace react_ts.Models.Repositories
 {
   ////////////////////////////////////////////////////////// ICCMRepository
   public interface ICCMRepository : IRepository<LostIdle>

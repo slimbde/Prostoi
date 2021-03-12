@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using react_ts.Models.Repositories;
-using rest_ts_react_template.Models.Repositories;
 
 namespace react_ts
 {
@@ -16,13 +15,10 @@ namespace react_ts
 
     public void ConfigureServices(IServiceCollection services)
     {
-      var conString = Configuration.GetConnectionString("LocalDb");
       var oraString = Configuration.GetConnectionString("Bunker");
       var ccm5L2String = Configuration.GetConnectionString("CCM5L2");
       var ccm2L2String = Configuration.GetConnectionString("CCM2L2");
 
-
-      services.AddScoped<IUserRepository, UserRepository>(provider => new UserRepository(conString));
       services.AddScoped<IIdleRepository, IdleRepository>(provider => new IdleRepository(oraString));
       services.AddScoped<ICCMRepository, CCMRepository>(provider => new CCMRepository(ccm5L2String, ccm2L2String));
 

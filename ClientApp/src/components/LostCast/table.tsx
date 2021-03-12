@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { LostCast } from '../../store/LostCast'
+import { LostCast } from '../../store/LostCastStore'
 import moment from 'moment'
 
 

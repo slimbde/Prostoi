@@ -1,23 +1,25 @@
 import * as React from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux'
 import { ApplicationState } from '../../../store';
-import * as GantStore from '../../../store/Gant';
-import * as CastStore from '../../../store/LostCast'
+import * as GantStore from '../../../store/GantStore';
+import * as CastStore from '../../../store/LostCastStore'
 import MenuIcon from "@material-ui/icons/Menu"
 import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
-import moment from 'moment'
-import { CastLostNavHandler, GantNavHandler, INavMenuStateHandler } from './stateHandlers';
+import { CastLostNavHandler, GantNavHandler, INavMenuStateHandler } from './NavStateHandlers';
 import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux'
+import { IdleSet } from "../../../models/types/gant";
+import { LostCast } from "../../../models/types/lostCast";
+import moment from 'moment'
 
 
 export interface NavMenuProps {
   location: any,
   shops: string[]
-  setIdles: (idleSet: GantStore.IdleSet) => void
-  setLostCasts: (data: CastStore.LostCast[]) => void
-  clearLostCasts: () => void,
-  clearIdles: () => void
+  setIdles: (idleSet: IdleSet) => GantStore.KnownAction
+  setLostCasts: (data: LostCast[]) => CastStore.KnownAction
+  clearLostCasts: () => CastStore.KnownAction,
+  clearIdles: () => GantStore.KnownAction
 }
 
 export interface NavMenuState {

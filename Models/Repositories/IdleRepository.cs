@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Threading.Tasks;
 using Oracle.ManagedDataAccess.Client;
-using rest_ts_react_template.Models.DTOs;
+using react_ts.Models.DTOs;
 
-namespace rest_ts_react_template.Models.Repositories
+namespace react_ts.Models.Repositories
 {
   public interface IIdleRepository
   {
@@ -13,12 +14,14 @@ namespace rest_ts_react_template.Models.Repositories
     Task<Dictionary<string, SortedDictionary<string, List<Idle>>>> GetIdles(string begin, string end, string ceh);
   }
 
+
+
   public class IdleRepository : IIdleRepository
   {
     protected OracleConnection _db;
     public IdleRepository(string conString) => _db = new OracleConnection(conString);
 
-    ///////////////////////// GET MIN MAX DATES
+
     public async Task<IEnumerable<string>> GetMinMaxDates()
     {
       try
@@ -31,11 +34,11 @@ namespace rest_ts_react_template.Models.Repositories
         var cmd = new OracleCommand(query, _db);
 
         await _db.OpenAsync();
-        var reader = cmd.ExecuteReader();
+        var reader = await cmd.ExecuteReaderAsync();
 
         var result = new List<string>();
 
-        while (reader.Read())
+        while (await reader.ReadAsync())
         {
           result.Add(Convert.ToDateTime(reader["min"]).ToString("yyyy-MM-dd"));
           result.Add(Convert.ToDateTime(reader["max"]).ToString("yyyy-MM-dd"));
@@ -45,28 +48,25 @@ namespace rest_ts_react_template.Models.Repositories
       }
       finally { await _db.CloseAsync(); }
     }
-
-    ///////////////// GET SHOPS
     public async Task<IEnumerable<string>> GetShops()
     {
-      var stmt = "SELECT DISTINCT NAM_CEH FROM KEEPER.PROSTOI WHERE NAM_CEH IS NOT NULL ORDER BY NAM_CEH";
-      var shops = new List<string>();
+      List<string> shops = new List<string>();
+
+      string stmt = "SELECT DISTINCT NAM_CEH FROM KEEPER.PROSTOI WHERE NAM_CEH IS NOT NULL ORDER BY NAM_CEH";
+      DbCommand cmd = new OracleCommand(stmt, _db);
 
       try
       {
-        await _db.OpenAsync();
-        var cmd = new OracleCommand(stmt, _db);
-        var reader = cmd.ExecuteReader();
+        _db.Open();
+        DbDataReader reader = await cmd.ExecuteReaderAsync();
 
-        while (reader.Read())
+        while (await reader.ReadAsync())
           shops.Add(reader[0].ToString());
+
+        return shops;
       }
       finally { await _db.CloseAsync(); }
-
-      return shops;
     }
-
-    ////////////////// GET IDLES
     public async Task<Dictionary<string, SortedDictionary<string, List<Idle>>>> GetIdles(string begin, string end, string ceh)
     {
       var stmt = @"
@@ -106,9 +106,9 @@ namespace rest_ts_react_template.Models.Repositories
         cmd.Parameters.Add("ceh", ceh);
 
         await _db.OpenAsync();
-        var reader = cmd.ExecuteReader();
+        var reader = await cmd.ExecuteReaderAsync();
 
-        while (reader.Read())
+        while (await reader.ReadAsync())
         {
           var idle = new Idle
           {

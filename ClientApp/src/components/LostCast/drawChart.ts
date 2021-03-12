@@ -3,7 +3,7 @@ import * as am4core from "@amcharts/amcharts4/core";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated"
 import am4themes_kelly from "@amcharts/amcharts4/themes/kelly"
 import am4lang_ru_RU from "@amcharts/amcharts4/lang/ru_RU"
-import { LostCast } from "../../store/LostCast";
+import { LostCast } from "../../store/LostCastStore";
 
 
 am4core.useTheme(am4themes_animated)

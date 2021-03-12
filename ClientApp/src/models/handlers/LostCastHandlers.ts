@@ -1,7 +1,8 @@
-import * as CastStore from '../../store/LostCast'
-import mnlz5Config from './mnlz5-config.json'
-import mnlz2Config from './mnlz2-config.json'
-import mnlz2Density from './mnlz2-markDensity.json'
+import mnlz5Config from '../../data/mnlz5-config.json'
+import mnlz2Config from '../../data/mnlz2-config.json'
+import mnlz2Density from '../../data/mnlz2-markDensity.json'
+import { dbHandler, LostCastResponse } from "./DbHandler"
+import { LostCast } from "../types/lostCast"
 import moment from 'moment'
 
 
@@ -17,22 +18,9 @@ type Mark = {
 
 
 
-type LostCastResponse = {
-  day: string,
-  mark: string,
-  pid: string,
-  profile: string,
-  width: number,
-  thickness: number,
-  count: number,
-  undercastLength: number,
-  undercastWidth: number,
-  undercastThickness: number,
-}
-
 
 export interface IMNLZHandler {
-  CalculateForAsync(bDate: string, eDate: string): Promise<CastStore.LostCast[]>
+  CalculateForAsync(bDate: string, eDate: string): Promise<LostCast[]>
 }
 
 
@@ -40,11 +28,10 @@ export interface IMNLZHandler {
 export abstract class TMNLZHandler implements IMNLZHandler {
   protected api: string = ""
 
-  async CalculateForAsync(bDate: string, eDate: string): Promise<CastStore.LostCast[]> {
-    const resp = await fetch(`api/Idle/${this.api}?bDate=${bDate}&eDate=${eDate}`)
-    const data = await (resp.json() as Promise<LostCastResponse[]>)
+  async CalculateForAsync(bDate: string, eDate: string): Promise<LostCast[]> {
+    const data = await dbHandler.getMnlzIdlesAsync(this.api, bDate, eDate)
 
-    const result = data.map<CastStore.LostCast>((lcr: LostCastResponse) => {
+    const result = data.map<LostCast>((lcr: LostCastResponse) => {
       // ищу нужный профиль
       const profile = this.findProfile(lcr)//mnlz2Config.find(profile => profile.Name === lcr.profile.split("X")[0]) || mnlz2Config[0]
 
@@ -136,3 +123,4 @@ export class MNLZ5Handler extends TMNLZHandler {
     return 7800
   }
 }
+

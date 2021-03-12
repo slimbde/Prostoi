@@ -4,7 +4,7 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated"
 import am4themes_kelly from "@amcharts/amcharts4/themes/kelly"
 import am4lang_ru_RU from "@amcharts/amcharts4/lang/ru_RU";
 import * as am4plugins_bullets from "@amcharts/amcharts4/plugins/bullets";
-import { IdleSet } from '../../store/Gant'
+import { IdleSet } from '../../store/GantStore'
 import { getCulpritText, getTooltipColor } from './functions'
 import { colors } from './colors'
 import moment from 'moment'
@@ -15,7 +15,6 @@ am4core.useTheme(am4themes_kelly)
 
 
 export const drawChart = (idles: IdleSet) => {
-  debugger
   const bDate = moment((document.getElementById("bDate") as HTMLInputElement).value, "DD.MM.YYYY")
   const eDate = moment((document.getElementById("eDate") as HTMLInputElement).value, "DD.MM.YYYY")
 

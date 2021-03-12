@@ -1,15 +1,7 @@
 import { Action, Reducer } from 'redux';
+import { LostCast } from "../models/types/lostCast";
 
 
-
-//////////////// TYPES
-export type LostCast = {
-  date: string,
-  lostIdle: number,
-  lostEfficiency: number,
-  lostIdlePercent: number,
-  lostEfficiencyPercent: number,
-}
 
 
 //////////////////////////////////////// STATE

@@ -1,7 +1,7 @@
 import { NavMenuProps, NavMenuState } from '.';
-import * as GantStore from '../../../store/Gant';
-import * as MNLZHandlers from '../../businessLogic/LostCastHandlers'
+import * as MNLZHandlers from '../../../models/handlers/LostCastHandlers'
 import M from 'materialize-css/dist/js/materialize.js'
+import { dbHandler } from "../../../models/handlers/DbHandler";
 import moment from "moment"
 
 
@@ -117,9 +117,13 @@ export class GantNavHandler extends INavMenuStateHandler {
 
     if (bDate! <= eDate! && this.nav.state.currentShop !== "") {
       this.loading!.style.opacity = "1"
-      fetch(`api/Idle/GetIdles?bDate=${bDate}&eDate=${eDate}&ceh=${selectedShop}`)
-        .then(resp => resp.json() as Promise<GantStore.IdleSet>)
+
+      dbHandler.getGantIdlesAsync(bDate, eDate, selectedShop)
         .then(data => setTimeout(() => this.nav.props.setIdles(data), 100))
+        .catch((error: any) => {
+          console.error(error)
+          alert(error.message)
+        })
     }
   }
 
@@ -131,9 +135,12 @@ export class GantNavHandler extends INavMenuStateHandler {
     if (selectedShop !== this.nav.state.currentShop) {
       this.loading!.style.opacity = "1"
       setTimeout(() => {
-        fetch(`api/Idle/GetIdles?bDate=${bDate}&eDate=${eDate}&ceh=${selectedShop}`)
-          .then(resp => resp.json())
+        dbHandler.getGantIdlesAsync(bDate, eDate, selectedShop)
           .then(data => this.nav.props.setIdles(data))
+          .catch((error: any) => {
+            console.error(error)
+            alert(error.message)
+          })
       }, 300)
 
       this.nav.setState({ currentShop: selectedShop })
@@ -199,7 +206,7 @@ export class CastLostNavHandler extends INavMenuStateHandler {
         .catch(error => {
           this.loading!.style.opacity = "0"
           console.error(error)
-          alert(error)
+          alert(error.message)
         })
     }
   }

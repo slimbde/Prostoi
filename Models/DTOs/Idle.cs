@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace rest_ts_react_template.Models.DTOs
+namespace react_ts.Models.DTOs
 {
   [Table("PROSTOI")]
   public class Idle

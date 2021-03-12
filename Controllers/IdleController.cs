@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using rest_ts_react_template.Models.Repositories;
+using react_ts.Models.Repositories;
 
 namespace react_ts.Controllers
 {

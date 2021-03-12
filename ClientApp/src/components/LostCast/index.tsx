@@ -3,10 +3,9 @@ import { drawChart } from './drawChart'
 import { connect } from 'react-redux'
 import * as am4core from "@amcharts/amcharts4/core";
 import { ApplicationState } from '../../store';
-import * as CastStore from '../../store/LostCast';
+import * as CastStore from '../../store/LostCastStore';
 import { CastLostTable } from './table';
 import './styles.css'
-import { errorHandler } from '../utils/errorHandler';
 
 
 type CastLostProps = {
@@ -19,10 +18,10 @@ const CastLost: React.FC<CastLostProps> = (props: CastLostProps) => {
     if (!props.lostCasts)
       return
 
-    if ("error" in props.lostCasts) {
-      errorHandler(props.lostCasts)
-      return
-    }
+    //if ("error" in props.lostCasts) {
+    //  errorHandler(props.lostCasts)
+    //  return
+    //}
 
     drawChart(props.lostCasts)
     const chartDiv = document.querySelector(".losts-wrapper") as HTMLDivElement
