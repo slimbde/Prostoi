@@ -15,7 +15,8 @@ export default (props: NavMenuProps) => {
     <NavMenu {...props} />
     <div className="container">
       {props.children}
+      <div className="push"></div>
+      <Footer />
     </div>
-    <Footer />
   </React.Fragment>
 }

@@ -11,6 +11,7 @@ import * as GantStore from '../../../store/GantStore';
 import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
 import MenuIcon from "@material-ui/icons/Menu"
 import moment from 'moment'
+import { BorderBottom } from "@material-ui/icons";
 
 
 export interface NavMenuProps {
@@ -28,10 +29,12 @@ class NavMenu extends React.Component<NavMenuProps> {
   public stateHandler: INavMenuStateHandler | undefined
   private path = this.props.location.pathname.slice(1)
   private liEls: HTMLLIElement[] | undefined
+  private sidenav: HTMLUListElement | undefined
 
 
   componentDidMount = () => {
     this.liEls = Array.from(document.getElementsByTagName("li"))
+    this.sidenav = document.getElementById("mobile-demo") as HTMLUListElement
     this.stateHandler = this.getNavHandler(this.path)
   }
 
@@ -45,14 +48,14 @@ class NavMenu extends React.Component<NavMenuProps> {
     const prevPath = prevProps.location.pathname
     const thisPath = this.props.location.pathname
 
-    if (prevPath !== thisPath) {
+    if (prevPath !== thisPath && prevPath !== "/") {
       this.stateHandler!.dispose()
       this.stateHandler = this.getNavHandler(this.path)
     }
   }
 
 
-
+  toggleMenu = () => this.sidenav!.classList.toggle("sidebar-visible")
   getNavHandler = (path: string): INavMenuStateHandler => {
     if (path === "gant" || path === "")
       return new GantNavHandler(this)
@@ -73,42 +76,43 @@ class NavMenu extends React.Component<NavMenuProps> {
       : this.assembleShops(["МНЛЗ-2", "МНЛЗ-5"])
 
     return (
-      <header className="navbar-fixed">
-        <nav>
-          <div className="nav-wrapper z-depth-5">
-            <div className="right" style={{ fontSize: "smaller" }}>{moment().format("DD.MM.YYYY  HH:mm")}</div>
-            <Link to="#" data-target="mobile-demo" className="sidenav-trigger"><MenuIcon className="menu-icon" /></Link>
-            <ul className="hide-on-med-and-down">
-              <li id="gant" className="active"><Link to="/gant">ДИАГРАММА ГАНТА</Link></li>
-              <li id="castlost"><Link to="/castlost">ПОТЕРИ СТАЛИ</Link></li>
-              <li style={{ width: '100px' }}>&nbsp;</li>
-              <form autoComplete="off">
+      <>
+        <header className="navbar-fixed">
+          <nav>
+            <div className="nav-wrapper z-depth-5">
+              <div className="menu" onClick={_ => this.toggleMenu()} ><MenuIcon className="menu-icon" /></div>
+              <li className="left hide-first logo"><img src="logo.png"></img>ПРОСТОИ И ПОТЕРИ ПАО ЧМК</li>
+              <ul className="hide-third">
+                <li id="gant" className="active"><Link to="/gant">ДИАГРАММА ГАНТА</Link></li>
+                <li id="castlost"><Link to="/castlost">ПОТЕРИ СТАЛИ</Link></li>
+                <li className="hide-first" style={{ width: '100px' }}>&nbsp;</li>
                 <li className="input-field">
                   <input type="text" className="datepicker" id="bDate" />
-                  <label htmlFor="bDate">Дата начала</label>
+                  <label htmlFor="bDate">НАЧАЛО</label>
                 </li>
                 <li className="input-field">
                   <input type="text" className="datepicker" id="eDate" />
-                  <label htmlFor="eDate">Дата окончания</label>
+                  <label htmlFor="eDate">ОКОНЧАНИЕ</label>
                 </li>
-                <ul className="hide-on-small-and-down">
-                  <li>
-                    <a className="dropdown-trigger" href="#!" data-target="dropdown1">ЦЕХ<ArrowDownIcon className="menu-icon" /></a>
-                    <ul id="dropdown1" className="dropdown-content z-depth-5">{shops}</ul>
-                  </li>
-                </ul>
-              </form>
-            </ul>
-            <div className="brand-logo">{this.stateHandler && this.stateHandler.currentShop}</div>
-          </div>
-          <div id="loading" className="loading"><img src="loading4.gif" height="50px" width="62px" alt="Loading.." /></div>
-        </nav>
+                <li>
+                  <a className="dropdown-trigger" href="#!" data-target="dropdown1">ЦЕХ<ArrowDownIcon className="menu-icon" /></a>
+                  <ul id="dropdown1" className="dropdown-content z-depth-5">{shops}</ul>
+                </li>
+                <li className="right hide-third" style={{ fontSize: "smaller" }}>{moment().format("DD.MM.YYYY  HH:mm")}</li>
+                <li className="brand-logo">{this.stateHandler && this.stateHandler.currentShop}</li>
+              </ul>
+            </div>
+            <div id="loading" className="loading"><img src="loading4.gif" height="50px" width="62px" alt="Loading.." /></div>
+          </nav>
+        </header >
 
-        <ul className="sidenav" id="mobile-demo">
+        <ul className="sidebar" id="mobile-demo">
+          <li style={{ borderBottom: "1px solid darkgrey", fontWeight: "bold" }}><a>{this.stateHandler && this.stateHandler.currentShop}</a></li>
           <li id="gantS" className="waves-effect"><Link to="/gant">ДИАГРАММА ГАНТА</Link></li>
           <li id="castlostS" className="waves-effect"><Link to="/castlost">ПОТЕРИ СТАЛИ</Link></li>
-        </ul>
-      </header>
+          <li style={{ fontSize: "smaller", borderTop: "1px solid darkgrey" }}><a>{moment().format("DD.MM.YYYY  HH:mm")}</a></li>
+        </ul >
+      </>
     );
   }
 }

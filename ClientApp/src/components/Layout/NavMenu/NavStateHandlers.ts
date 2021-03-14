@@ -69,7 +69,7 @@ export class GantNavHandler extends INavMenuStateHandler {
 
   constructor(nav: ManagedNavMenu) {
     super(nav)
-    console.log("it's me, ganthandler")
+    console.log("yeey! It's me, ganthandler")
 
     this.datePickerBegin = M.Datepicker.init(document.getElementById("bDate"), { ...this.datepickerOptions, defaultDate: moment().toDate() })
     this.datePickerEnd = M.Datepicker.init(document.getElementById("eDate"), { ...this.datepickerOptions, defaultDate: moment().toDate() })
@@ -123,7 +123,7 @@ export class CastLostNavHandler extends INavMenuStateHandler {
 
   constructor(nav: ManagedNavMenu) {
     super(nav)
-    console.log("it's me, casthandler")
+    console.log("yeey! It's me, casthandler")
 
     this.datePickerBegin = M.Datepicker.init(document.getElementById("bDate"), { ...this.datepickerOptions, defaultDate: moment().subtract(14, "day").toDate() })
     this.datePickerEnd = M.Datepicker.init(document.getElementById("eDate"), { ...this.datepickerOptions, defaultDate: moment().subtract(1, "day").toDate() })

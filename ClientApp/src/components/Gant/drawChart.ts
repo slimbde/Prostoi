@@ -4,7 +4,7 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated"
 import am4themes_kelly from "@amcharts/amcharts4/themes/kelly"
 import am4lang_ru_RU from "@amcharts/amcharts4/lang/ru_RU";
 import * as am4plugins_bullets from "@amcharts/amcharts4/plugins/bullets";
-import { IdleSet } from '../../store/GantStore'
+import { IdleSet } from "../../models/types/gant";
 import { getCulpritText, getTooltipColor } from './functions'
 import { colors } from './colors'
 import moment from 'moment'

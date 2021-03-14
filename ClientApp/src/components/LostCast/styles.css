@@ -1,7 +1,7 @@
 .losts-wrapper {
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   box-sizing: border-box;
   width: 100%;
   opacity: 0;
@@ -10,8 +10,10 @@
 
 .losts-wrapper table {
   max-width: 220px;
+  margin: auto;
   margin-top: 1rem;
-  margin-right: 1rem;
+  margin-right: 3rem;
+  margin-bottom: 5rem;
 }
 
 .losts-wrapper table thead {
@@ -50,12 +52,14 @@
 }
 
 #chartdiv-loss {
-  height: 700px;
-  max-width: 1900px;
-  margin-right: 2rem;
+  height: 80vh;
+  max-width: 1000px;
+  min-width: 750px;
   margin-top: 1rem;
   margin-left: 1rem;
   transition: all .1s;
+  flex-grow: 1;
+  width: unset !important;
 }
 
 .main-field {
