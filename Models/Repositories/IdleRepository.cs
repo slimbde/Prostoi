@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
 using Oracle.ManagedDataAccess.Client;
+using Prostoi.Models;
 using react_ts.Models.DTOs;
 
 namespace react_ts.Models.Repositories
@@ -19,7 +20,12 @@ namespace react_ts.Models.Repositories
   public class IdleRepository : IIdleRepository
   {
     protected OracleConnection _db;
-    public IdleRepository(string conString) => _db = new OracleConnection(conString);
+    protected IDbAdapter _adapter;
+    public IdleRepository(string conString, IDbAdapter adapter)
+    {
+      _db = new OracleConnection(conString);
+      _adapter = adapter;
+    }
 
 
     public async Task<IEnumerable<string>> GetMinMaxDates()
@@ -63,7 +69,7 @@ namespace react_ts.Models.Repositories
         while (await reader.ReadAsync())
           shops.Add(reader[0].ToString());
 
-        return shops;
+        return _adapter.AdaptShops(shops);
       }
       finally { await _db.CloseAsync(); }
     }
@@ -84,7 +90,7 @@ namespace react_ts.Models.Repositories
                     decode(nam_ceh, 'Аглопроизводство', teh_sut + 20/24, teh_sut + 19.5/24)     smEnd
                   FROM keeper.prostoi, t
                   WHERE
-                    nam_ceh = t.ceh
+                    nam_ceh LIKE '%' || t.ceh || '%'
                     and teh_sut	between t.start_point and t.end_point
                 )
                 SELECT
@@ -131,6 +137,8 @@ namespace react_ts.Models.Repositories
 
           result[idle.Ceh][idle.Agreg].Add(idle);
         }
+
+        return _adapter.AdaptIdles(result);
       }
       catch (Exception ex)
       {
@@ -141,8 +149,6 @@ namespace react_ts.Models.Repositories
         throw new Exception(msg);
       }
       finally { await _db.CloseAsync(); }
-
-      return result;
     }
   }
 }

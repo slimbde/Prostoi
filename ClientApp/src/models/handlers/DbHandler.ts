@@ -20,6 +20,8 @@ class DbHandler {
     const resp = await fetch(`api/Idle/GetIdles?bDate=${bDate}&eDate=${eDate}&ceh=${ceh}`)
     if (resp.ok)
       return await (resp.json() as Promise<IdleSet>)
+    else if ((await resp.json()).error.includes(`contains no element`))
+      throw new Error(`Нет простоев для ${ceh} за ${bDate} ... ${eDate}`)
     throw new Error("Не могу получить список простоев для Ганта")
   }
 }

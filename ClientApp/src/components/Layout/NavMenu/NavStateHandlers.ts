@@ -90,7 +90,7 @@ export class GantNavHandler extends INavMenuStateHandler {
       dbHandler.getGantIdlesAsync(bDate, eDate, this.currentShop)
         .then(data => setTimeout(() => this.nav.props.setIdles(data), 100))
         .catch((error: any) => {
-          console.error(error)
+          this.loading!.style.opacity = "0"
           alert(error.message)
         })
     }
@@ -108,7 +108,7 @@ export class GantNavHandler extends INavMenuStateHandler {
         dbHandler.getGantIdlesAsync(bDate, eDate, selectedShop)
           .then(data => this.nav.props.setIdles(data))
           .catch((error: any) => {
-            console.error(error)
+            this.loading!.style.opacity = "0"
             alert(error.message)
           })
       }, 0)

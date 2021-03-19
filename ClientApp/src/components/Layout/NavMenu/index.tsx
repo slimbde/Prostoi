@@ -11,7 +11,7 @@ import * as GantStore from '../../../store/GantStore';
 import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
 import MenuIcon from "@material-ui/icons/Menu"
 import moment from 'moment'
-import { BorderBottom } from "@material-ui/icons";
+
 
 
 export interface NavMenuProps {
@@ -81,7 +81,7 @@ class NavMenu extends React.Component<NavMenuProps> {
           <nav>
             <div className="nav-wrapper z-depth-5">
               <div className="menu" onClick={_ => this.toggleMenu()} ><MenuIcon className="menu-icon" /></div>
-              <li className="left hide-first logo"><img src="logo.png"></img>ПРОСТОИ И ПОТЕРИ ПАО ЧМК</li>
+              <li className="left hide-first logo"><img src="logo.png" onClick={_ => document.location.href = "https://mechel.com"} ></img>ПРОСТОИ И ПОТЕРИ ПАО ЧМК</li>
               <ul className="hide-third">
                 <li id="gant" className="active"><Link to="/gant">ДИАГРАММА ГАНТА</Link></li>
                 <li id="castlost"><Link to="/castlost">ПОТЕРИ СТАЛИ</Link></li>

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Prostoi.Models;
 using react_ts.Models.Repositories;
 
 namespace react_ts
@@ -19,7 +20,7 @@ namespace react_ts
       var ccm5L2String = Configuration.GetConnectionString("CCM5L2");
       var ccm2L2String = Configuration.GetConnectionString("CCM2L2");
 
-      services.AddScoped<IIdleRepository, IdleRepository>(provider => new IdleRepository(oraString));
+      services.AddScoped<IIdleRepository, IdleRepository>(provider => new IdleRepository(oraString, new BunkerAdapter()));
       services.AddScoped<ICCMRepository, CCMRepository>(provider => new CCMRepository(ccm5L2String, ccm2L2String));
 
       services.AddControllersWithViews();

@@ -18,6 +18,7 @@
   height: 25px;
   margin-top: .3rem;
   margin-right: 1rem;
+  cursor: pointer;
 }
 
 .nav-wrapper {
@@ -129,8 +130,9 @@ nav .input-field label.active {
   display: flex;
 }
 
-.sidebar li:hover {
+.sidebar li:hover, .input-field:hover {
   background-color: rgba(0, 0, 0, 0.158);
+  cursor: pointer;
 }
 
 .sidebar a {
