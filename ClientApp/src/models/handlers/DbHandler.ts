@@ -1,4 +1,7 @@
 import { IdleSet } from "../types/gant"
+import "isomorphic-fetch"
+import 'promise-polyfill/src/polyfill'
+
 
 class DbHandler {
 

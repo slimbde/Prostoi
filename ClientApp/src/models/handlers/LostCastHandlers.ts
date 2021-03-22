@@ -33,10 +33,10 @@ export abstract class TMNLZHandler implements IMNLZHandler {
 
     const result = data.map<LostCast>((lcr: LostCastResponse) => {
       // ищу нужный профиль
-      const profile = this.findProfile(lcr)//mnlz2Config.find(profile => profile.Name === lcr.profile.split("X")[0]) || mnlz2Config[0]
+      const profile = this.findProfile(lcr)
 
       // ищу пару марка-скорость
-      const markSpeed = profile.Marks.find((pm: Mark) => pm.Name.toUpperCase() === lcr.mark.toUpperCase())
+      const markSpeed = profile.Marks.filter((pm: Mark) => pm.Name.toUpperCase() === lcr.mark.toUpperCase())[0]
 
       // если марка не задана, то беру из поля default профиля, иначе - заданное значение
       const speed = (markSpeed ? markSpeed.Quotient : profile.Default) as number
@@ -99,7 +99,7 @@ export class MNLZ2Handler extends TMNLZHandler {
   }
 
   findProfile(lcr: LostCastResponse): any {
-    return mnlz2Config.find(profile => profile.Name === lcr.profile.split("X")[0]) || mnlz2Config[0]
+    return mnlz2Config.filter(profile => profile.Name === lcr.profile.split("X")[0])[0] || mnlz2Config[0]
   }
 
   findDensity(lcr: LostCastResponse): number {
@@ -116,7 +116,7 @@ export class MNLZ5Handler extends TMNLZHandler {
   }
 
   findProfile(lcr: LostCastResponse): any {
-    return mnlz5Config.find(profile => profile.width === lcr.width && profile.thickness === lcr.thickness) || mnlz5Config[0]
+    return mnlz5Config.filter(profile => profile.width === lcr.width && profile.thickness === lcr.thickness)[0] || mnlz5Config[0]
   }
 
   findDensity(lcr: LostCastResponse): number {

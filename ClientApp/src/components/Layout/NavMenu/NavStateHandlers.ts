@@ -91,7 +91,8 @@ export class GantNavHandler extends INavMenuStateHandler {
         .then(data => setTimeout(() => this.nav.props.setIdles(data), 100))
         .catch((error: any) => {
           this.loading!.style.opacity = "0"
-          alert(error.message)
+          console.error(error)
+          //alert(error.message)
         })
     }
   }
@@ -109,7 +110,8 @@ export class GantNavHandler extends INavMenuStateHandler {
           .then(data => this.nav.props.setIdles(data))
           .catch((error: any) => {
             this.loading!.style.opacity = "0"
-            alert(error.message)
+            console.error(error)
+            //alert(error.message)
           })
       }, 0)
     }
@@ -160,7 +162,7 @@ export class CastLostNavHandler extends INavMenuStateHandler {
         .catch(error => {
           this.loading!.style.opacity = "0"
           console.error(error)
-          alert(error.message)
+          //alert(error.message)
         })
     }
   }
