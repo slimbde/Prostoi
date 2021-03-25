@@ -1,6 +1,7 @@
 import { IdleSet } from "../types/gant"
 import "isomorphic-fetch"
 import 'promise-polyfill/src/polyfill'
+import 'abortcontroller-polyfill'
 
 
 class DbHandler {
@@ -20,7 +21,7 @@ class DbHandler {
   }
 
   public async getGantIdlesAsync(bDate: string, eDate: string, ceh: string): Promise<IdleSet> {
-    const resp = await fetch(`api/Idle/GetIdles?bDate=${bDate}&eDate=${eDate}&ceh=${ceh}`)
+    const resp = await fetch(`api/Idle/GetIdles?bDate=${bDate}&eDate=${eDate}&ceh=${encodeURIComponent(ceh)}`)
     if (resp.ok)
       return await (resp.json() as Promise<IdleSet>)
     else if ((await resp.json()).error.includes(`contains no element`))

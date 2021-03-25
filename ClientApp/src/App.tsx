@@ -31,6 +31,8 @@ class App extends React.Component<{ setShops: (shops: string[]) => store.SetShop
   }
 }
 
+
+
 export default connect(
   null,
   store.actionCreators

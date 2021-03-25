@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace react_ts.Models.DTOs
+namespace Prostoi.Models.DTOs
 {
   public class LostIdle
   {

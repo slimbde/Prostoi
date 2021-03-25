@@ -1,19 +1,35 @@
 using System.Collections.Generic;
 using System.Linq;
-using react_ts.Models.DTOs;
+using Prostoi.Models.DTOs;
 
 namespace Prostoi.Models
 {
+  /// <summary>
+  /// Is used to adapt db data for Application needs
+  /// </summary>
   public interface IDbAdapter
   {
+    /// <summary>
+    /// Rearranges shop list provided by db
+    /// </summary>
+    /// <param name="shops">The raw shop list</param>
+    /// <returns>Stripped shop list with integrated shop names</returns>
     IEnumerable<string> AdaptShops(IEnumerable<string> shops);
+
+    /// <summary>
+    /// Combines idles of the same shop in a dictionary
+    /// </summary>
+    /// <param name="idles">The raw idles</param>
+    /// <returns>Integrated shop list</returns>
     Dictionary<string, SortedDictionary<string, List<Idle>>> AdaptIdles(Dictionary<string, SortedDictionary<string, List<Idle>>> idles);
   }
 
 
 
 
-
+  /// <summary>
+  /// Bunker shops comprise different names for the same shops
+  /// </summary>
   public class BunkerAdapter : IDbAdapter
   {
     public Dictionary<string, SortedDictionary<string, List<Idle>>> AdaptIdles(Dictionary<string, SortedDictionary<string, List<Idle>>> idles)
