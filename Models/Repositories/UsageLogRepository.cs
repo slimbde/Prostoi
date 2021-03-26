@@ -28,12 +28,21 @@ namespace Prostoi.Models.Repositories
     Task<IEnumerable<string>> GetIps();
 
     /// <summary>
+    /// Retrieves Usage records for requested type
+    /// </summary>
+    /// <param name="what">the type of request</param>
+    /// <returns>UsageLogs set</returns>
+    Task<IEnumerable<UsageLog>> GetFor(string what);
+
+    /// <summary>
     /// Appends new record to the db
     /// </summary>
     /// <param name="obj">set of usageLog objs</param>
     /// <returns>num rows affected</returns>
     Task<int> Put(UsageLog[] obj);
   }
+
+
 
 
 
@@ -86,7 +95,9 @@ namespace Prostoi.Models.Repositories
 
       if (DateTime.TryParse(what, out DateTime date))
       {
-        cmd.CommandText = "SELECT * FROM UsageLogs WHERE FORMAT(UsageDate, 'yyyy-MM-dd') = FORMAT(@date, 'yyyy-MM-dd')";
+        cmd.CommandText = @"SELECT * 
+                            FROM UsageLogs 
+                            WHERE strftime('%Y-%m-%d', UsageDate) = strftime('%Y-%m-%d', @date)";
         cmd.Parameters.AddWithValue("@date", date);
       }
       else
@@ -99,7 +110,10 @@ namespace Prostoi.Models.Repositories
     }
     public async Task<IEnumerable<UsageLog>> GetForAll(string date, string ip)
     {
-      string stmt = "SELECT * FROM UsageLogs WHERE Ip = @ip AND CAST(UsageDate AS date) = CAST(@date AS date)";
+      string stmt = @"SELECT * 
+                      FROM UsageLogs 
+                      WHERE Ip = @ip 
+                      AND strftime('%Y-%m-%d', UsageDate) = strftime('%Y-%m-%d', @date)";
       SQLiteCommand cmd = new SQLiteCommand(stmt, _db);
       cmd.Parameters.AddWithValue("@date", date);
       cmd.Parameters.AddWithValue("@ip", ip);
