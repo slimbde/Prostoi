@@ -14,14 +14,6 @@ namespace Prostoi.Models.Repositories
   public interface IUsageLogRepository
   {
     /// <summary>
-    /// Retrieves logs for both date and ip
-    /// </summary>
-    /// <param name="date">desired date</param>
-    /// <param name="ip">desired ip</param>
-    /// <returns>UsageLogs set</returns>
-    Task<IEnumerable<UsageLog>> GetForAll(string date, string ip);
-
-    /// <summary>
     /// Retrieves unique ip from the database
     /// </summary>
     /// <returns>Unique ip list</returns>
@@ -32,7 +24,7 @@ namespace Prostoi.Models.Repositories
     /// </summary>
     /// <param name="what">the type of request</param>
     /// <returns>UsageLogs set</returns>
-    Task<IEnumerable<UsageLog>> GetFor(string what);
+    Task<IEnumerable<UsageLog>> GetFor(string bDate, string eDate, string ip);
 
     /// <summary>
     /// Appends new record to the db
@@ -88,39 +80,27 @@ namespace Prostoi.Models.Repositories
       }
       finally { await _db.CloseAsync(); }
     }
-    public async Task<IEnumerable<UsageLog>> GetFor(string what)
+    public async Task<IEnumerable<UsageLog>> GetFor(string bDate, string eDate, string ip)
     {
       SQLiteCommand cmd = new SQLiteCommand();
       cmd.Connection = _db;
 
-      if (DateTime.TryParse(what, out DateTime date))
+      cmd.CommandText = @"SELECT * 
+                          FROM UsageLogs 
+                          WHERE 
+                            strftime('%Y-%m-%d', UsageDate) BETWEEN strftime('%Y-%m-%d', @bDate) AND strftime('%Y-%m-%d', @eDate)";
+
+      cmd.Parameters.AddWithValue("@bDate", bDate);
+      cmd.Parameters.AddWithValue("@eDate", eDate);
+
+      if (ip != "ВСЕ")
       {
-        cmd.CommandText = @"SELECT * 
-                            FROM UsageLogs 
-                            WHERE strftime('%Y-%m-%d', UsageDate) = strftime('%Y-%m-%d', @date)";
-        cmd.Parameters.AddWithValue("@date", date);
-      }
-      else
-      {
-        cmd.CommandText = "SELECT * FROM UsageLogs WHERE Ip = @ip";
-        cmd.Parameters.AddWithValue("@ip", what);
+        cmd.CommandText += " AND Ip = @ip";
+        cmd.Parameters.AddWithValue("@ip", ip);
       }
 
       return await assembleUsageLog(cmd);
     }
-    public async Task<IEnumerable<UsageLog>> GetForAll(string date, string ip)
-    {
-      string stmt = @"SELECT * 
-                      FROM UsageLogs 
-                      WHERE Ip = @ip 
-                      AND strftime('%Y-%m-%d', UsageDate) = strftime('%Y-%m-%d', @date)";
-      SQLiteCommand cmd = new SQLiteCommand(stmt, _db);
-      cmd.Parameters.AddWithValue("@date", date);
-      cmd.Parameters.AddWithValue("@ip", ip);
-
-      return await assembleUsageLog(cmd);
-    }
-
 
 
     ///////////////////// PRIVATE SECTION

@@ -102,3 +102,15 @@ code {
   flex-direction: row;
   justify-content: flex-end;
 }
+
+.display-5 {
+  font-size: 2rem;
+  font-weight: 200;
+  line-height: 1.2;
+}
+
+.not-found {
+  margin-left: 3rem;
+  margin-top: 1rem;
+  color: gray;
+}

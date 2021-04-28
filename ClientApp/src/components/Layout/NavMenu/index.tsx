@@ -5,9 +5,11 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import { IdleSet } from "../../../models/types/gant";
 import { LostCast } from "../../../models/types/lostCast";
-import { CastLostNavHandler, GantNavHandler, INavMenuStateHandler } from './NavStateHandlers';
+import { Usage } from "../../../models/types/stats";
+import { CastLostNavHandler, GantNavHandler, INavMenuStateHandler, StatsNavHandler } from './NavStateHandlers';
 import * as CastStore from '../../../store/LostCastStore'
 import * as GantStore from '../../../store/GantStore';
+import * as StatsStore from '../../../store/StatsStore';
 import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
 import MenuIcon from "@material-ui/icons/Menu"
 import moment from 'moment'
@@ -15,10 +17,14 @@ import moment from 'moment'
 
 
 export interface NavMenuProps {
-  location: any,
+  location: any
   shops: string[]
+  ips: string[]
+  usages: Usage[]
   setIdles: (idleSet: IdleSet) => GantStore.KnownAction
   setLostCasts: (data: LostCast[]) => CastStore.KnownAction
+  setIps: (ips: string[]) => StatsStore.KnownAction
+  setUsages: (usages: Usage[]) => StatsStore.KnownAction
   clearLostCasts: () => CastStore.KnownAction,
   clearIdles: () => GantStore.KnownAction
 }
@@ -27,6 +33,7 @@ export interface NavMenuProps {
 ///////////////////////// NAV MENU CLASS
 class NavMenu extends React.Component<NavMenuProps> {
   public stateHandler: INavMenuStateHandler | undefined
+  public dropDownHint: string | undefined
   private path = this.props.location.pathname.slice(1)
   private liEls: HTMLLIElement[] | undefined
   private sidenav: HTMLUListElement | undefined
@@ -42,38 +49,50 @@ class NavMenu extends React.Component<NavMenuProps> {
     this.path = this.props.location.pathname.slice(1) || "brand-logo"
 
     this.liEls!.forEach(ul => ul.classList.remove("active"))
-    document.getElementById(this.path)!.classList.add("active")
-    document.getElementById(this.path + "S")!.classList.add("active")
+
+    const navLink = document.getElementById(this.path)
+    navLink && navLink.classList.add("active")
+
+    const navLinkS = document.getElementById(this.path + "S")
+    navLinkS && navLinkS.classList.add("active")
 
     const prevPath = prevProps.location.pathname
     const thisPath = this.props.location.pathname
 
     if (prevPath !== thisPath && prevPath !== "/") {
-      this.stateHandler!.dispose()
+      this.stateHandler && this.stateHandler.dispose()
       this.stateHandler = this.getNavHandler(this.path)
     }
   }
 
 
   toggleMenu = () => this.sidenav!.classList.toggle("sidebar-visible")
-  getNavHandler = (path: string): INavMenuStateHandler => {
-    if (path === "gant" || path === "")
-      return new GantNavHandler(this)
-
-    return new CastLostNavHandler(this)
+  getNavHandler = (path: string): INavMenuStateHandler | undefined => {
+    switch (path) {
+      case 'gant': case '': return new GantNavHandler(this)
+      case 'castlost': return new CastLostNavHandler(this)
+      case 'stats': return new StatsNavHandler(this)
+      default: return undefined
+    }
   }
-  assembleShops = (shops: string[]) => shops.map(shop => <li key={shop} onClick={e => (this.stateHandler!.clickShop(e))}>{shop}</li>)
+  assembleDropEls = (shops: string[]) => shops.map(shop => <li key={shop} onClick={e => (this.stateHandler!.clickShop(e))}>{shop}</li>)
 
 
   ////////////////////////////// RENDER
   public render() {
     //console.log("nav-render", this.props.shops)
 
-    const shops = this.path === "gant"
+    const dropDownEls = this.path === "gant"
       ? this.props.shops.length > 0
-        ? this.assembleShops(this.props.shops)
+        ? this.assembleDropEls(this.props.shops)
         : <></>
-      : this.assembleShops(["МНЛЗ-2", "МНЛЗ-5"])
+      : this.path === "castlost"
+        ? this.assembleDropEls(["МНЛЗ-2", "МНЛЗ-5"])
+        : this.path === "stats"
+          ? this.props.ips.length > 0
+            ? [<li key="all" onClick={e => (this.stateHandler!.clickShop(e))}>ВСЕ</li>, ...this.assembleDropEls(this.props.ips)]
+            : <></>
+          : <></>
 
     return (
       <>
@@ -85,6 +104,7 @@ class NavMenu extends React.Component<NavMenuProps> {
               <ul className="hide-third">
                 <li id="gant" className="active"><Link to="/gant">ДИАГРАММА ГАНТА</Link></li>
                 <li id="castlost"><Link to="/castlost">ПОТЕРИ СТАЛИ</Link></li>
+                <li id="stats"><Link to="/stats">СТАТИСТИКА</Link></li>
                 <li className="hide-first" style={{ width: '100px' }}>&nbsp;</li>
                 <li className="input-field">
                   <input type="text" className="datepicker" id="bDate" />
@@ -95,8 +115,8 @@ class NavMenu extends React.Component<NavMenuProps> {
                   <label htmlFor="eDate">ОКОНЧАНИЕ</label>
                 </li>
                 <li>
-                  <a className="dropdown-trigger" href="#!" data-target="dropdown1">ЦЕХ<ArrowDownIcon className="menu-icon" /></a>
-                  <ul id="dropdown1" className="dropdown-content z-depth-5">{shops}</ul>
+                  <a className="dropdown-trigger" href="#!" data-target="dropdown1">{this.dropDownHint}<ArrowDownIcon className="menu-icon" /></a>
+                  <ul id="dropdown1" className="dropdown-content z-depth-5">{dropDownEls}</ul>
                 </li>
                 <li className="right hide-third" style={{ fontSize: "smaller" }}>{moment().format("DD.MM.YYYY  HH:mm")}</li>
                 <li className="brand-logo">{this.stateHandler && this.stateHandler.currentShop}</li>
@@ -118,12 +138,17 @@ class NavMenu extends React.Component<NavMenuProps> {
 }
 
 
-const mapDispatchToProps = (dispatch: any) => bindActionCreators({ ...GantStore.actionCreators, ...CastStore.actionCreators }, dispatch)
+const mapDispatchToProps = (dispatch: any) =>
+  bindActionCreators({
+    ...GantStore.actionCreators,
+    ...CastStore.actionCreators,
+    ...StatsStore.actionCreators
+  }, dispatch)
 
 const showTheLocationWithRouter = withRouter(NavMenu as any)
 
 export default connect(
-  (state: ApplicationState) => ({ ...state.gant, ...state.lostCast }),
+  (state: ApplicationState) => ({ ...state.gant, ...state.lostCast, ...state.stats }),
   mapDispatchToProps
 )(showTheLocationWithRouter)
 

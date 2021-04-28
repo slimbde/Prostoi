@@ -8,6 +8,7 @@ import moment from "moment"
 
 type MenuStateHandler = {
   stateHandler: INavMenuStateHandler | undefined
+  dropDownHint: string | undefined
 }
 
 type ManagedNavMenu = React.Component<NavMenuProps> & MenuStateHandler
@@ -48,6 +49,7 @@ export abstract class INavMenuStateHandler {
 
   constructor(nav: ManagedNavMenu) {
     this.nav = nav
+    this.nav.dropDownHint = "ЦЕХ"
     this.loading = document.getElementById("loading") as HTMLElement
 
     setTimeout(() => {
@@ -111,7 +113,8 @@ export class GantNavHandler extends INavMenuStateHandler {
           .catch((error: any) => {
             this.loading!.style.opacity = "0"
             console.error(error)
-            //alert(error.message)
+            if (error.message.includes(`Нет простоев`))
+              alert(`Нет простоев для ${selectedShop}\nза период ${moment(bDate).format("DD.MM.YYYY")} ... ${moment(eDate).format("DD.MM.YYYY")}`)
           })
       }, 0)
     }
@@ -164,6 +167,70 @@ export class CastLostNavHandler extends INavMenuStateHandler {
           console.error(error)
           //alert(error.message)
         })
+    }
+  }
+}
+
+
+///////////////////////////////////////////////////////////////////// STATS NAV HANDLER
+export class StatsNavHandler extends INavMenuStateHandler {
+
+  constructor(nav: ManagedNavMenu) {
+    super(nav)
+    console.log("yeey! It's me, statshandler")
+
+    this.datePickerBegin = M.Datepicker.init(document.getElementById("bDate"), { ...this.datepickerOptions, defaultDate: moment().toDate() })
+    this.datePickerEnd = M.Datepicker.init(document.getElementById("eDate"), { ...this.datepickerOptions, defaultDate: moment().toDate() })
+
+    const datepickerDoneBtns = document.querySelectorAll('.datepicker-done')
+    datepickerDoneBtns.forEach(el => el.addEventListener("click", () => this.datePick()))
+
+    this.nav.dropDownHint = "IP"
+
+    dbHandler.getUsageIpsAsync()
+      .then(data => setTimeout(() => this.nav.props.setIps(data), 100))
+      .catch((error: any) => {
+        this.loading!.style.opacity = "0"
+        console.error(error)
+        //alert(error.message)
+      })
+  }
+
+  public datePick = () => {
+    const bDate = moment((document.getElementById("bDate") as HTMLInputElement).value, "DD.MM.YYYY").format("YYYY-MM-DD")
+    const eDate = moment((document.getElementById("eDate") as HTMLInputElement).value, "DD.MM.YYYY").format("YYYY-MM-DD")
+
+    if (bDate! <= eDate! && this.currentShop !== "") {
+      this.loading!.style.opacity = "1"
+
+      dbHandler.getUsageIpsAsync()
+        .then(data => setTimeout(() => this.nav.props.setIps(data), 100))
+        .catch((error: any) => {
+          this.loading!.style.opacity = "0"
+          console.error(error)
+          //alert(error.message)
+        })
+    }
+  }
+
+  public clickShop(e?: React.MouseEvent<HTMLLIElement, MouseEvent>) {
+    const ip = e ? (e.target as HTMLElement).textContent! : "ВСЕ"
+    const bDate = moment((document.getElementById("bDate") as HTMLInputElement).value, "DD.MM.YYYY").format("YYYY-MM-DD")
+    const eDate = moment((document.getElementById("eDate") as HTMLInputElement).value, "DD.MM.YYYY").format("YYYY-MM-DD")
+
+    if (this.currentShop !== ip) {
+      this.currentShop = ip
+      setTimeout(() => {
+        this.loading!.style.opacity = "1"
+        dbHandler.getUsageForAsync(bDate, eDate, ip)
+          .then(data => this.nav.props.setUsages(data))
+          .catch((error: any) => {
+            this.loading!.style.opacity = "0"
+            console.error(error)
+            if (error.message.includes(`Нет`))
+              alert(`Нет данных для ${ip}\nза период ${moment(bDate).format("DD.MM.YYYY")} ... ${moment(eDate).format("DD.MM.YYYY")}`)
+          })
+      }, 0)
     }
   }
 }

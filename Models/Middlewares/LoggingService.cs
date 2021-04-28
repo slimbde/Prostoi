@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Prostoi.Models.DTOs;
 using Prostoi.Models.Repositories;
+
 
 namespace Prostoi.Models.Middlewares
 {
@@ -13,13 +15,15 @@ namespace Prostoi.Models.Middlewares
   public class LoggingService
   {
     private readonly IUsageLogRepository _repo;
+    private readonly List<string> _ipsToExclude;
     private Dictionary<string, Dictionary<string, string>> _cache;  // ip - method - time
 
 
 
-    public LoggingService(IUsageLogRepository repo)
+    public LoggingService(IUsageLogRepository repo, IConfiguration config)
     {
       _repo = repo;
+      _ipsToExclude = config.GetSection("UsageIpExclude").Get<List<string>>();
       _cache = new Dictionary<string, Dictionary<string, string>>();
     }
 
@@ -31,9 +35,16 @@ namespace Prostoi.Models.Middlewares
     {
       if (context.Request.QueryString.Value.Length > 0)
       {
-        var ip = context.Connection.RemoteIpAddress.ToString();
-        var method = context.Request.Path.Value;
-        var time = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+        string ip = context.Connection.RemoteIpAddress.ToString();
+
+        foreach (string exIp in _ipsToExclude)
+        {
+          if (ip == exIp)
+            return;
+        }
+
+        string method = context.Request.Path.Value;
+        string time = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
 
         // checking if the ip has used the method within last minute
         // and if it's the same method - return

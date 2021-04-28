@@ -1,4 +1,5 @@
 import { IdleSet } from "../types/gant"
+import { Usage } from "../types/stats"
 import "isomorphic-fetch"
 import 'promise-polyfill/src/polyfill'
 import 'abortcontroller-polyfill'
@@ -27,6 +28,20 @@ class DbHandler {
     else if ((await resp.json()).error.includes(`contains no element`))
       throw new Error(`Нет простоев для ${ceh} за ${bDate} ... ${eDate}`)
     throw new Error("Не могу получить список простоев для Ганта")
+  }
+
+  public async getUsageIpsAsync(): Promise<string[]> {
+    const resp = await fetch(`api/usage/GetUsageIps`)
+    if (resp.ok)
+      return await (resp.json() as Promise<string[]>)
+    throw new Error("Не могу получить список Ip")
+  }
+
+  public async getUsageForAsync(bDate: string, eDate: string, ip: string): Promise<Usage[]> {
+    const resp = await fetch(`api/usage/GetUsageFor?bDate=${bDate}&eDate=${eDate}&ip=${ip}`)
+    if (resp.ok)
+      return await (resp.json() as Promise<Usage[]>)
+    throw new Error("Нет посещений по указанным параметрам")
   }
 }
 

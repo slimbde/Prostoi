@@ -8,6 +8,7 @@ using Prostoi.Models;
 using Prostoi.Models.Middlewares;
 using Prostoi.Models.Repositories;
 
+
 namespace Prostoi
 {
   public class Startup
@@ -22,16 +23,13 @@ namespace Prostoi
       string ccm2L2String = Configuration.GetConnectionString("CCM2L2");
       string usageLogString = Configuration.GetConnectionString("SQLite");
 
-      UsageLogRepository uRepo = new UsageLogRepository(usageLogString);
-
       services.AddScoped<IIdleRepository, IdleRepository>(provider => new IdleRepository(oraString, new BunkerAdapter()));
       services.AddScoped<ICCMRepository, CCMRepository>(provider => new CCMRepository(ccm5L2String, ccm2L2String));
 
-      services.AddSingleton<IUsageLogRepository, UsageLogRepository>(provider => uRepo);
-      services.AddSingleton<LoggingService>(provider => new LoggingService(uRepo));
+      services.AddSingleton<IUsageLogRepository, UsageLogRepository>(provider => new UsageLogRepository(usageLogString));
+      services.AddSingleton<LoggingService>();
 
       services.AddControllersWithViews();
-
       services.AddSpaStaticFiles(configuration =>
       {
         configuration.RootPath = "ClientApp/build";
