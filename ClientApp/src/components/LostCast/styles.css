@@ -10,10 +10,7 @@
 
 .losts-wrapper table {
   max-width: 220px;
-  margin: auto;
-  margin-top: 1rem;
-  margin-right: 3rem;
-  margin-bottom: 5rem;
+  margin: 1rem 3rem;
 }
 
 .losts-wrapper table thead {
@@ -29,7 +26,7 @@
 
 .losts-wrapper table tbody {
   display: block;
-  max-height: 550px;
+  max-height: 58vh;
   overflow-y: auto;
 }
 

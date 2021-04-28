@@ -1,4 +1,5 @@
-import * as Gant from './GantStore';
+import * as Stats from './StatsStore'
+import * as Gant from './GantStore'
 import * as LostCast from './LostCastStore'
 
 
@@ -7,6 +8,7 @@ import * as LostCast from './LostCastStore'
 export interface ApplicationState {
   gant: Gant.GantState
   lostCast: LostCast.LostCastState
+  stats: Stats.StatsState
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
@@ -15,6 +17,7 @@ export interface ApplicationState {
 export const reducers = {
   gant: Gant.reducer,
   lostCast: LostCast.reducer,
+  stats: Stats.reducer
 };
 
 // This type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are

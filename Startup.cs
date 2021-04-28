@@ -5,9 +5,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Prostoi.Models;
-using react_ts.Models.Repositories;
+using Prostoi.Models.Middlewares;
+using Prostoi.Models.Repositories;
 
-namespace react_ts
+
+namespace Prostoi
 {
   public class Startup
   {
@@ -16,15 +18,18 @@ namespace react_ts
 
     public void ConfigureServices(IServiceCollection services)
     {
-      var oraString = Configuration.GetConnectionString("Bunker");
-      var ccm5L2String = Configuration.GetConnectionString("CCM5L2");
-      var ccm2L2String = Configuration.GetConnectionString("CCM2L2");
+      string oraString = Configuration.GetConnectionString("Bunker");
+      string ccm5L2String = Configuration.GetConnectionString("CCM5L2");
+      string ccm2L2String = Configuration.GetConnectionString("CCM2L2");
+      string usageLogString = Configuration.GetConnectionString("SQLite");
 
       services.AddScoped<IIdleRepository, IdleRepository>(provider => new IdleRepository(oraString, new BunkerAdapter()));
       services.AddScoped<ICCMRepository, CCMRepository>(provider => new CCMRepository(ccm5L2String, ccm2L2String));
 
-      services.AddControllersWithViews();
+      services.AddSingleton<IUsageLogRepository, UsageLogRepository>(provider => new UsageLogRepository(usageLogString));
+      services.AddSingleton<LoggingService>();
 
+      services.AddControllersWithViews();
       services.AddSpaStaticFiles(configuration =>
       {
         configuration.RootPath = "ClientApp/build";
@@ -39,8 +44,10 @@ namespace react_ts
       else
       {
         app.UseExceptionHandler("/Error");
-        app.UseHsts();
+        //app.UseHsts();
       }
+
+      app.UseMiddleware<LoggingMiddleware>();
 
       //app.UseHttpsRedirection();
       app.UseStaticFiles();

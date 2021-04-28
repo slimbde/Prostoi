@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using react_ts.Models.Repositories;
+using Prostoi.Models.Repositories;
 
-namespace react_ts.Controllers
+namespace Prostoi.Controllers
 {
   [ApiController]
   [Route("api/[controller]")]

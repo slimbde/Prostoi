@@ -4,9 +4,9 @@ using System.Data.Common;
 using System.Threading.Tasks;
 using Oracle.ManagedDataAccess.Client;
 using Prostoi.Models;
-using react_ts.Models.DTOs;
+using Prostoi.Models.DTOs;
 
-namespace react_ts.Models.Repositories
+namespace Prostoi.Models.Repositories
 {
   public interface IIdleRepository
   {
