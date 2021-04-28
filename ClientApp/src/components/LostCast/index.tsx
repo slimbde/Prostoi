@@ -19,6 +19,7 @@ const CastLost: React.FC<CastLostProps> = (props: CastLostProps) => {
     if (!props.lostCasts || props.lostCasts.length === 0)
       return
 
+    console.log("")
     drawChart(props.lostCasts)
     const chartDiv = document.querySelector(".losts-wrapper") as HTMLDivElement
     chartDiv.style.opacity = "1"

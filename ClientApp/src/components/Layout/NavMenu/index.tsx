@@ -104,7 +104,7 @@ class NavMenu extends React.Component<NavMenuProps> {
               <ul className="hide-third">
                 <li id="gant" className="active"><Link to="/gant">ДИАГРАММА ГАНТА</Link></li>
                 <li id="castlost"><Link to="/castlost">ПОТЕРИ СТАЛИ</Link></li>
-                <li id="stats"><Link to="/stats">СТАТИСТИКА</Link></li>
+                {/*<li id="stats"><Link to="/stats">СТАТИСТИКА</Link></li>*/}
                 <li className="hide-first" style={{ width: '100px' }}>&nbsp;</li>
                 <li className="input-field">
                   <input type="text" className="datepicker" id="bDate" />

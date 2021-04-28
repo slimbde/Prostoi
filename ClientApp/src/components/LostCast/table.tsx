@@ -38,7 +38,7 @@ export const CastLostTable: React.FC<CastLostTableProps> = (props: CastLostTable
         <tr>
           <td style={{ background: "#bbbbbb", fontWeight: 600 }}>{totalIdle.toLocaleString()}</td>
           <td style={{ background: "#dbd7ca", fontWeight: 600 }}>{totalEfficiency.toLocaleString()}</td>
-          <td style={{ background: "#3b688c7e", fontWeight: 600 }}>ИТОГО</td>
+          <td style={{ background: "#a9bbca", fontWeight: 600 }}>ИТОГО</td>
         </tr>
       </tbody>
     </table >

@@ -37,6 +37,7 @@ export abstract class TMNLZHandler implements IMNLZHandler {
 
       // ищу пару марка-скорость
       const markSpeed = profile.Marks.filter((pm: Mark) => pm.Name.toUpperCase() === lcr.mark.toUpperCase())[0]
+      !markSpeed && console.error(`[MNLZHandler]: couldn't find speed for mark '${lcr.mark}' - applied default value`)
 
       // если марка не задана, то беру из поля default профиля, иначе - заданное значение
       const speed = (markSpeed ? markSpeed.Quotient : profile.Default) as number
@@ -50,10 +51,10 @@ export abstract class TMNLZHandler implements IMNLZHandler {
       // считаю объем неотлитого металла по формуле из таблицы - длина * промежуточное значение
       const lostIdleMetalVolume = idleBeamLengthMeters * transientVal
 
-      const density = this.findDensity(lcr)//(mnlz2Density as DensityList)[lcr.mark.toUpperCase()]
+      const density = this.findDensity(lcr)   //(mnlz2Density as DensityList)[lcr.mark.toUpperCase()]
 
       // считаю вес - объем неотлитого металла * плотность из запроса
-      const idleWeight = lostIdleMetalVolume * (density ? density : 7800) / 1000   ///////////// значение по Простоям
+      const idleWeight = lostIdleMetalVolume * density / 1000             ///////////// значение по Простоям
 
       ///// ВТОРАЯ ЧАСТЬ - СНИЖЕНИЕ ПРОИЗВОДИТЕЛЬНОСТИ. перевожу длину в метры
       const lostEfficiencyLengthMeters = lcr.undercastLength / 1000
@@ -103,12 +104,14 @@ export class MNLZ2Handler extends TMNLZHandler {
   }
 
   findDensity(lcr: LostCastResponse): number {
-    return (mnlz2Density as DensityList)[lcr.mark.toUpperCase()]
+    const density = (mnlz2Density as DensityList)[lcr.mark.toUpperCase()]
+    !density && console.error(`[MNLZ2Handler]: couldn't find density for mark '${lcr.mark}' - applied default value 7800`)
+    return density ? density : 7800
   }
 }
 
 
-/////////////////////////////////////////////////////////////////////////////////////////// MNLZ2Handler
+/////////////////////////////////////////////////////////////////////////////////////////// MNLZ5Handler
 export class MNLZ5Handler extends TMNLZHandler {
   constructor() {
     super()
