@@ -6,14 +6,35 @@
   margin-left: 1rem;
 }
 
+.left {
+  display: flex;
+  margin-right: 1rem;
+  font-weight: 100;
+  color: white;
+  font-size: 1.5rem;
+}
+
+.left img {
+  height: 25px;
+  margin-top: .3rem;
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
 .nav-wrapper {
   padding: 0 1rem;
   background: #3b678c;
+  display: flex;
+  width: 100%;
 }
 
 nav, .sidenav-trigger {
   line-height: 3rem !important;
   height: 3rem !important;
+}
+
+nav .hide-third {
+  flex-grow: 1;
 }
 
 .menu-icon {
@@ -25,10 +46,9 @@ nav, .sidenav-trigger {
   width: 400px !important;
   position: fixed !important;
   height: unset !important;
-  top: 40px !important;
+  top: 42px !important;
   background: darkgrey !important;
 }
-
 
 .dropdown-content li {
   min-height: 1rem !important;
@@ -53,14 +73,19 @@ nav .input-field input {
   height: 1.5rem !important;
   line-height: 1.5rem !important;
   cursor: pointer;
+  max-width: 80px !important;
 }
 
 .datepicker-date-display {
-    background-color:#3b678c !important;
+  background-color: #3b678c !important;
 }
 
 .datepicker-table-wrapper, .datepicker-controls input {
-  color:#3b678c !important;
+  color: #3b678c !important;
+}
+
+.datepicker-calendar-container {
+  padding: 1rem;
 }
 
 nav .input-field label {
@@ -82,19 +107,78 @@ nav .input-field label.active {
   color: white !important;
 }
 
-.sidenav {
-  background: #3b678c !important;
-  width: 350px !important;
+.sidebar {
+  background-color: #3b678ce0;
+  width: 350px;
+  top: 29px;
+  left: -350px;
+  position: absolute;
+  z-index: 1000;
+  padding: 0 !important;
+  display: flex;
+  flex-flow: column nowrap;
+  transition: left .3s ease-in-out;
+  height: 100%;
 }
 
-.sidenav li {
+.sidebar-visible {
+  left: 0px;
+}
+
+.sidebar li {
   width: 100%;
+  display: flex;
 }
 
-.sidenav a {
+.sidebar li:hover, .input-field:hover {
+  background-color: rgba(0, 0, 0, 0.158);
+  cursor: pointer;
+}
+
+.sidebar a {
+  text-transform: uppercase;
   color: white !important;
+  padding: 1rem;
+  width: 100%;
 }
 
 #chartdiv {
   overflow: unset;
+  flex-grow: 1;
+}
+
+.menu {
+  display: none;
+  cursor: pointer;
+}
+
+@media only screen and (max-width: 1400px) {
+  .hide-first {
+    display: none !important;
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  .hide-second {
+    display: none !important;
+  }
+  .brand-logo {
+    display: none !important;
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  .menu {
+    display: block;
+  }
+  .brand-logo {
+    display: block !important;
+  }
+  .hide-third {
+    display: none !important;
+  }
+  .logo {
+    display: block !important;
+    margin-left: 1rem;
+  }
 }

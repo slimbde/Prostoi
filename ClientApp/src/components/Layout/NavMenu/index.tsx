@@ -1,127 +1,154 @@
 import * as React from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { connect } from 'react-redux'
 import { ApplicationState } from '../../../store';
-import * as GantStore from '../../../store/Gant';
-import * as CastStore from '../../../store/LostCast'
-import MenuIcon from "@material-ui/icons/Menu"
-import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
-import moment from 'moment'
-import { CastLostNavHandler, GantNavHandler, INavMenuStateHandler } from './stateHandlers';
 import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux'
+import { IdleSet } from "../../../models/types/gant";
+import { LostCast } from "../../../models/types/lostCast";
+import { Usage } from "../../../models/types/stats";
+import { CastLostNavHandler, GantNavHandler, INavMenuStateHandler, StatsNavHandler } from './NavStateHandlers';
+import * as CastStore from '../../../store/LostCastStore'
+import * as GantStore from '../../../store/GantStore';
+import * as StatsStore from '../../../store/StatsStore';
+import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
+import MenuIcon from "@material-ui/icons/Menu"
+import moment from 'moment'
+
 
 
 export interface NavMenuProps {
-  location: any,
+  location: any
   shops: string[]
-  setIdles: (idleSet: GantStore.IdleSet) => void
-  setLostCasts: (data: CastStore.LostCast[]) => void
-  clearLostCasts: () => void,
-  clearIdles: () => void
+  ips: string[]
+  usages: Usage[]
+  setIdles: (idleSet: IdleSet) => GantStore.KnownAction
+  setLostCasts: (data: LostCast[]) => CastStore.KnownAction
+  setIps: (ips: string[]) => StatsStore.KnownAction
+  setUsages: (usages: Usage[]) => StatsStore.KnownAction
+  clearLostCasts: () => CastStore.KnownAction,
+  clearIdles: () => GantStore.KnownAction
 }
 
-export interface NavMenuState {
-  firstLoad: boolean
-  currentShop: string
-}
+
+///////////////////////// NAV MENU CLASS
+class NavMenu extends React.Component<NavMenuProps> {
+  public stateHandler: INavMenuStateHandler | undefined
+  public dropDownHint: string | undefined
+  private path = this.props.location.pathname.slice(1)
+  private liEls: HTMLLIElement[] | undefined
+  private sidenav: HTMLUListElement | undefined
 
 
+  componentDidMount = () => {
+    this.liEls = Array.from(document.getElementsByTagName("li"))
+    this.sidenav = document.getElementById("mobile-demo") as HTMLUListElement
+    this.stateHandler = this.getNavHandler(this.path)
+  }
 
-class NavMenu extends React.Component<NavMenuProps, NavMenuState> {
-  public stateHandler: INavMenuStateHandler
+  componentDidUpdate = (prevProps: NavMenuProps) => {
+    this.path = this.props.location.pathname.slice(1) || "brand-logo"
 
+    this.liEls!.forEach(ul => ul.classList.remove("active"))
 
-  constructor(props: NavMenuProps) {
-    super(props)
+    const navLink = document.getElementById(this.path)
+    navLink && navLink.classList.add("active")
 
-    const path = props.location.pathname.slice(1)
+    const navLinkS = document.getElementById(this.path + "S")
+    navLinkS && navLinkS.classList.add("active")
 
-    this.stateHandler = path === "gant" || path === ""
-      ? new GantNavHandler(this)
-      : new CastLostNavHandler(this)
+    const prevPath = prevProps.location.pathname
+    const thisPath = this.props.location.pathname
+
+    if (prevPath !== thisPath && prevPath !== "/") {
+      this.stateHandler && this.stateHandler.dispose()
+      this.stateHandler = this.getNavHandler(this.path)
+    }
   }
 
 
-  state: NavMenuState = {
-    firstLoad: true,
-    currentShop: "",
+  toggleMenu = () => this.sidenav!.classList.toggle("sidebar-visible")
+  getNavHandler = (path: string): INavMenuStateHandler | undefined => {
+    switch (path) {
+      case 'gant': case '': return new GantNavHandler(this)
+      case 'castlost': return new CastLostNavHandler(this)
+      case 'stats': return new StatsNavHandler(this)
+      default: return undefined
+    }
   }
-
-
-  componentDidMount = () => this.stateHandler.didMount()
-
-  componentDidUpdate = (prevProps: NavMenuProps) => this.stateHandler.didUpdate(prevProps)
-
-  componentWillUnmount = () => this.stateHandler.willUnmount()
-
-
+  assembleDropEls = (shops: string[]) => shops.map(shop => <li key={shop} onClick={e => (this.stateHandler!.clickShop(e))}>{shop}</li>)
 
 
   ////////////////////////////// RENDER
   public render() {
-    //console.log("nav-render", this.props)
+    //console.log("nav-render", this.props.shops)
 
-    const previousActive = document.querySelectorAll("ul > li.active")!
-    previousActive.forEach(p => p.classList.remove("active"))
-
-    const path = this.props.location.pathname.slice(1) || "brand-logo"
-
-    const li = document.getElementById(path)!
-    const liS = document.getElementById(path + "S")!
-    li && li.classList.add("active")
-    liS && liS.classList.add("active")
-
-    const shops = Array.isArray(this.props.shops) && path === "gant"
-      ? this.props.shops.map(shop => <li key={shop} onClick={e => this.stateHandler.clickShop(e)}>{shop}</li>)
-      : ["МНЛЗ-2", "МНЛЗ-5"].map(shop => <li key={shop} onClick={e => this.stateHandler.clickShop(e)}>{shop}</li>)
+    const dropDownEls = this.path === "gant"
+      ? this.props.shops.length > 0
+        ? this.assembleDropEls(this.props.shops)
+        : <></>
+      : this.path === "castlost"
+        ? this.assembleDropEls(["МНЛЗ-2", "МНЛЗ-5"])
+        : this.path === "stats"
+          ? this.props.ips.length > 0
+            ? [<li key="all" onClick={e => (this.stateHandler!.clickShop(e))}>ВСЕ</li>, ...this.assembleDropEls(this.props.ips)]
+            : <></>
+          : <></>
 
     return (
-      <header className="navbar-fixed">
-        <nav>
-          <div className="nav-wrapper z-depth-5">
-            <div className="right" style={{ fontSize: "smaller" }}>{moment().format("DD.MM.YYYY  HH:mm")}</div>
-            <Link to="#" data-target="mobile-demo" className="sidenav-trigger"><MenuIcon className="menu-icon" /></Link>
-            <ul className="hide-on-med-and-down">
-              <li id="gant" className="active"><Link to="/gant">ДИАГРАММА ГАНТА</Link></li>
-              <li id="castlost"><Link to="/castlost">ПОТЕРИ СТАЛИ</Link></li>
-              <li style={{ width: '100px' }}>&nbsp;</li>
-              <form autoComplete="off">
+      <>
+        <header className="navbar-fixed">
+          <nav>
+            <div className="nav-wrapper z-depth-5">
+              <div className="menu" onClick={_ => this.toggleMenu()} ><MenuIcon className="menu-icon" /></div>
+              <li className="left hide-first logo"><img src="logo1.png" onClick={_ => document.location.href = "https://mechel.com"} ></img>ПРОСТОИ И ПОТЕРИ ПАО ЧМК</li>
+              <ul className="hide-third">
+                <li id="gant" className="active"><Link to="/gant">ДИАГРАММА ГАНТА</Link></li>
+                <li id="castlost"><Link to="/castlost">ПОТЕРИ СТАЛИ</Link></li>
+                <li id="stats"><Link to="/stats">СТАТИСТИКА</Link></li>
+                <li className="hide-first" style={{ width: '100px' }}>&nbsp;</li>
                 <li className="input-field">
                   <input type="text" className="datepicker" id="bDate" />
-                  <label htmlFor="bDate">Дата начала</label>
+                  <label htmlFor="bDate">НАЧАЛО</label>
                 </li>
                 <li className="input-field">
                   <input type="text" className="datepicker" id="eDate" />
-                  <label htmlFor="eDate">Дата окончания</label>
+                  <label htmlFor="eDate">ОКОНЧАНИЕ</label>
                 </li>
-                <ul className="hide-on-small-and-down">
-                  <li>
-                    <a className="dropdown-trigger" href="#!" data-target="dropdown1">ЦЕХ<ArrowDownIcon className="menu-icon" /></a>
-                    <ul id="dropdown1" className="dropdown-content z-depth-5">{shops}</ul>
-                  </li>
-                </ul>
-              </form>
-            </ul>
-            <div className="brand-logo">{this.state.currentShop}</div>
-          </div>
-          <div id="loading" className="loading"><img src="loading4.gif" height="50px" width="62px" alt="Loading.." /></div>
-        </nav>
+                <li>
+                  <a className="dropdown-trigger" href="#!" data-target="dropdown1">{this.dropDownHint}<ArrowDownIcon className="menu-icon" /></a>
+                  <ul id="dropdown1" className="dropdown-content z-depth-5">{dropDownEls}</ul>
+                </li>
+                <li className="right hide-third" style={{ fontSize: "smaller" }}>{moment().format("DD.MM.YYYY  HH:mm")}</li>
+                <li className="brand-logo">{this.stateHandler && this.stateHandler.currentShop}</li>
+              </ul>
+            </div>
+            <div id="loading" className="loading"><img src="loading4.gif" height="50px" width="62px" alt="Loading.." /></div>
+          </nav>
+        </header >
 
-        <ul className="sidenav" id="mobile-demo">
+        <ul className="sidebar" id="mobile-demo">
+          <li style={{ borderBottom: "1px solid darkgrey", fontWeight: "bold" }}><a>{this.stateHandler && this.stateHandler.currentShop}</a></li>
           <li id="gantS" className="waves-effect"><Link to="/gant">ДИАГРАММА ГАНТА</Link></li>
           <li id="castlostS" className="waves-effect"><Link to="/castlost">ПОТЕРИ СТАЛИ</Link></li>
-        </ul>
-      </header>
+          <li style={{ fontSize: "smaller", borderTop: "1px solid darkgrey" }}><a>{moment().format("DD.MM.YYYY  HH:mm")}</a></li>
+        </ul >
+      </>
     );
   }
 }
 
 
-const mapDispatchToProps = (dispatch: any) => bindActionCreators({ ...GantStore.actionCreators, ...CastStore.actionCreators }, dispatch)
+const mapDispatchToProps = (dispatch: any) =>
+  bindActionCreators({
+    ...GantStore.actionCreators,
+    ...CastStore.actionCreators,
+    ...StatsStore.actionCreators
+  }, dispatch)
 
 const showTheLocationWithRouter = withRouter(NavMenu as any)
+
 export default connect(
-  (state: ApplicationState) => ({ ...state.gant, ...state.lostCast }),
+  (state: ApplicationState) => ({ ...state.gant, ...state.lostCast, ...state.stats }),
   mapDispatchToProps
 )(showTheLocationWithRouter)
 

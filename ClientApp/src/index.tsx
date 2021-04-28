@@ -1,3 +1,4 @@
+import '@babel/polyfill'
 //import 'bootstrap/dist/css/bootstrap.css';
 import 'materialize-css/dist/js/materialize.js';
 
@@ -11,8 +12,17 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 import configureStore from './store/configureStore';
+//import registerServiceWorker from './registerServiceWorker';
 import App from './App';
-import registerServiceWorker from './registerServiceWorker';
+
+if (window.NodeList && !NodeList.prototype.forEach) {
+  NodeList.prototype.forEach = function (callback, thisArg) {
+    thisArg = thisArg || window;
+    for (var i = 0; i < this.length; i++) {
+      callback.call(thisArg, this[i], i, this);
+    }
+  };
+}
 
 // Create browser history to use in the Redux store
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href') as string;
@@ -29,4 +39,4 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root'));
 
-registerServiceWorker();
+//registerServiceWorker();

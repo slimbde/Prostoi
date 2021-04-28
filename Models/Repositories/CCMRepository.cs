@@ -1,23 +1,39 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Threading.Tasks;
 using Oracle.ManagedDataAccess.Client;
-using react_ts.Models.Repositories;
-using rest_ts_react_template.Models.DTOs;
+using Prostoi.Models.DTOs;
 
-namespace rest_ts_react_template.Models.Repositories
+namespace Prostoi.Models.Repositories
 {
-  ////////////////////////////////////////////////////////// ICCMRepository
-  public interface ICCMRepository : IRepository<LostIdle>
+  /// <summary>
+  /// The CCM repository interface
+  /// </summary>
+  public interface ICCMRepository
   {
+    /// <summary>
+    /// Retrieves MNLZ5 idles for the interval
+    /// </summary>
+    /// <param name="begin">start date</param>
+    /// <param name="end">end date</param>
+    /// <returns>Idles set</returns>
     Task<IEnumerable<LostIdle>> GetMNLZ5LostIdles(string begin, string end);
+
+    /// <summary>
+    /// Retrieves MNLZ2 idles for the interval
+    /// </summary>
+    /// <param name="begin">start date</param>
+    /// <param name="end">end date</param>
+    /// <returns></returns>
     Task<IEnumerable<LostIdle>> GetMNLZ2LostIdles(string begin, string end);
   }
 
 
 
-  ///////////////////////////////////////////////////////// CCMRepository
+
+  /// <summary>
+  /// CCM Repository instance
+  /// </summary>
   public class CCMRepository : ICCMRepository
   {
     protected OracleConnection _db5;
@@ -30,16 +46,8 @@ namespace rest_ts_react_template.Models.Repositories
       _db2 = new OracleConnection(ccm2L2String);
     }
 
-    public Task<int> Delete(Guid id) =>
-      throw new NotImplementedException();
 
-    public Task<LostIdle> Get(Guid id) =>
-      throw new NotImplementedException();
 
-    public Task<IEnumerable<LostIdle>> GetList() =>
-      throw new NotImplementedException();
-
-    //////////////////////////////////////////////////////////////////////////////////////// GET MNLZ 5 LOST IDLES
     public async Task<IEnumerable<LostIdle>> GetMNLZ5LostIdles(string begin, string end)
     {
       var stmt = @"
@@ -283,10 +291,6 @@ namespace rest_ts_react_template.Models.Repositories
       }
       finally { await _db5.CloseAsync(); }
     }
-
-
-
-    //////////////////////////////////////////////////////////////////////////////////////// GET MNLZ 2 LOST IDLES
     public async Task<IEnumerable<LostIdle>> GetMNLZ2LostIdles(string begin, string end)
     {
       var stmt = @"
@@ -530,14 +534,7 @@ namespace rest_ts_react_template.Models.Repositories
     }
 
 
-    public Task<int> Post(LostIdle obj) =>
-      throw new NotImplementedException();
 
-    public Task<Guid> Put(LostIdle obj) =>
-      throw new NotImplementedException();
-
-
-    /////////////////////////////////////////////////////////////////////////////////// CREATE LOST IDLE
     private LostIdle createLostIdle(System.Data.Common.DbDataReader reader)
     {
       return new LostIdle
@@ -551,9 +548,6 @@ namespace rest_ts_react_template.Models.Repositories
         Count = Convert.ToUInt64(reader["COUNT"])
       };
     }
-
-
-    /////////////////////////////////////////////////////////////////////////////////// COMPLEMENT LOST IDLE
     private void complementLostIdle(System.Data.Common.DbDataReader reader, List<LostIdle> idleList)
     {
       DateTime date = Convert.ToDateTime(reader["STOP_DATE"]);

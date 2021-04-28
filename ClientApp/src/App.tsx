@@ -1,49 +1,38 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { Redirect, Route } from 'react-router';
+import { Redirect, Route, Switch } from 'react-router';
 import Layout from './components/Layout'
 import Gant from './components/Gant';
 import CastLost from './components/LostCast';
-import { ApplicationState } from './store';
-import * as GantStore from './store/Gant';
-
+import Stats from "./components/Stats";
+import { dbHandler } from "./models/handlers/DbHandler";
+import { connect } from "react-redux";
+import * as store from './store/GantStore'
 import './custom.css'
 
 
-interface AppProps {
-  shops: string[]
-  setShops: (data: string[]) => void
-}
+class App extends React.Component<{ setShops: (shops: string[]) => store.SetShops }> {
 
-
-
-class App extends React.Component<AppProps> {
-
-  constructor(props: AppProps) {
+  constructor(props: any) {
     super(props)
 
-    if (props.shops.length === 0) {
-      fetch(`api/idle/getshops`)
-        .then(resp => resp.json() as Promise<any>)
-        .then(data => {
-          if ("error" in data)
-            alert("Не могу получить список цехов...")
-          else
-            props.setShops(data)
-        })
-        .catch(error => console.error(error))
-    }
+    dbHandler.getShopsAsync()
+      .then(shops => this.props.setShops(shops))
+      .catch((error: Error) => console.error(`[App]: ${error.message}`))
   }
 
-
+  notFound = <div className="display-5 not-found">404 - Запрашиваемая страница не найдена на сервере</div>
 
   render() {
     //console.log(this.props)
 
     return <Layout>
-      <Route exact path='/'><Redirect to='/gant' /></Route>
-      <Route exact path='/gant' component={Gant} />
-      <Route path='/castlost' component={CastLost} />
+      <Switch>
+        <Route exact path='/gant' component={Gant} />
+        <Route exact path='/castlost' component={CastLost} />
+        <Route exact path='/stats' component={Stats} />
+        <Redirect exact from='/' to='/gant' />
+        <Route path="/*" render={() => this.notFound} />
+      </Switch>
     </Layout >
 
   }
@@ -52,6 +41,6 @@ class App extends React.Component<AppProps> {
 
 
 export default connect(
-  (state: ApplicationState) => state.gant,
-  GantStore.actionCreators
+  null,
+  store.actionCreators
 )(App as any);
