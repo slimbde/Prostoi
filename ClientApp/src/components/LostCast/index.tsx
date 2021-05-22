@@ -1,11 +1,11 @@
+import ReactDOM from "react-dom";
 import * as React from 'react'
+import * as am4core from "@amcharts/amcharts4/core";
+import * as CastStore from '../../store/LostCastStore';
 import { drawChart } from './drawChart'
 import { connect } from 'react-redux'
-import ReactDOM from "react-dom";
 import { LostCastSidePanel } from "./lostCastSidePanel";
-import * as am4core from "@amcharts/amcharts4/core";
 import { ApplicationState } from '../../store';
-import * as CastStore from '../../store/LostCastStore';
 import { CastLostTable } from './table';
 import { LostCast } from "../../models/types/lostCast";
 import '../Layout/sidepanel.css'

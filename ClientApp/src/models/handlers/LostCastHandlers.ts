@@ -1,8 +1,9 @@
 import mnlz5Config from '../../data/mnlz5-config.json'
 import mnlz2Config from '../../data/mnlz2-config.json'
 import mnlz2Density from '../../data/mnlz2-markDensity.json'
-import { dbHandler, LostCastResponse } from "./DbHandler"
+import { dbProxy } from "./DbProxy"
 import { LostCast } from "../types/lostCast"
+import { LostCastResponse } from "./DbHandler"
 import moment from 'moment'
 
 
@@ -29,7 +30,7 @@ export abstract class TMNLZHandler implements IMNLZHandler {
   protected api: string = ""
 
   async CalculateForAsync(bDate: string, eDate: string): Promise<LostCast[]> {
-    const data = await dbHandler.getMnlzIdlesAsync(this.api, bDate, eDate)
+    const data = await dbProxy.getMnlzIdlesAsync(this.api, bDate, eDate)
 
     const result = data.map<LostCast>((lcr: LostCastResponse) => {
       // ищу нужный профиль

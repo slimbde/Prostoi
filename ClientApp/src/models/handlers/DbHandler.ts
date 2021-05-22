@@ -1,11 +1,12 @@
 import { IdleSet } from "../types/gant"
 import { Usage } from "../types/stats"
+import { IDbHandler } from "./IDbHandler"
 import "isomorphic-fetch"
 import 'promise-polyfill/src/polyfill'
 import 'abortcontroller-polyfill'
 
 
-class DbHandler {
+export class DbHandler implements IDbHandler {
 
   public async getShopsAsync(): Promise<string[]> {
     const resp = await fetch(`api/idle/getshops`)
@@ -44,10 +45,6 @@ class DbHandler {
     throw new Error("Нет посещений по указанным параметрам")
   }
 }
-
-
-export const dbHandler = new DbHandler()
-
 
 
 export type LostCastResponse = {

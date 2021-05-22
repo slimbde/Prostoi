@@ -6,7 +6,7 @@ import * as GantStore from '../../store/GantStore';
 import * as am4core from "@amcharts/amcharts4/core";
 import { IdleSet } from "../../models/types/gant";
 import { GantSidePanel } from "./gantSidePanel";
-import { dbHandler } from "../../models/handlers/DbHandler";
+import { dbProxy } from "../../models/handlers/DbProxy";
 import ReactDOM from "react-dom";
 import "../Layout/sidepanel.css"
 
@@ -25,15 +25,16 @@ const Gant: React.FC<GantProps> = (props: GantProps) => {
     const loadingEl = document.getElementById("loading") as HTMLDivElement
     loadingEl.style.opacity = "1"
 
-    dbHandler.getShopsAsync()
+    dbProxy.getShopsAsync()
       .then(shops => {
         loadingEl.style.opacity = "0"
         const sidepanel = document.getElementById("sidepanel") as HTMLDivElement
         shops.length > 0 && ReactDOM.render(<GantSidePanel shops={shops} setIdles={props.setIdles} />, sidepanel)
       })
       .catch(data => {
+        dbProxy.remove("getShopsAsync")
         console.error(data)
-        loadingEl.style.opacity = "1"
+        loadingEl.style.opacity = "0"
       })
 
     return () => { props.clearIdles() }

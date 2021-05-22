@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import M from 'materialize-css/dist/js/materialize.js'
 import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
-import { dbHandler } from "../../models/handlers/DbHandler";
+import { dbProxy } from "../../models/handlers/DbProxy";
 import { IdleSet } from "../../models/types/gant";
 import * as GantStore from '../../store/GantStore';
 import moment from "moment";
@@ -72,13 +72,16 @@ export const GantSidePanel: React.FC<PanelProps> = (props: PanelProps) => {
     const eDate = moment((document.getElementById("eDate") as HTMLInputElement).value, "DD.MM.YYYY").format("YYYY-MM-DD")
 
     if (currentShop !== selectedShop) {
-      currentShop = selectedShop
       setTimeout(() => {
-        shopEl.textContent = currentShop
         loadingEl.style.opacity = "1"
-        dbHandler.getGantIdlesAsync(bDate, eDate, selectedShop)
-          .then(data => props.setIdles(data))
+        dbProxy.getGantIdlesAsync(bDate, eDate, selectedShop)
+          .then(data => {
+            shopEl.textContent = selectedShop
+            currentShop = selectedShop
+            props.setIdles(data)
+          })
           .catch((error: any) => {
+            dbProxy.remove(`${bDate}${eDate}${selectedShop}`)
             loadingEl.style.opacity = "0"
             if (error.message.includes(`Нет простоев`))
               alert(`Нет простоев для ${selectedShop}\nза период ${moment(bDate).format("DD.MM.YYYY")} ... ${moment(eDate).format("DD.MM.YYYY")}`)
@@ -96,9 +99,10 @@ export const GantSidePanel: React.FC<PanelProps> = (props: PanelProps) => {
     if (bDate! <= eDate! && currentShop !== "") {
       loadingEl.style.opacity = "1"
 
-      dbHandler.getGantIdlesAsync(bDate, eDate, currentShop)
-        .then(data => setTimeout(() => props.setIdles(data), 100))
+      dbProxy.getGantIdlesAsync(bDate, eDate, currentShop)
+        .then(data => props.setIdles(data))
         .catch((error: any) => {
+          dbProxy.remove(`${bDate}${eDate}${currentShop}`)
           loadingEl.style.opacity = "0"
           !error.message.includes(`Нет простоев`) && console.error(error)
         })

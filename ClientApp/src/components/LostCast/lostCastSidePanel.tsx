@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import M from 'materialize-css/dist/js/materialize.js'
 import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
-import * as MNLZHandlers from "../../models/handlers/LostCastHandlers";
-import moment from "moment";
-import { LostCast } from "../../models/types/lostCast";
 import * as CastStore from '../../store/LostCastStore'
+import * as MNLZHandlers from "../../models/handlers/LostCastHandlers";
+import { LostCast } from "../../models/types/lostCast";
+import M from 'materialize-css/dist/js/materialize.js'
+import moment from "moment";
 
 type PanelProps = {
   shops: string[]
@@ -91,7 +91,7 @@ export const LostCastSidePanel: React.FC<PanelProps> = (props: PanelProps) => {
     if (bDate! <= eDate!) {
       loadingEl.style.opacity = "1"
       handler!.CalculateForAsync(bDate, eDate)
-        .then(result => setTimeout(() => props.setLostCasts(result), 200))
+        .then(result => props.setLostCasts(result))
         .catch(error => {
           loadingEl.style.opacity = "0"
           console.error(error)
