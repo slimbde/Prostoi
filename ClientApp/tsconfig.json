@@ -13,6 +13,7 @@
     "noEmit": true,
     "noImplicitAny": true,
     "jsx": "react",
+    "downlevelIteration": true,
     "lib": [
       "es2015",
       "dom"

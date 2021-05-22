@@ -1,0 +1,71 @@
+.stats-wrapper {
+  height: 100%;
+  width: 100%;
+  padding: 1rem 2rem;
+  overflow: hidden;
+}
+
+.stats-wrapper table {
+  table-layout: fixed;
+  max-width: 1000px;
+  border-spacing: 0;
+  border-collapse: collapse;
+  border: 0;
+}
+
+.stats-wrapper table tbody {
+  display: block;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.stats-wrapper table thead {
+  display: table;
+}
+
+.stats-wrapper table thead th {
+  border-radius: 0;
+  color: #6494bb;
+  font-size: .9rem;
+  font-weight: 400;
+  padding: .1rem 1rem;
+  border-bottom: 2px solid #6494bb;
+}
+
+.stats-wrapper table thead th:first-child {
+  width: 105px;
+}
+
+.stats-wrapper table thead th:nth-child(2) {
+  width: 160px;
+}
+
+.stats-wrapper table thead th:nth-child(3) {
+  width: 240px;
+}
+
+.stats-wrapper table thead th:last-child {
+  max-width: 500px;
+  width: 506px;
+}
+
+.stats-wrapper table tbody td {
+  font-size: .9rem;
+  padding: .2rem 1rem;
+}
+
+.stats-wrapper table tbody td:first-child {
+  width: 100px;
+}
+
+.stats-wrapper table tbody td:nth-child(2) {
+  width: 160px;
+}
+
+.stats-wrapper table tbody td:nth-child(3) {
+  width: 240px;
+}
+
+.stats-wrapper table tbody td:last-child {
+  width: 500px;
+}

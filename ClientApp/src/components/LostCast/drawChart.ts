@@ -19,7 +19,7 @@ export const drawChart = (data: LostCast[]) => {
 
   chart.padding(40, 40, 20, 20)
   const chartDiv = document.getElementById("chartdiv-loss") as HTMLDivElement
-  chartDiv.style.width = `${data.length * 50 + 200}px`
+  chartDiv.style.maxWidth = `${data.length * 50 + 200}px`
 
   chart.dateFormatter.inputDateFormat = "yyyy-MM-dd"
 

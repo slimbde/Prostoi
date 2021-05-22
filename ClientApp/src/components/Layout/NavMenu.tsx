@@ -20,12 +20,14 @@ class NavMenu extends React.Component<NavMenuProps> {
   private liEls: HTMLLIElement[] | undefined
   private sidenav: HTMLDivElement | undefined
   private chartfield: HTMLDivElement | undefined
+  private loading: HTMLDivElement | undefined
 
 
   componentDidMount = () => {
     this.liEls = Array.from(document.getElementsByTagName("li"))
     this.sidenav = document.getElementById("sidepanel") as HTMLDivElement
     this.chartfield = document.getElementById("chartfield") as HTMLDivElement
+    this.loading = document.getElementsByClassName("loading")[0] as HTMLDivElement
 
     this.componentDidUpdate(this.props)
   }
@@ -46,6 +48,7 @@ class NavMenu extends React.Component<NavMenuProps> {
   toggleMenu = () => {
     this.sidenav!.classList.toggle("sidepanel-hidden")
     this.chartfield!.classList.toggle("chartfield-full")
+    this.loading!.classList.toggle("loading-full")
   }
 
 
@@ -59,7 +62,7 @@ class NavMenu extends React.Component<NavMenuProps> {
           <nav>
             <div className="nav-wrapper">
               <div className="menu" onClick={_ => this.toggleMenu()} ><MenuIcon className="menu-icon" /></div>
-              <li className="left hide-first logo"><img src="logo1.png" onClick={_ => document.location.href = "https://mechel.com"} ></img>ПРОСТОИ И ПОТЕРИ ПАО ЧМК</li>
+              <li className="left hide-second logo"><img src="logo1.png" onClick={_ => document.location.href = "https://mechel.com"} ></img>ПРОСТОИ И ПОТЕРИ ПАО ЧМК</li>
               <ul className="hide-third">
                 <li id="gant" className="active"><Link to="/gant">ДИАГРАММА ГАНТА</Link></li>
                 <li id="castlost"><Link to="/castlost">ПОТЕРИ СТАЛИ</Link></li>

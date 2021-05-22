@@ -22,7 +22,7 @@
 }
 
 .nav-wrapper {
-  padding: 0 1rem;
+  padding: 0 1rem 0 0;
   background: #3b678c;
   display: flex;
   width: 100%;
@@ -50,6 +50,12 @@ nav .hide-third {
 .menu {
   display: block;
   cursor: pointer;
+  padding-left: .5rem;
+  margin-right: .5rem;
+}
+
+.menu:hover {
+  background-color: rgba(0, 0, 0, 0.158);
 }
 
 @media only screen and (max-width: 1400px) {

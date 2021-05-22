@@ -39,7 +39,7 @@ export class DbHandler implements IDbHandler {
   }
 
   public async getUsageForAsync(bDate: string, eDate: string, ip: string): Promise<Usage[]> {
-    const resp = await fetch(`api/usage/GetUsageFor?bDate=${bDate}&eDate=${eDate}&ip=${ip}`)
+    const resp = await fetch(`api/usage/GetUsageFor?bDate=${bDate}&eDate=${eDate}&ip=${encodeURIComponent(ip)}`)
     if (resp.ok)
       return await (resp.json() as Promise<Usage[]>)
     throw new Error("Нет посещений по указанным параметрам")

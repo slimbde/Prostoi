@@ -20,6 +20,8 @@ type CastLostProps = {
 
 
 const CastLost: React.FC<CastLostProps> = (props: CastLostProps) => {
+  const pageWrapper = document.querySelector(".losts-wrapper") as HTMLDivElement
+
   React.useEffect(() => {
     const sidepanel = document.getElementById("sidepanel") as HTMLDivElement
     ReactDOM.render(
@@ -36,8 +38,7 @@ const CastLost: React.FC<CastLostProps> = (props: CastLostProps) => {
       return
 
     drawChart(props.lostCasts)
-    const chartDiv = document.querySelector(".losts-wrapper") as HTMLDivElement
-    chartDiv.style.opacity = "1"
+    pageWrapper.style.opacity = "1"
 
     return () => am4core.disposeAllCharts()
   }, [props.lostCasts])

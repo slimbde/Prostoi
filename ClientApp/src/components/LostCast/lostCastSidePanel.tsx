@@ -51,8 +51,8 @@ export const LostCastSidePanel: React.FC<PanelProps> = (props: PanelProps) => {
     const dropdown = document.getElementById("dd-trigger") as HTMLUListElement
     dropdownM = M.Dropdown.init(dropdown)
 
-    dpBeginM = M.Datepicker.init(document.getElementById("bDate"), { ...datepickerOptions, defaultDate: moment().subtract(14, "day").toDate() })
-    dpEndM = M.Datepicker.init(document.getElementById("eDate"), { ...datepickerOptions, defaultDate: moment().subtract(1, "day").toDate() })
+    dpBeginM = M.Datepicker.init(bDateEl, { ...datepickerOptions, defaultDate: moment().subtract(14, "day").toDate() })
+    dpEndM = M.Datepicker.init(eDateEl, { ...datepickerOptions, defaultDate: moment().subtract(1, "day").toDate() })
 
     const datepickerDoneBtns = document.querySelectorAll('.datepicker-done')
     datepickerDoneBtns.forEach(el => el.addEventListener("click", () => datePick()))

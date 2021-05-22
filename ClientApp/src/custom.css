@@ -83,7 +83,7 @@ code {
   flex-flow: column;
   left: 0px;
   width: 250px;
-  background-color: #3b678ce0;
+  background-color: #3b6780;
   height: 100% !important;
   transition: left .5s;
   z-index: 1;
@@ -104,7 +104,7 @@ code {
 }
 
 .chartfield-full {
-  padding-left: unset !important;
+  padding-left: 0 !important;
 }
 
 .navbar-fixed {
@@ -119,10 +119,14 @@ code {
   width: 50px;
   margin-top: 0.5rem;
   position: absolute;
-  right: 2rem;
+  left: 260px;
   opacity: 0;
   transition: all .3s;
   z-index: 2000;
+}
+
+.loading-full {
+  left: 10px;
 }
 
 .push {
@@ -130,16 +134,24 @@ code {
 }
 
 .footer {
-  position: relative;
+  position: absolute;
   bottom: 0px;
-  font-size: xx-small;
-  padding: 1rem;
-  height: 100px;
-  background: #0000000f;
+  font-size: x-small;
+  padding: .5rem 1rem;
+  height: 85px;
+  background: #3b6780;
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
+}
+
+.footer a {
+  color: rgb(219, 219, 219)
+}
+
+.footer a:hover {
+  color: white;
 }
 
 .display-5 {
@@ -152,4 +164,17 @@ code {
   margin-left: 3rem;
   margin-top: 1rem;
   color: gray;
+}
+
+.badge {
+  background-color: lightblue;
+  margin-left: .5rem !important;
+  padding: .1rem .2rem !important;
+  font-size: .8rem !important;
+  height: 1.1rem !important;
+  min-width: 2rem !important;
+  width: 1.5rem !important;
+  line-height: 1rem !important;
+  color: #1861ac !important;
+  font-weight: 500 !important;
 }

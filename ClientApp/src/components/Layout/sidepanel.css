@@ -1,11 +1,11 @@
 .sidepanel-content {
   display: flex;
   flex-flow: column;
-  margin: unset;
+  margin: 0;
 }
 
 .sidepanel-content>.input-field {
-  margin: unset;
+  margin: 0;
   padding: 1rem;
 }
 
@@ -22,7 +22,7 @@
 .sidepanel-datepickers .input-field {
   padding: 0 1rem;
   padding-top: .5rem;
-  margin: unset;
+  margin: 0;
   height: 3.5rem;
 }
 
@@ -39,11 +39,11 @@
 }
 
 .sidepanel-datepickers .input-field input {
-  border-bottom: unset !important;
+  border-bottom: 0 !important;
   color: white;
   cursor: pointer;
   height: 2.5rem;
-  margin-bottom: unset;
+  margin-bottom: 0;
 }
 
 .dropdown-content {
