@@ -40,5 +40,10 @@
 	The Kestrel scheme is way more slower. That's why you should avoid `outofprocess` in production deployment
 - By the way.. when you develop in vscode, Kestrel is used by the environment of the developing infrastructure.
 
-### Adaptation
+## Adaptation
 - IE doesn't support `Array.find( )` function. Use **Array.filter()[0]** instead
+
+
+## If charts draw twice at the switch to another page
+- The point is you forgot to dispose Idles or any other data in Redux. So it takes previous data for the first render
+- Dispose that data and blinking stops

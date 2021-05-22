@@ -28,7 +28,7 @@
   width: 100%;
 }
 
-nav, .sidenav-trigger {
+nav {
   line-height: 3rem !important;
   height: 3rem !important;
 }
@@ -39,107 +39,7 @@ nav .hide-third {
 
 .menu-icon {
   vertical-align: text-top;
-  margin-right: 0.5rem;
-}
-
-.dropdown-content {
-  width: 400px !important;
-  position: fixed !important;
-  height: unset !important;
-  top: 42px !important;
-  background: darkgrey !important;
-}
-
-.dropdown-content li {
-  min-height: 1rem !important;
-  background: #3b678c;
-  margin-top: 1px;
-  padding: 0.5rem;
-  color: white !important;
-}
-
-.dropdown-content li:hover {
-  color: black !important;
-}
-
-nav .input-field {
-  line-height: 3rem !important;
-  padding-left: 1rem;
-  max-width: 140px !important;
-}
-
-nav .input-field input {
-  color: white;
-  height: 1.5rem !important;
-  line-height: 1.5rem !important;
-  cursor: pointer;
-  max-width: 80px !important;
-}
-
-.datepicker-date-display {
-  background-color: #3b678c !important;
-}
-
-.datepicker-table-wrapper, .datepicker-controls input {
-  color: #3b678c !important;
-}
-
-.datepicker-calendar-container {
-  padding: 1rem;
-}
-
-nav .input-field label {
-  padding-left: 1rem;
-  color: white;
-  line-height: 1.5rem;
-}
-
-nav .input-field label.active {
-  transform: translateY(0px) scale(0.7) !important;
-  padding-left: 1.5rem !important;
-}
-
-.select-dropdown li {
-  padding: 0;
-}
-
-.select-dropdown li span {
-  color: white !important;
-}
-
-.sidebar {
-  background-color: #3b678ce0;
-  width: 350px;
-  top: 29px;
-  left: -350px;
-  position: absolute;
-  z-index: 1000;
-  padding: 0 !important;
-  display: flex;
-  flex-flow: column nowrap;
-  transition: left .3s ease-in-out;
-  height: 100%;
-}
-
-.sidebar-visible {
-  left: 0px;
-}
-
-.sidebar li {
-  width: 100%;
-  display: flex;
-}
-
-.sidebar li:hover, .input-field:hover {
-  background-color: rgba(0, 0, 0, 0.158);
-  cursor: pointer;
-}
-
-.sidebar a {
-  text-transform: uppercase;
-  color: white !important;
-  padding: 1rem;
-  width: 100%;
+  margin-right: 1rem;
 }
 
 #chartdiv {
@@ -148,7 +48,7 @@ nav .input-field label.active {
 }
 
 .menu {
-  display: none;
+  display: block;
   cursor: pointer;
 }
 

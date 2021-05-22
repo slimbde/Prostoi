@@ -4,21 +4,11 @@ import Layout from './components/Layout'
 import Gant from './components/Gant';
 import CastLost from './components/LostCast';
 import Stats from "./components/Stats";
-import { dbHandler } from "./models/handlers/DbHandler";
-import { connect } from "react-redux";
 import * as store from './store/GantStore'
 import './custom.css'
 
 
-class App extends React.Component<{ setShops: (shops: string[]) => store.SetShops }> {
-
-  constructor(props: any) {
-    super(props)
-
-    dbHandler.getShopsAsync()
-      .then(shops => this.props.setShops(shops))
-      .catch((error: Error) => console.error(`[App]: ${error.message}`))
-  }
+export default class App extends React.Component<{ setShops: (shops: string[]) => store.SetShops }> {
 
   notFound = <div className="display-5 not-found">404 - Запрашиваемая страница не найдена на сервере</div>
 
@@ -37,10 +27,3 @@ class App extends React.Component<{ setShops: (shops: string[]) => store.SetShop
 
   }
 }
-
-
-
-export default connect(
-  null,
-  store.actionCreators
-)(App as any);

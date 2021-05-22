@@ -11,6 +11,7 @@
 .losts-wrapper table {
   max-width: 220px;
   margin: 1rem 3rem;
+  z-index: 10;
 }
 
 .losts-wrapper table thead {
@@ -18,7 +19,6 @@
 }
 
 .losts-wrapper table thead, .losts-wrapper table tbody tr {
-  display: block;
   display: table;
   table-layout: fixed;
   width: 100%;
@@ -50,7 +50,7 @@
 
 #chartdiv-loss {
   height: 80vh;
-  max-width: 1000px;
+  /*max-width: 1000px;*/
   min-width: 750px;
   margin-top: 1rem;
   margin-left: 1rem;
@@ -60,11 +60,11 @@
 }
 
 .main-field {
-  background: #3b688c33;
+  background: #cfd6dc;
 }
 
 .table-header {
-  background: #3b688cce;
+  background: #3b688c;
   color: white;
   border-bottom: unset !important;
 }

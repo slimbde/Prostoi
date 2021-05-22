@@ -19,7 +19,7 @@ export const drawChart = (idles: IdleSet) => {
   const eDate = moment((document.getElementById("eDate") as HTMLInputElement).value, "DD.MM.YYYY")
 
   const chart = am4core.create("chartdiv", am4charts.XYChart);
-  chart.hiddenState.properties.opacity = 0.2; // this creates initial fade-in
+  chart.hiddenState.properties.opacity = 1; // this creates initial fade-in
   chart.language.locale = am4lang_ru_RU;
 
   chart.paddingRight = 30;

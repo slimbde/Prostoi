@@ -1,0 +1,88 @@
+.sidepanel-content {
+  display: flex;
+  flex-flow: column;
+  margin: unset;
+}
+
+.sidepanel-content>.input-field {
+  margin: unset;
+  padding: 1rem;
+}
+
+.sidepanel-content>.input-field a {
+  color: white;
+  display: flex;
+}
+
+.sidepanel-datepickers {
+  display: flex;
+  flex-flow: row;
+}
+
+.sidepanel-datepickers .input-field {
+  padding: 0 1rem;
+  padding-top: .5rem;
+  margin: unset;
+  height: 3.5rem;
+}
+
+.sidepanel-datepickers .input-field label {
+  color: white;
+  font-size: .8rem;
+  margin-left: 1rem;
+  cursor: pointer;
+}
+
+.sidepanel-datepickers .input-field label.active {
+  margin-top: 1.5rem;
+  width: 100%;
+}
+
+.sidepanel-datepickers .input-field input {
+  border-bottom: unset !important;
+  color: white;
+  cursor: pointer;
+  height: 2.5rem;
+  margin-bottom: unset;
+}
+
+.dropdown-content {
+  width: 400px !important;
+  position: fixed !important;
+  height: unset !important;
+  top: 42px !important;
+  background: darkgrey !important;
+}
+
+.dropdown-content li {
+  min-height: 1rem !important;
+  background: #3b678c;
+  margin-top: 1px;
+  padding: 0.5rem;
+  color: white !important;
+}
+
+.dropdown-content li:hover {
+  color: black !important;
+}
+
+.dd-hint {
+  text-transform: uppercase;
+}
+
+.datepicker-date-display {
+  background-color: #3b678c !important;
+}
+
+.datepicker-table-wrapper, .datepicker-controls input {
+  color: #3b678c !important;
+}
+
+.datepicker-calendar-container {
+  padding: 1rem;
+}
+
+.input-field:hover {
+  background-color: rgba(0, 0, 0, 0.158);
+  cursor: pointer;
+}

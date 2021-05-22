@@ -4,8 +4,9 @@
   box-sizing: border-box;
 }
 
-body {
+body, #root {
   overflow: hidden;
+  height: 100vh;
 }
 
 ::-webkit-scrollbar {
@@ -66,24 +67,62 @@ code {
   max-width: 100%;
   width: 100%;
   height: 100% !important;
-  overflow-y: scroll !important;
+}
+
+.main {
+  position: relative;
+  display: flex;
+  flex-flow: row;
+  flex-grow: 1;
+  height: 100% !important;
+}
+
+#sidepanel {
+  position: absolute;
+  display: flex;
+  flex-flow: column;
+  left: 0px;
+  width: 250px;
+  background-color: #3b678ce0;
+  height: 100% !important;
+  transition: left .5s;
+  z-index: 1;
+}
+
+.sidepanel-hidden {
+  left: -300px !important;
+}
+
+#chartfield {
+  display: flex;
+  width: 100%;
+  position: absolute;
+  padding-left: 250px;
+  transition: padding-left .5s;
+  height: 100%;
+  overflow-y: scroll;
+}
+
+.chartfield-full {
+  padding-left: unset !important;
 }
 
 .navbar-fixed {
   margin-bottom: 0;
-  height: 42px;
+  height: 3rem;
   width: 100% !important;
   overflow: hidden !important;
 }
 
 .loading {
   height: 50px;
-  width: 150px;
-  margin-left: 0.5rem;
+  width: 50px;
   margin-top: 0.5rem;
   position: absolute;
+  right: 2rem;
   opacity: 0;
   transition: all .3s;
+  z-index: 2000;
 }
 
 .push {
