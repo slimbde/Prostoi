@@ -62,6 +62,11 @@
   color: white !important;
 }
 
+.select-dropdown li span {
+  color: white !important;
+  padding: .2rem 1rem !important;
+}
+
 .dropdown-content li:hover {
   color: black !important;
 }
@@ -85,4 +90,9 @@
 .input-field:hover {
   background-color: rgba(0, 0, 0, 0.158);
   cursor: pointer;
+}
+
+.today-button {
+  color: #26a69a !important;
+  float: left !important;
 }

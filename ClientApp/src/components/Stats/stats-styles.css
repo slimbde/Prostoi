@@ -7,7 +7,7 @@
 
 .stats-wrapper table {
   table-layout: fixed;
-  max-width: 1000px;
+  max-width: 950px;
   border-spacing: 0;
   border-collapse: collapse;
   border: 0;
@@ -33,15 +33,15 @@
 }
 
 .stats-wrapper table thead th:first-child {
-  width: 105px;
+  width: 115px;
 }
 
 .stats-wrapper table thead th:nth-child(2) {
-  width: 160px;
+  width: 145px;
 }
 
 .stats-wrapper table thead th:nth-child(3) {
-  width: 240px;
+  width: 200px;
 }
 
 .stats-wrapper table thead th:last-child {
@@ -55,15 +55,15 @@
 }
 
 .stats-wrapper table tbody td:first-child {
-  width: 100px;
+  width: 110px;
 }
 
 .stats-wrapper table tbody td:nth-child(2) {
-  width: 160px;
+  width: 145px;
 }
 
 .stats-wrapper table tbody td:nth-child(3) {
-  width: 240px;
+  width: 200px;
 }
 
 .stats-wrapper table tbody td:last-child {

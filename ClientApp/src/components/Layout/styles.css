@@ -39,7 +39,6 @@ nav .hide-third {
 
 .menu-icon {
   vertical-align: text-top;
-  margin-right: 1rem;
 }
 
 #chartdiv {
@@ -51,6 +50,7 @@ nav .hide-third {
   display: block;
   cursor: pointer;
   padding-left: .5rem;
+  padding-right: .6rem;
   margin-right: .5rem;
 }
 

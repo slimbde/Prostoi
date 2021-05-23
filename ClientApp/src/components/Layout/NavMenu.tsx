@@ -72,7 +72,7 @@ class NavMenu extends React.Component<NavMenuProps> {
                 <li className="brand-logo"></li>
               </ul>
             </div>
-            <div id="loading" className="loading"><img src="loading4.gif" height="50px" width="62px" alt="Loading.." /></div>
+            <img id="loading" className="loading" src="loading4.gif" />
           </nav>
         </header >
       </>

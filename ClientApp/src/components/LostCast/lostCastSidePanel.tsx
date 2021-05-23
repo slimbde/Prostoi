@@ -47,6 +47,7 @@ export const LostCastSidePanel: React.FC<PanelProps> = (props: PanelProps) => {
     bDateEl = document.getElementById("bDate") as HTMLInputElement
     eDateEl = document.getElementById("eDate") as HTMLInputElement
     loadingEl = document.getElementById("loading") as HTMLDivElement
+    loadingEl.style.display = "block"
 
     const dropdown = document.getElementById("dd-trigger") as HTMLUListElement
     dropdownM = M.Dropdown.init(dropdown)

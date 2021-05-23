@@ -56,6 +56,13 @@ export const StatsSidePanel: React.FC<PanelProps> = (props: PanelProps) => {
     const datepickerDoneBtns = document.querySelectorAll('.datepicker-done')
     datepickerDoneBtns.forEach(el => el.addEventListener("click", () => datePick()))
 
+    const dpFooter = document.getElementsByClassName("confirmation-btns")[0] as HTMLButtonElement
+    const todayBtn = document.createElement("button")
+    todayBtn.classList.add("today-button", "btn-flat", "waves-effect")
+    todayBtn.textContent = "Сегодня"
+    todayBtn.onclick = (e) => { dpBeginM.gotoDate(new Date()) }
+    dpFooter.appendChild(todayBtn)
+
     clickIp(null)
 
     return () => {

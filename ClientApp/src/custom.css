@@ -11,16 +11,23 @@ body, #root {
 
 ::-webkit-scrollbar {
   width: 6px;
-  background: #3b688c33;
+  background: #e3e6e9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #3b688c2d;
+  background: #c0ccd6;
   border-radius: 1px;
 }
 
-a {
-  color: #0366d6;
+a, .a-like {
+  position: relative;
+  color: #6494bb;
+  cursor: pointer !important;
+}
+
+.a-like:hover {
+  color: lightcoral;
+  background-color: rgba(0, 0, 0, 0.034);
 }
 
 code {
@@ -116,13 +123,13 @@ code {
 
 .loading {
   height: 50px;
-  width: 50px;
+  width: 62px;
   margin-top: 0.5rem;
   position: absolute;
   left: 260px;
   opacity: 0;
   transition: all .3s;
-  z-index: 2000;
+  z-index: 1;
 }
 
 .loading-full {

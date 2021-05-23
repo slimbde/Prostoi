@@ -23,6 +23,7 @@ type GantProps = {
 const Gant: React.FC<GantProps> = (props: GantProps) => {
   useEffect(() => {
     const loadingEl = document.getElementById("loading") as HTMLDivElement
+    loadingEl.style.display = "block"
     loadingEl.style.opacity = "1"
 
     dbProxy.getShopsAsync()

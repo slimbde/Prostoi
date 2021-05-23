@@ -20,18 +20,16 @@ type StatsProps = {
 const Stats: React.FC<StatsProps> = (props: StatsProps) => {
   useEffect(() => {
     const loadingEl = document.getElementById("loading") as HTMLDivElement
-    loadingEl.style.opacity = "1"
+    loadingEl.style.display = "none"
 
     dbProxy.getUsageIpsAsync()
       .then(data => {
-        loadingEl.style.opacity = "0"
         const sidepanel = document.getElementById("sidepanel") as HTMLDivElement
         data.length > 0 && ReactDOM.render(<StatsSidePanel ips={data} setUsages={props.setUsages} />, sidepanel)
       })
       .catch(data => {
         dbProxy.remove("getUsageIpsAsync")
         console.error(data)
-        loadingEl.style.opacity = "0"
       })
   }, [])
 
