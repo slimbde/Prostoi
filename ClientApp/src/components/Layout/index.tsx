@@ -20,8 +20,7 @@ export default (props: NavMenuProps) => {
           {props.children}
         </div>
       </div>
-      <div className="push"></div>
-      <Footer />
     </div>
+    <Footer />
   </React.Fragment>
 }

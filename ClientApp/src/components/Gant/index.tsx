@@ -21,16 +21,21 @@ type GantProps = {
 
 
 const Gant: React.FC<GantProps> = (props: GantProps) => {
+  let pending = false // abort flag
+
   useEffect(() => {
     const loadingEl = document.getElementById("loading") as HTMLDivElement
     loadingEl.style.display = "block"
     loadingEl.style.opacity = "1"
 
+    pending = true
     dbProxy.getShopsAsync()
-      .then(shops => {
-        loadingEl.style.opacity = "0"
-        const sidepanel = document.getElementById("sidepanel") as HTMLDivElement
-        shops.length > 0 && ReactDOM.render(<GantSidePanel shops={shops} setIdles={props.setIdles} />, sidepanel)
+      .then(async shops => {
+        if (pending) {
+          loadingEl.style.opacity = "0"
+          const sidepanel = document.getElementById("sidepanel") as HTMLDivElement
+          shops.length > 0 && ReactDOM.render(<GantSidePanel shops={shops} setIdles={props.setIdles} />, sidepanel)
+        }
       })
       .catch(data => {
         dbProxy.remove("getShopsAsync")
@@ -38,7 +43,10 @@ const Gant: React.FC<GantProps> = (props: GantProps) => {
         loadingEl.style.opacity = "0"
       })
 
-    return () => { props.clearIdles() }
+    return () => {
+      pending = false
+      props.clearIdles()
+    }
   }, [])
 
   useEffect(() => {
