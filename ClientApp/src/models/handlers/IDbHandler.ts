@@ -1,6 +1,7 @@
 import { IdleSet } from "../types/gant";
+import { LostSteel } from "../types/lostSteel";
 import { Usage } from "../types/stats";
-import { LostCastResponse } from "./DbHandler";
+
 
 export interface IDbHandler {
   /**
@@ -15,7 +16,7 @@ export interface IDbHandler {
    * @param bDate start date
    * @param eDate end date
    */
-  getMnlzIdlesAsync(api: string, bDate: string, eDate: string): Promise<LostCastResponse[]>
+  getCcmLostSteelAsync(bDate: string, eDate: string, ccmNo: number): Promise<LostSteel[]>
 
 
   /**

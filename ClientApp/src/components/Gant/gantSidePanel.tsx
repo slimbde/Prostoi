@@ -1,22 +1,27 @@
-import React, { useEffect } from 'react';
+import "../Layout/sidepanel.scss"
+import moment from "moment";
+import * as GantStore from '../../store/GantStore';
+import React, { useEffect, useState } from 'react';
 import M from 'materialize-css/dist/js/materialize.js'
 import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
-import { dbProxy } from "../../models/handlers/DbProxy";
-import { IdleSet } from "../../models/types/gant";
-import * as GantStore from '../../store/GantStore';
-import moment from "moment";
+import { ApplicationState } from "../../store";
+import { connect } from "react-redux";
 
-type PanelProps = {
-  shops: string[]
-  setIdles: (idleSet: IdleSet) => GantStore.KnownAction
+type Props = GantStore.GantState & typeof GantStore.actionCreators
+
+type State = {
+  bDateEl?: HTMLInputElement
+  eDateEl?: HTMLInputElement
+  loadingEl?: HTMLDivElement
 }
+
 
 const datepickerOptions = {
   format: "dd.mm.yyyy",
   setDefaultDate: true,
   firstDay: 1,
   //autoClose: true,
-  //onClose: () => this.datePick(),
+  //onClose: () => datePick(),
   maxDate: moment().toDate(),
   i18n: {
     months: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
@@ -25,108 +30,113 @@ const datepickerOptions = {
     weekdaysShort: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"],
     weekdaysAbbrev: ["В", "Пн", "В", "С", "Ч", "Пт", "С"],
     cancel: "Отмена",
-  }
+  },
 }
 
-/**
- * Draws gant panel
- */
-export const GantSidePanel: React.FC<PanelProps> = (props: PanelProps) => {
-  let dropdownM: any
-  let dpBeginM: any
-  let dpEndM: any
-  let currentShop = ""
-  let shopEl: HTMLAnchorElement
-  let bDateEl: HTMLInputElement
-  let eDateEl: HTMLInputElement
-  let loadingEl: HTMLDivElement
+
+const GantSidePanel: React.FC<Props> = ({
+  currentShop,
+  loading,
+  error,
+  shops,
+  DOWNLOAD_SHOPS,
+  DOWNLOAD_IDLES,
+}) => {
+
+  const [state, setState] = useState<State>({
+    bDateEl: undefined,
+    eDateEl: undefined,
+    loadingEl: undefined,
+  })
+
 
   useEffect(() => {
-    shopEl = document.getElementsByClassName("dd-hint")[0] as HTMLAnchorElement
-    bDateEl = document.getElementById("bDate") as HTMLInputElement
-    eDateEl = document.getElementById("eDate") as HTMLInputElement
-    loadingEl = document.getElementById("loading") as HTMLDivElement
-
     const dropdown = document.getElementById("dd-trigger") as HTMLUListElement
-    dropdownM = M.Dropdown.init(dropdown)
+    const shopM = M.Dropdown.init(dropdown)
 
-    dpBeginM = M.Datepicker.init(bDateEl, { ...datepickerOptions, defaultDate: moment().toDate() })
-    dpEndM = M.Datepicker.init(eDateEl, { ...datepickerOptions, defaultDate: moment().toDate() })
+    const bDateEl = document.getElementById("bDate") as HTMLInputElement
+    const eDateEl = document.getElementById("eDate") as HTMLInputElement
+    const shopEl = document.getElementsByClassName("dd-hint")[0] as HTMLDivElement
+    const loadingEl = document.getElementById("loading") as HTMLDivElement
 
+
+    const dpBeginM = M.Datepicker.init(bDateEl, { ...datepickerOptions, defaultDate: moment().toDate() })
+    const dpEndM = M.Datepicker.init(eDateEl, { ...datepickerOptions, defaultDate: moment().toDate() })
+
+    //// datepickers doesn't see component state
     const datepickerDoneBtns = document.querySelectorAll('.datepicker-done')
-    datepickerDoneBtns.forEach(el => el.addEventListener("click", () => datePick()))
+    datepickerDoneBtns.forEach(el => (el as HTMLElement).onclick = () => {
+      const bDate = moment(bDateEl!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
+      const eDate = moment(eDateEl!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
+      bDate <= eDate && DOWNLOAD_IDLES(bDate, eDate, shopEl.textContent!)
+    })
 
-    clickShop(null)
+    setState(state => ({ ...state, bDateEl, eDateEl, loadingEl }))
+
+    DOWNLOAD_SHOPS()
 
     return () => {
-      dropdownM && dropdownM.destroy()
+      shopM && shopM.destroy()
       dpBeginM && dpBeginM.destroy()
       dpEndM && dpEndM.destroy()
     }
   }, [])
 
+  useEffect(() => {
+    if (shops.length < 1) return
+    clickShop(null)
+    //eslint-disable-next-line  
+  }, [shops])
+
+  useEffect(() => {
+    if (!error) return
+    M.toast({ html: error.message })
+    //eslint-disable-next-line  
+  }, [error])
+
+  useEffect(() => {
+    state.loadingEl && (state.loadingEl.style.opacity = loading ? "1" : "0")
+    //eslint-disable-next-line  
+  }, [loading])
+
 
   const clickShop = (e: any) => {
-    const selectedShop = e ? (e.target as HTMLElement).textContent! : "Аглопроизводство"
-    const bDate = moment(bDateEl.value, "DD.MM.YYYY").format("YYYY-MM-DD")
-    const eDate = moment(eDateEl.value, "DD.MM.YYYY").format("YYYY-MM-DD")
+    const newShop = e ? (e.target as HTMLElement).textContent! : "Аглопроизводство"
+    const bDate = moment(state.bDateEl!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
+    const eDate = moment(state.eDateEl!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
 
-    if (currentShop !== selectedShop) {
-      setTimeout(() => {
-        loadingEl.style.opacity = "1"
-        dbProxy.getGantIdlesAsync(bDate, eDate, selectedShop)
-          .then(data => {
-            shopEl.textContent = selectedShop
-            currentShop = selectedShop
-            props.setIdles(data)
-          })
-          .catch((error: any) => {
-            dbProxy.remove(`${bDate}${eDate}${selectedShop}`)
-            loadingEl.style.opacity = "0"
-            if (error.message.includes(`Нет простоев`))
-              alert(`Нет простоев для ${selectedShop}\nза период ${moment(bDate).format("DD.MM.YYYY")} ... ${moment(eDate).format("DD.MM.YYYY")}`)
-            else
-              console.error(error)
-          })
-      }, 0)
-    }
+    currentShop !== newShop && DOWNLOAD_IDLES(bDate, eDate, newShop)
   }
 
-  const datePick = () => {
-    const bDate = moment(bDateEl.value, "DD.MM.YYYY").format("YYYY-MM-DD")
-    const eDate = moment(eDateEl.value, "DD.MM.YYYY").format("YYYY-MM-DD")
 
-    if (bDate! <= eDate! && currentShop !== "") {
-      loadingEl.style.opacity = "1"
 
-      dbProxy.getGantIdlesAsync(bDate, eDate, currentShop)
-        .then(data => props.setIdles(data))
-        .catch((error: any) => {
-          dbProxy.remove(`${bDate}${eDate}${currentShop}`)
-          loadingEl.style.opacity = "0"
-          !error.message.includes(`Нет простоев`) && console.error(error)
-        })
-    }
-  }
 
-  const assembleDropEls = (shops: string[]) => shops.map(shop => <li key={shop} onClick={e => clickShop(e)}>{shop}</li>)
-
-  return <>
-    <ul className="sidepanel-content">
-      <li className="input-field" id="dd-trigger" data-target="dropdown3" >
-        <a className="dropdown-trigger" href="#" data-target="dropdown3">ЦЕХ<ArrowDownIcon className="menu-icon" /><div className="dd-hint">{currentShop}</div></a>
-        <ul id="dropdown3" className="dropdown-content z-depth-5">{assembleDropEls(props.shops)}</ul>
+  return <ul className={`sidepanel${loading ? " inactive" : ""}`}>
+    <li className="input-field" id="dd-trigger" data-target="dropdown3">
+      <a className="dropdown-trigger" href="#" data-target="dropdown3">
+        ЦЕХ
+        <ArrowDownIcon className="menu-icon" />
+        <div className="dd-hint">{currentShop}</div>
+      </a>
+      <ul id="dropdown3" className="dropdown-content z-depth-5">{shops.map(shop =>
+        <li key={shop} onClick={e => clickShop(e)}>{shop}</li>
+      )}</ul>
+    </li>
+    <div className="sidepanel-datepickers">
+      <li className="input-field">
+        <input type="text" className="datepicker" id="bDate" autoComplete="off" />
+        <label htmlFor="bDate">НАЧАЛО</label>
       </li>
-      <div className="sidepanel-datepickers">
-        <li className="input-field">
-          <input type="text" className="datepicker" id="bDate" autoComplete="off" />
-          <label htmlFor="bDate">НАЧАЛО</label>
-        </li>
-        <li className="input-field">
-          <input type="text" className="datepicker" id="eDate" autoComplete="off" />
-          <label htmlFor="eDate">ОКОНЧАНИЕ</label>
-        </li>
-      </div>
-    </ul>
-  </>
-};
+      <li className="input-field">
+        <input type="text" className="datepicker" id="eDate" autoComplete="off" />
+        <label htmlFor="eDate">ОКОНЧАНИЕ</label>
+      </li>
+    </div>
+  </ul>
+}
+
+
+export default connect(
+  (state: ApplicationState) => ({ ...state.gant }),
+  GantStore.actionCreators
+)(GantSidePanel as any)

@@ -1,0 +1,70 @@
+@import "~materialize-css/dist/css/materialize.min.css";
+
+* {
+  scrollbar-width: thin;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+#root {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  background: #e3e6e9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c0ccd6;
+  border-radius: 1px;
+}
+
+a,
+.a-like {
+  position: relative;
+  color: #6494bb;
+  cursor: pointer !important;
+
+  &:hover {
+    color: lightcoral;
+    background-color: rgba(0, 0, 0, 0.034);
+  }
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.display-5 {
+  font-size: 2rem;
+  font-weight: 200;
+  line-height: 1.2;
+}
+
+.not-found {
+  margin-left: 3rem;
+  margin-top: 1rem;
+  color: gray;
+}
+
+.badge {
+  background-color: lightblue;
+  margin-left: 0.5rem !important;
+  padding: 0.1rem 0.2rem !important;
+  font-size: 0.8rem !important;
+  height: 1.1rem !important;
+  min-width: 2rem !important;
+  width: 1.5rem !important;
+  line-height: 1rem !important;
+  color: #1861ac !important;
+  font-weight: 500 !important;
+}

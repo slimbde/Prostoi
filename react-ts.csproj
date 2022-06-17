@@ -7,11 +7,13 @@
     <SpaRoot>ClientApp\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
     <RootNamespace>Prostoi</RootNamespace>
+    <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.4"/>
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.3"/>
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.113"/>
+    <PackageReference Include="Dapper" Version="2.0.90"/>
   </ItemGroup>
   <ItemGroup>
     <Content Remove="$(SpaRoot)**"/>

@@ -1,0 +1,113 @@
+.sidepanel {
+  position: sticky;
+  top: 0px;
+  display: flex;
+  flex-flow: column;
+  width: 300px;
+  background-color: #3b6780;
+  height: 100%;
+  transition: margin-left 0.5s;
+  z-index: 2;
+  margin: 0;
+
+  &.inactive {
+    pointer-events: none;
+    filter: opacity(0.7);
+  }
+
+  &.hidden {
+    margin-left: -300px !important;
+  }
+
+  .sidepanel-datepickers {
+    display: flex;
+    flex-flow: row;
+  }
+
+  .input-field {
+    padding: 0 1rem;
+    padding-top: 0.5rem;
+    margin: 0;
+    height: 3.5rem;
+
+    label {
+      color: white;
+      font-size: 0.8rem;
+      margin-left: 1rem;
+      cursor: pointer;
+
+      &.active {
+        margin-top: 1.5rem;
+        width: 100%;
+      }
+    }
+
+    input {
+      border-bottom: 0 !important;
+      color: white;
+      cursor: pointer;
+      height: 2.5rem;
+      margin-bottom: 0;
+    }
+
+    a {
+      color: white;
+      display: flex;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+  }
+}
+
+.dropdown-content {
+  width: 400px !important;
+  position: fixed !important;
+  top: 42px !important;
+  background: darkgrey !important;
+
+  li {
+    min-height: 1rem !important;
+    background: #3b678c;
+    margin-top: 1px;
+    padding: 0.5rem;
+    color: white !important;
+
+    &:hover {
+      color: black !important;
+    }
+  }
+}
+
+.select-dropdown li span {
+  color: white !important;
+  padding: 0.2rem 1rem !important;
+}
+
+.dd-hint {
+  text-transform: uppercase;
+}
+
+.datepicker-date-display {
+  background-color: #3b678c !important;
+}
+
+.datepicker-table-wrapper,
+.datepicker-controls input {
+  color: #3b678c !important;
+}
+
+.datepicker-calendar-container {
+  padding: 1rem;
+}
+
+.input-field:hover {
+  background-color: rgba(0, 0, 0, 0.158);
+  cursor: pointer;
+}
+
+.today-button {
+  color: #26a69a !important;
+  float: left !important;
+}

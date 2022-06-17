@@ -3,7 +3,6 @@ import { Usage } from "../../models/types/stats"
 import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
 import ArrowUpIcon from '@material-ui/icons/ArrowDropUp'
 import moment from "moment"
-import "./stats-styles.css"
 
 
 type StatsTableProps = {
@@ -53,7 +52,7 @@ export const StatsTable: React.FC<StatsTableProps> = (props: StatsTableProps) =>
 
 
   return (
-    <table className="highlight">
+    <table className="highlight stats-table">
       <thead>
         <tr>
           <th className="a-like" onClick={() => headerClick("ip")}>Кто{state.field === "ip" && state.arrow}<span className="badge">{uniqueIps}</span></th>

@@ -1,26 +1,31 @@
-import { LostCast } from "../../models/types/lostCast"
-import * as React from 'react'
 import moment from 'moment'
+import * as React from 'react'
+import { LostSteel } from "models/types/lostSteel"
 
 
-type CastLostTableProps = {
-  lostCasts: LostCast[]
+type Props = {
+  lostSteel: LostSteel[]
 }
 
 
-export const CastLostTable: React.FC<CastLostTableProps> = (props: CastLostTableProps) => {
-  const data = props.lostCasts
-    ? props.lostCasts.map(lc => <tr key={lc.date + lc.lostIdle}>
-      <td style={{ background: "#cececd" }}>{lc.lostIdle.toLocaleString()}</td>
-      <td style={{ background: "#eee9db" }}>{lc.lostEfficiency.toLocaleString()}</td>
-      <td className="main-field">{moment(lc.date).format("DD.MM.YYYY")}</td>
+export const LostSteelTable: React.FC<Props> = ({
+  lostSteel,
+}) => {
+
+  const data = lostSteel
+    ? lostSteel.map(lc => <tr key={lc.SHIFT + lc.DOWNTIME_WEIGHT}>
+      <td style={{ background: "#cececd" }}>{lc.IDLE_WEIGHT.toLocaleString()}</td>
+      <td style={{ background: "#eee9db" }}>{lc.DOWNTIME_WEIGHT.toLocaleString()}</td>
+      <td className="main-field">{moment(lc.SHIFT).format("DD.MM.YYYY")}</td>
     </tr>)
     : <tr><td></td><td></td><td></td></tr>
+
   let totalIdle = 0
   let totalEfficiency = 0
-  props.lostCasts && props.lostCasts.forEach((lc: LostCast) => {
-    totalIdle += lc.lostIdle
-    totalEfficiency += lc.lostEfficiency
+
+  lostSteel && lostSteel.forEach((lc: LostSteel) => {
+    totalIdle += lc.IDLE_WEIGHT
+    totalEfficiency += lc.DOWNTIME_WEIGHT
   })
 
   return (

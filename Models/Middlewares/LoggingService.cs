@@ -4,8 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Prostoi.Models.DTOs;
-using Prostoi.Models.Repositories;
-
+using Prostoi.Models.Repositories.Interfaces;
 
 namespace Prostoi.Models.Middlewares
 {

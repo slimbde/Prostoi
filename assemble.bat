@@ -1,1 +1,1 @@
-dotnet publish -r win10-x64 -c Release --self-contained false
+dotnet publish -c Release -r win-x64 --self-contained false -p:DebugType=None

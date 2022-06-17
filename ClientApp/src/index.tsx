@@ -1,5 +1,4 @@
 import '@babel/polyfill'
-//import 'bootstrap/dist/css/bootstrap.css';
 import 'materialize-css/dist/js/materialize.js';
 
 ///// to use icons:
@@ -12,7 +11,6 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import { createBrowserHistory } from 'history';
 import configureStore from './store/configureStore';
-//import registerServiceWorker from './registerServiceWorker';
 import App from './App';
 
 if (window.NodeList && !NodeList.prototype.forEach) {
@@ -38,5 +36,3 @@ ReactDOM.render(
     </ConnectedRouter>
   </Provider>,
   document.getElementById('root'));
-
-//registerServiceWorker();

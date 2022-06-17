@@ -1,13 +1,13 @@
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Prostoi.Models;
 using Prostoi.Models.Middlewares;
 using Prostoi.Models.Repositories;
-
+using Prostoi.Models.Repositories.Interfaces;
 
 namespace Prostoi
 {
@@ -18,15 +18,19 @@ namespace Prostoi
 
     public void ConfigureServices(IServiceCollection services)
     {
-      string oraString = Configuration.GetConnectionString("Bunker");
-      string ccm5L2String = Configuration.GetConnectionString("CCM5L2");
-      string ccm2L2String = Configuration.GetConnectionString("CCM2L2");
+      string bunkerString = Configuration.GetConnectionString("Bunker");
+
+      IDictionary<int, string> ccmStrings = new Dictionary<int, string>() {
+        {2,Configuration.GetConnectionString("CCM2L2")},
+        {5,Configuration.GetConnectionString("CCM5L2")},
+      };
+
       string usageLogString = Configuration.GetConnectionString("SQLite");
 
-      services.AddScoped<IIdleRepository, IdleRepository>(provider => new IdleRepository(oraString, new BunkerAdapter()));
-      services.AddScoped<ICCMRepository, CCMRepository>(provider => new CCMRepository(ccm5L2String, ccm2L2String));
+      services.AddSingleton<IIdleRepository>(RepositoryFactory.CreateIdleRepo(bunkerString));
+      services.AddSingleton<ICCMRepository>(RepositoryFactory.CreateCcmRepo(ccmStrings));
+      services.AddSingleton<IUsageLogRepository>(RepositoryFactory.CreateUsageRepo(usageLogString));
 
-      services.AddSingleton<IUsageLogRepository, UsageLogRepository>(provider => new UsageLogRepository(usageLogString));
       services.AddSingleton<LoggingService>();
 
       services.AddControllersWithViews();
@@ -38,22 +42,15 @@ namespace Prostoi
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-      if (env.IsDevelopment())
-        app.UseDeveloperExceptionPage();
+      if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+      else app.UseExceptionHandler("/Error");
 
-      else
-      {
-        app.UseExceptionHandler("/Error");
-        //app.UseHsts();
-      }
-
-      app.UseMiddleware<LoggingMiddleware>();
-
-      //app.UseHttpsRedirection();
       app.UseStaticFiles();
       app.UseSpaStaticFiles();
 
       app.UseRouting();
+
+      app.UseMiddleware<LoggingMiddleware>();
 
       app.UseEndpoints(endpoints =>
       {

@@ -1,0 +1,67 @@
+.losts-wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  flex-grow: 1;
+  box-sizing: border-box;
+  transition: all 0.1s;
+
+  table {
+    max-width: 220px;
+    margin: 1rem 3rem;
+
+    thead {
+      border-bottom: 2px solid lightgray;
+
+      tr {
+        border: unset !important;
+
+        th {
+          padding: 0.5rem 0.2rem;
+          font-size: smaller;
+          border-radius: 0 !important;
+          border-bottom: unset !important;
+          border-top: unset !important;
+        }
+      }
+    }
+
+    tbody {
+      display: block;
+      max-height: 58vh;
+      overflow-y: auto;
+
+      td {
+        padding: 0.2rem 0.1rem;
+        font-size: smaller;
+        border-radius: 0 !important;
+      }
+    }
+
+    thead,
+    tbody tr {
+      display: table;
+      table-layout: fixed;
+      width: 100%;
+    }
+
+    .main-field {
+      background: #cfd6dc;
+    }
+
+    .table-header {
+      background: #3b688c;
+      color: white;
+      border-bottom: unset !important;
+    }
+  }
+
+  #chartdiv {
+    height: 78vh;
+    min-width: 650px;
+    margin-top: 1rem;
+    margin-left: 1rem;
+    transition: all 0.1s;
+    flex-grow: 1;
+  }
+}

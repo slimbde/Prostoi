@@ -1,7 +1,13 @@
 using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Prostoi.Models.Repositories;
+using Newtonsoft.Json;
+using Prostoi.Models.DTOs;
+using Prostoi.Models.Repositories.Interfaces;
+
 
 namespace Prostoi.Controllers
 {
@@ -9,12 +15,12 @@ namespace Prostoi.Controllers
   [Route("api/[controller]")]
   public class IdleController : ControllerBase
   {
-    private readonly IIdleRepository _repo;
-    private readonly ICCMRepository _ccmRepo;
+    readonly IIdleRepository idleRepo;
+    readonly ICCMRepository ccmRepo;
     public IdleController(IIdleRepository repo, ICCMRepository ccmRepo)
     {
-      _repo = repo;
-      _ccmRepo = ccmRepo;
+      idleRepo = repo;
+      this.ccmRepo = ccmRepo;
     }
 
     ///// GET: api/Idle/GetMinMaxDates
@@ -23,10 +29,10 @@ namespace Prostoi.Controllers
     {
       try
       {
-        var dates = await _repo.GetMinMaxDates();
+        var dates = await idleRepo.GetMinMaxDates();
         return Ok(dates);
       }
-      catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
+      catch (Exception ex) { return BadRequest(ex.Message); }
     }
 
     ///// GET: api/Idle/GetShops
@@ -35,10 +41,10 @@ namespace Prostoi.Controllers
     {
       try
       {
-        var shops = await _repo.GetShops();
+        var shops = await idleRepo.GetShops();
         return Ok(shops);
       }
-      catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
+      catch (Exception ex) { return BadRequest(ex.Message); }
     }
 
     ///// GET: api/Idle/GetIdles?bDate=...&eDate=...&ceh=...
@@ -47,34 +53,26 @@ namespace Prostoi.Controllers
     {
       try
       {
-        var idles = await _repo.GetIdles(bDate, eDate, ceh);
+        var idles = await idleRepo.GetIdles(bDate, eDate, ceh);
         return Ok(idles);
       }
-      catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
+      catch (Exception ex) { return BadRequest(ex.Message); }
     }
 
-    ///// GET: api/Idle/GetMNLZ5LostIdles?bDate=...&eDate=...
-    [HttpGet("GetMNLZ5LostIdles")]
-    public async Task<IActionResult> GetMNLZ5LostIdles(string bDate, string eDate)
+    ///// GET: api/Idle/GetCcmIdleDowntimeWeight?bDate=...&eDate=...&ccmNo=...
+    [HttpGet("GetCcmIdleDowntimeWeight")]
+    public async Task<IActionResult> GetCcmIdleDowntimeWeight(string bDate, string eDate, int ccmNo)
     {
       try
       {
-        var lostIdles = await _ccmRepo.GetMNLZ5LostIdles(bDate, eDate);
-        return Ok(lostIdles);
-      }
-      catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
-    }
+        await Task.Yield();
+        WebClient client = new WebClient();
+        client.UseDefaultCredentials = true;
+        string content = client.DownloadString($"http://10.2.59.20:81/api/Idle/GetCcmIdleDowntimeWeight?bDate={bDate}&eDate={eDate}&ccmNo={ccmNo}");
 
-    ///// GET: api/Idle/GetMNLZ2LostIdles?bDate=...&eDate=...
-    [HttpGet("GetMNLZ2LostIdles")]
-    public async Task<IActionResult> GetMNLZ2LostIdles(string bDate, string eDate)
-    {
-      try
-      {
-        var lostIdles = await _ccmRepo.GetMNLZ2LostIdles(bDate, eDate);
-        return Ok(lostIdles);
+        return Ok(content);
       }
-      catch (Exception ex) { return BadRequest(new { error = ex.Message }); }
+      catch (Exception ex) { return BadRequest(ex.Message); }
     }
   }
 }

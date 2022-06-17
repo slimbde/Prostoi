@@ -1,13 +1,13 @@
 import * as Stats from './StatsStore'
 import * as Gant from './GantStore'
-import * as LostCast from './LostCastStore'
+import * as LostSteel from './LostSteelStore'
 
 
 
 // The top-level state object
 export interface ApplicationState {
   gant: Gant.GantState
-  lostCast: LostCast.LostCastState
+  lostSteel: LostSteel.CastState
   stats: Stats.StatsState
 }
 
@@ -16,7 +16,7 @@ export interface ApplicationState {
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
   gant: Gant.reducer,
-  lostCast: LostCast.reducer,
+  lostSteel: LostSteel.reducer,
   stats: Stats.reducer
 };
 

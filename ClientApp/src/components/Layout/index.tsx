@@ -1,7 +1,7 @@
 import * as React from 'react';
 import NavMenu from './NavMenu'
 import Footer from './Footer'
-import './styles.css'
+import './layout.scss'
 
 
 type NavMenuProps = {
@@ -11,16 +11,11 @@ type NavMenuProps = {
 
 export default (props: NavMenuProps) => {
 
-  return <React.Fragment>
+  return <>
     <NavMenu {...props} />
-    <div className="container">
-      <div className="main">
-        <div id="sidepanel"></div>
-        <div id="chartfield">
-          {props.children}
-        </div>
-      </div>
+    <div className="main">
+      {props.children}
     </div>
     <Footer />
-  </React.Fragment>
+  </>
 }

@@ -5,39 +5,11 @@ using System.Data.Common;
 using System.Data.SQLite;
 using System.Threading.Tasks;
 using Prostoi.Models.DTOs;
+using Prostoi.Models.Repositories.Interfaces;
 
-namespace Prostoi.Models.Repositories
+
+namespace Prostoi.Models.Repositories.SQLite
 {
-  /// <summary>
-  /// The basic interface for usage logging
-  /// </summary>
-  public interface IUsageLogRepository
-  {
-    /// <summary>
-    /// Retrieves unique ip from the database
-    /// </summary>
-    /// <returns>Unique ip list</returns>
-    Task<IEnumerable<string>> GetIps();
-
-    /// <summary>
-    /// Retrieves Usage records for requested type
-    /// </summary>
-    /// <param name="what">the type of request</param>
-    /// <returns>UsageLogs set</returns>
-    Task<IEnumerable<UsageLog>> GetFor(string bDate, string eDate, string ip);
-
-    /// <summary>
-    /// Appends new record to the db
-    /// </summary>
-    /// <param name="obj">set of usageLog objs</param>
-    /// <returns>num rows affected</returns>
-    Task<int> Put(UsageLog[] obj);
-  }
-
-
-
-
-
   public class UsageLogRepository : IUsageLogRepository
   {
     protected SQLiteConnection _db;
