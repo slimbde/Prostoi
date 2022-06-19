@@ -1,13 +1,15 @@
 import * as Stats from './StatsStore'
 import * as Gant from './GantStore'
 import * as LostSteel from './LostSteelStore'
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+
 
 
 
 // The top-level state object
 export interface ApplicationState {
   gant: Gant.GantState
-  lostSteel: LostSteel.CastState
+  lostSteel: LostSteel.LostState
   stats: Stats.StatsState
 }
 
@@ -23,5 +25,7 @@ export const reducers = {
 // This type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are
 // correctly typed to match your store.
 export interface AppThunkAction<TAction> {
-  (dispatch: (action: TAction) => void, getState: () => ApplicationState): void;
+  (dispatch: (action: TAction) => Promise<void>, getState: () => ApplicationState): void;
 }
+
+export const useStateSelector = useSelector as TypedUseSelectorHook<ApplicationState>

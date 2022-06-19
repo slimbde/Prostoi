@@ -4,10 +4,12 @@ import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
 import * as LostSteelStore from '../../store/LostSteelStore'
 import M from 'materialize-css/dist/js/materialize.js'
 import moment from "moment";
-import { ApplicationState } from "../../store";
-import { connect } from "react-redux";
+import { useStateSelector } from "../../store";
+import { useDispatch } from "react-redux";
 
-type Props = LostSteelStore.LostState & typeof LostSteelStore.actionCreators
+
+
+//type Props = LostSteelStore.LostState & typeof LostSteelStore.actionCreators
 
 type State = {
   bDateEl?: HTMLInputElement
@@ -36,19 +38,24 @@ const datepickerOptions = {
 /**
  * Draws LostCast panel
  */
-const LostSteelSidePanel: React.FC<Props> = ({
-  currentShop,
-  loading,
-  error,
-  shops,
-  DOWNLOAD_LOSTS
-}) => {
+const LostSteelSidePanel: React.FC = () => {
 
   const [state, setState] = useState<State>({
     bDateEl: undefined,
     eDateEl: undefined,
     loadingEl: undefined,
   })
+
+  const {
+    currentShop,
+    loading,
+    error,
+    shops,
+  } = useStateSelector(appState => appState.lostSteel)
+
+  const dispatch = useDispatch()
+  const { DOWNLOAD_LOSTS } = LostSteelStore.actionCreators
+
 
   useEffect(() => {
     const dropdown = document.getElementById("dd-trigger") as HTMLUListElement
@@ -101,12 +108,12 @@ const LostSteelSidePanel: React.FC<Props> = ({
   }, [loading])
 
 
-  const clickShop = (e: any) => {
+  const clickShop = async (e: any) => {
     const newShop = e ? (e.target as HTMLElement).textContent! : "МНЛЗ-5"
     const bDate = moment(state.bDateEl!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
     const eDate = moment(state.eDateEl!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
 
-    currentShop !== newShop && DOWNLOAD_LOSTS(bDate, eDate, newShop)
+    currentShop !== newShop && dispatch(DOWNLOAD_LOSTS(bDate, eDate, newShop))
   }
 
 
@@ -135,7 +142,4 @@ const LostSteelSidePanel: React.FC<Props> = ({
   </ul>
 };
 
-export default connect(
-  (state: ApplicationState) => ({ ...state.lostSteel }),
-  LostSteelStore.actionCreators
-)(LostSteelSidePanel as any)
+export default LostSteelSidePanel

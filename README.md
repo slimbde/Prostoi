@@ -47,3 +47,9 @@
 ## If charts draw twice at the switch to another page
 - The point is you forgot to dispose Idles or any other data in Redux. So it takes previous data for the first render
 - Dispose that data and blinking stops
+
+## REDUX
+- The benefit of using **connect** function is it wraps your `actionCreators` with ***dispatch*** function
+  so there is no need to use `useDispatch` hook. However you're unable to pass any props to the component except for redux stuff
+
+- The benefit of using hooks to deal with redux is to avoiding using `connect` function and possibility to pass any props to the component.
