@@ -1,13 +1,11 @@
 import "../Layout/sidepanel.scss"
 import moment from "moment";
-import * as GantStore from '../../store/GantStore';
 import React, { useEffect, useState } from 'react';
 import M from 'materialize-css/dist/js/materialize.js'
 import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
-import { ApplicationState } from "../../store";
-import { connect } from "react-redux";
+import { useActions, useStateSelector } from "../../store";
 
-type Props = GantStore.GantState & typeof GantStore.actionCreators
+
 
 type State = {
   bDateEl?: HTMLInputElement
@@ -34,20 +32,22 @@ const datepickerOptions = {
 }
 
 
-const GantSidePanel: React.FC<Props> = ({
-  currentShop,
-  loading,
-  error,
-  shops,
-  DOWNLOAD_SHOPS,
-  DOWNLOAD_IDLES,
-}) => {
+export default () => {
 
   const [state, setState] = useState<State>({
     bDateEl: undefined,
     eDateEl: undefined,
     loadingEl: undefined,
   })
+
+  const {
+    currentShop,
+    loading,
+    error,
+    shops,
+  } = useStateSelector(appState => appState.gant)
+
+  const { DOWNLOAD_SHOPS, DOWNLOAD_IDLES } = useActions().gant
 
 
   useEffect(() => {
@@ -135,8 +135,3 @@ const GantSidePanel: React.FC<Props> = ({
   </ul>
 }
 
-
-export default connect(
-  (state: ApplicationState) => ({ ...state.gant }),
-  GantStore.actionCreators
-)(GantSidePanel as any)

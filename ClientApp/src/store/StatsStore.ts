@@ -39,7 +39,12 @@ export const actionCreators = {
     if (!state.loading) {
       try {
         dispatch({ type: 'START_LOADING' })
-        const ips = await db.getUsageIpsAsync()
+        const ips = (await db.getUsageIpsAsync()).sort((a, b) => {
+          const a1 = a.replace(/\./g, "")
+          const b1 = b.replace(/\./g, "")
+
+          return a1 < b1 ? -1 : a1 > b1 ? 1 : 0
+        })
         dispatch({ type: "SET_IPS", ips })
       } catch (error) {
         console.log(error)

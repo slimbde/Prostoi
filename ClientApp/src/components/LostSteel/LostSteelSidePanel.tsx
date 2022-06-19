@@ -1,15 +1,14 @@
 import "../Layout/sidepanel.scss"
 import React, { useEffect, useState } from 'react';
 import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
-import * as LostSteelStore from '../../store/LostSteelStore'
 import M from 'materialize-css/dist/js/materialize.js'
 import moment from "moment";
-import { useStateSelector } from "../../store";
-import { useDispatch } from "react-redux";
+import { useActions, useStateSelector } from "../../store";
 
 
 
-//type Props = LostSteelStore.LostState & typeof LostSteelStore.actionCreators
+// as we use hooks no need to put everything in props
+// type Props = LostSteelStore.LostState & typeof LostSteelStore.actionCreators
 
 type State = {
   bDateEl?: HTMLInputElement
@@ -36,7 +35,7 @@ const datepickerOptions = {
 }
 
 /**
- * Draws LostCast panel
+ * Draws LostSteel panel
  */
 const LostSteelSidePanel: React.FC = () => {
 
@@ -53,8 +52,7 @@ const LostSteelSidePanel: React.FC = () => {
     shops,
   } = useStateSelector(appState => appState.lostSteel)
 
-  const dispatch = useDispatch()
-  const { DOWNLOAD_LOSTS } = LostSteelStore.actionCreators
+  const { DOWNLOAD_LOSTS } = useActions().lostSteel
 
 
   useEffect(() => {
@@ -113,7 +111,7 @@ const LostSteelSidePanel: React.FC = () => {
     const bDate = moment(state.bDateEl!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
     const eDate = moment(state.eDateEl!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
 
-    currentShop !== newShop && dispatch(DOWNLOAD_LOSTS(bDate, eDate, newShop))
+    currentShop !== newShop && DOWNLOAD_LOSTS(bDate, eDate, newShop)
   }
 
 

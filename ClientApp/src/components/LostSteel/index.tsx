@@ -1,20 +1,17 @@
 import * as React from 'react'
 import * as am4core from "@amcharts/amcharts4/core";
-import * as CastStore from '../../store/LostSteelStore';
 import { drawChart } from './drawChart'
-import { connect } from 'react-redux'
-import LostCastSidePanel from "./LostSteelSidePanel";
-import { ApplicationState } from '../../store';
+import LostSteelSidePanel from "./LostSteelSidePanel";
+import { useStateSelector } from '../../store';
 import { LostSteelTable } from './LostSteelTable';
 import '../Layout/sidepanel.scss'
 import './lostSteel.scss'
 
 
-type Props = CastStore.LostState
 
-const Steel: React.FC<Props> = ({
-  lostSteel,
-}) => {
+
+export default () => {
+  const { lostSteel } = useStateSelector(appState => appState.lostSteel)
 
   React.useEffect(() => {
     if (!lostSteel || lostSteel.length === 0) return
@@ -26,7 +23,7 @@ const Steel: React.FC<Props> = ({
 
 
   return <>
-    <LostCastSidePanel />
+    <LostSteelSidePanel />
     <div className="losts-wrapper">
       <div id="chartdiv"></div>
       {lostSteel && <LostSteelTable lostSteel={lostSteel} />}
@@ -34,7 +31,3 @@ const Steel: React.FC<Props> = ({
   </>
 }
 
-export default connect(
-  (state: ApplicationState) => state.lostSteel,
-  CastStore.actionCreators
-)(Steel as any);

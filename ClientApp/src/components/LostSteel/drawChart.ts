@@ -44,7 +44,8 @@ export const drawChart = (data: LostSteel[]) => {
   valueAxis.renderer.inside = false;
   valueAxis.fontSize = 12
   valueAxis.min = 0;
-  valueAxis.max = 102
+  valueAxis.max = 105
+  valueAxis.strictMinMax = true
 
 
   // Create series

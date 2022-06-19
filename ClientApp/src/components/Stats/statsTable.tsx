@@ -15,14 +15,13 @@ export const StatsTable: React.FC<StatsTableProps> = (props: StatsTableProps) =>
 
   const countData = (field: string, asc: boolean): JSX.Element[] =>
     props.usages.concat().sort(predicateProvider(field, asc)).map(item =>
-      <tr key={`${item.ip}${item.date}${item.method}${item.params}`}>
-        <td>{item.ip}</td>
-        <td>{moment(item.date).format("DD.MM.YYYY  HH:mm")}</td>
-        <td>{methodDecoder[item.method]}</td>
-        <td>{paramDecoder(item.params)}</td>
-      </tr>
+      <div className="tr" key={`${item.ip}${item.date}${item.method}${item.params}`}>
+        <div className="td">{item.ip}</div>
+        <div className="td">{moment(item.date).format("DD.MM.YYYY  HH:mm")}</div>
+        <div className="td">{methodDecoder[item.method]}</div>
+        <div className="td">{paramDecoder(item.params)}</div>
+      </div>
     )
-
 
   const [state, setState] = useState({
     field: "date",
@@ -52,19 +51,19 @@ export const StatsTable: React.FC<StatsTableProps> = (props: StatsTableProps) =>
 
 
   return (
-    <table className="highlight stats-table">
-      <thead>
-        <tr>
-          <th className="a-like" onClick={() => headerClick("ip")}>Кто{state.field === "ip" && state.arrow}<span className="badge">{uniqueIps}</span></th>
-          <th className="a-like" onClick={() => headerClick("date")}>Когда{state.field === "date" && state.arrow}</th>
-          <th className="a-like" onClick={() => headerClick("method")}>Куда{state.field === "method" && state.arrow}<span className="badge">{uniqueMethods}</span></th>
-          <th>Зачем</th>
-        </tr>
-      </thead>
-      <tbody>
+    <div className="stats-table">
+      <div className="thead">
+        <div className="tr">
+          <div className="th a-like" onClick={() => headerClick("ip")}>{state.field === "ip" && state.arrow}Кто<span className="badge">{uniqueIps}</span></div>
+          <div className="th a-like" onClick={() => headerClick("date")}>{state.field === "date" && state.arrow}Когда</div>
+          <div className="th a-like" onClick={() => headerClick("method")}>{state.field === "method" && state.arrow}Куда<span className="badge">{uniqueMethods}</span></div>
+          <div className="th">Зачем</div>
+        </div>
+      </div>
+      <div className="tbody">
         {state.data}
-      </tbody>
-    </table >
+      </div>
+    </div >
   )
 }
 

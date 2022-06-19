@@ -2,6 +2,7 @@ import * as Stats from './StatsStore'
 import * as Gant from './GantStore'
 import * as LostSteel from './LostSteelStore'
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { bindActionCreators } from "redux";
 
 
 
@@ -25,7 +26,20 @@ export const reducers = {
 // This type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are
 // correctly typed to match your store.
 export interface AppThunkAction<TAction> {
-  (dispatch: (action: TAction) => Promise<void>, getState: () => ApplicationState): void;
+  (dispatch: (action: TAction) => void, getState: () => ApplicationState): void;
 }
 
+
+// the hook to retrieve app state within FC
 export const useStateSelector = useSelector as TypedUseSelectorHook<ApplicationState>
+
+// the hook to retrieve action creators within FC. Dispatch is already bound so no need to call it explicitly 
+export const useActions = () => {
+  const dispatch = useDispatch();
+
+  return {
+    gant: bindActionCreators(Gant.actionCreators, dispatch),
+    lostSteel: bindActionCreators(LostSteel.actionCreators, dispatch),
+    stats: bindActionCreators(Stats.actionCreators, dispatch),
+  }
+}

@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import M from 'materialize-css/dist/js/materialize.js'
 import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
-import { dbProxy } from "../../models/handlers/DbProxy";
-import { Usage } from "../../models/types/stats";
-import * as StatsStore from '../../store/StatsStore'
 import moment from "moment";
-import { connect } from "react-redux";
-import { ApplicationState } from "store";
+import { useActions, useStateSelector } from "store";
 
-type Props = StatsStore.StatsState & typeof StatsStore.actionCreators
 
 type State = {
   bDateEl?: HTMLInputElement
@@ -36,20 +31,23 @@ const datepickerOptions = {
 /**
  * Draws stats panel
  */
-const StatsSidePanel: React.FC<Props> = ({
-  DOWNLOAD_IPS,
-  DOWNLOAD_USAGES,
-  loading,
-  currentIp,
-  error,
-  ips,
-}) => {
+export default () => {
 
   const [state, setState] = useState<State>({
     bDateEl: undefined,
     eDateEl: undefined,
     loadingEl: undefined,
   })
+
+  const {
+    loading,
+    currentIp,
+    error,
+    ips,
+  } = useStateSelector(appState => appState.stats)
+
+  const { DOWNLOAD_IPS, DOWNLOAD_USAGES } = useActions().stats
+
 
   useEffect(() => {
     const ipEl = document.getElementsByClassName("ip-hint")[0] as HTMLAnchorElement
@@ -142,11 +140,6 @@ const StatsSidePanel: React.FC<Props> = ({
       </li>
     </div>
   </ul>
-};
+}
 
-
-export default connect(
-  (state: ApplicationState) => ({ ...state.stats }),
-  StatsStore.actionCreators
-)(StatsSidePanel as any)
 

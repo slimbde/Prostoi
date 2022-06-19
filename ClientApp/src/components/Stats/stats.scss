@@ -1,26 +1,30 @@
 .stats-table {
-  display: block;
+  display: flex;
+  flex-flow: column;
   margin: 1rem 2rem;
-  max-width: 1000px;
+  height: fit-content;
 
-  tr {
+  .tr {
     width: 100%;
     display: grid;
     grid-template-columns: 100px 150px 200px 1fr !important;
+
+    & + .tr {
+      border-top: 1px solid lightgray;
+    }
   }
 
-  thead {
+  .thead {
     display: block;
-    position: fixed;
-    max-width: 1000px;
-    width: 1000px;
-    top: 45px;
+    position: sticky;
+    margin-top: -1rem;
+    top: 0;
     background-color: rgba(255, 255, 255, 0.733);
     backdrop-filter: blur(2px);
     z-index: 1;
     padding-top: 1rem;
 
-    th {
+    .th {
       position: relative;
       border-radius: 0;
       color: #6494bb;
@@ -28,25 +32,20 @@
       font-weight: 400;
       padding: 0.2rem 1rem;
       border-bottom: 2px solid #6494bb;
-
-      svg {
-        position: absolute;
-        right: 0;
-      }
+      display: flex;
+      align-items: center;
     }
   }
 
-  tbody {
-    display: block;
-    max-height: 80vh;
-    position: absolute;
-    top: 3rem;
-    max-width: 1000px;
-    width: 1000px;
+  .tbody {
+    display: flex;
+    flex-flow: column;
 
-    td {
+    .td {
       font-size: 0.9rem;
       padding: 0.2rem 1rem;
+      overflow: hidden;
+      white-space: nowrap;
     }
   }
 }
