@@ -2,5 +2,5 @@ import * as React from 'react'
 
 
 export default () => <div className="footer">
-  <a href="mailto:GrigoriyDolgiy@mechel.ru">Версия: 17.06.2022.17.29</a>
+  <a href="mailto:GrigoriyDolgiy@mechel.ru">Версия: 25.06.2022.14.11</a>
 </div >

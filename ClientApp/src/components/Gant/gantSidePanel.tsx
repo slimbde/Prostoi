@@ -48,6 +48,7 @@ export default () => {
   } = useStateSelector(appState => appState.gant)
 
   const { DOWNLOAD_SHOPS, DOWNLOAD_IDLES } = useActions().gant
+  const { DOWNLOAD_IPS } = useActions().stats
 
 
   useEffect(() => {

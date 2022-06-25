@@ -13,10 +13,10 @@ export const LostSteelTable: React.FC<Props> = ({
 }) => {
 
   const data = lostSteel
-    ? lostSteel.map(lc => <tr key={lc.SHIFT + lc.DOWNTIME_WEIGHT}>
-      <td style={{ background: "#cececd" }}>{lc.IDLE_WEIGHT.toLocaleString()}</td>
-      <td style={{ background: "#eee9db" }}>{lc.DOWNTIME_WEIGHT.toLocaleString()}</td>
-      <td className="main-field">{moment(lc.SHIFT).format("DD.MM.YYYY")}</td>
+    ? lostSteel.map((ls, idx) => <tr key={idx}>
+      <td style={{ background: "#cececd" }}>{ls.IDLE_WEIGHT.toLocaleString()}</td>
+      <td style={{ background: "#eee9db" }}>{ls.DOWNTIME_WEIGHT.toLocaleString()}</td>
+      <td className="main-field">{moment(ls.SHIFT).format("DD.MM.YYYY")}</td>
     </tr>)
     : <tr><td></td><td></td><td></td></tr>
 

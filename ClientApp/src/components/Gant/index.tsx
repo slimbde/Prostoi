@@ -2,7 +2,7 @@ import "../Layout/sidepanel.scss"
 import * as am4core from "@amcharts/amcharts4/core";
 import React, { useEffect } from 'react';
 import GantSidePanel from "./gantSidePanel";
-import { useStateSelector } from '../../store';
+import { useActions, useStateSelector } from '../../store';
 import { drawChart } from './drawChart';
 
 

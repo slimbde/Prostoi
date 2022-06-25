@@ -2,18 +2,16 @@ import thunk from 'redux-thunk';
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import { connectRouter, routerMiddleware } from 'connected-react-router';
 import { ApplicationState, reducers } from './';
-import { History } from 'history';
+import { createBrowserHistory, History } from 'history';
 
-export default function configureStore(history: History, initialState?: ApplicationState) {
+
+
+
+function configureStore(history: History, initialState?: ApplicationState) {
   const middleware = [
     thunk,
     routerMiddleware(history)
   ];
-
-  const rootReducer = combineReducers({
-    ...reducers,
-    router: connectRouter(history)
-  });
 
   const enhancers: never[] = [];
   const windowIfDefined = typeof window === 'undefined'
@@ -30,3 +28,20 @@ export default function configureStore(history: History, initialState?: Applicat
     compose(applyMiddleware(...middleware), ...enhancers)
   );
 }
+
+
+
+
+
+// Create browser history to use in the Redux store
+const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href') as string;
+export const history = createBrowserHistory({ basename: baseUrl });
+
+export const rootReducer = combineReducers({
+  ...reducers,
+  router: connectRouter(history)
+});
+
+// Get the application-wide store instance, prepopulating with state from the server where available.
+export const store = configureStore(history)
+

@@ -1,7 +1,10 @@
 import { Action, Reducer } from 'redux';
-import { AppThunkAction } from ".";
 import { IdleSet } from "../models/types/gant";
 import db from "../models/handlers/DbHandler"
+import { actionCreators as statsActionCreators } from "./StatsStore";
+import { AppThunkAction } from "store";
+
+
 
 
 ///////////////////////////////////// STATE
@@ -23,61 +26,59 @@ const InitialState: GantState = {
 
 ///////////////////////////////////// ACTIONS
 
-type StartLoading = { type: 'START_LOADING' }
-type LoadingError = { type: 'LOADING_ERROR', error: any }
-type SetShops = { type: 'SET_SHOPS', shops: string[] }
-type SetIdles = { type: 'SET_IDLES', idles: IdleSet, currentShop: string }
-type ClearIdles = { type: "CLEAR_IDLES" }
+type StartLoading = { type: 'GANT_START_LOADING' }
+type LoadingError = { type: 'GANT_LOADING_ERROR', error: any }
+type SetShops = { type: 'GANT_SET_SHOPS', shops: string[] }
+type SetIdles = { type: 'GANT_SET_IDLES', idles: IdleSet, currentShop: string }
 
-export type KnownAction = StartLoading | SetShops | LoadingError | SetIdles | ClearIdles
+
+export type KnownAction = StartLoading | SetShops | LoadingError | SetIdles
 
 
 /////////////////////////////////////// ACTION CREATORS
 
 export const actionCreators = {
-  DOWNLOAD_SHOPS: (): AppThunkAction<KnownAction> => async (dispatch, getState) => {
+  DOWNLOAD_SHOPS: (): AppThunkAction<Promise<void>> => async (dispatch, getState) => {
     const state = getState().gant
     if (!state.loading) {
       try {
-        dispatch({ type: 'START_LOADING' })
+        dispatch({ type: 'GANT_START_LOADING' })
         const shops = await db.getShopsAsync()
-        dispatch({ type: "SET_SHOPS", shops })
+        dispatch({ type: "GANT_SET_SHOPS", shops })
       } catch (error) {
         console.log(error)
-        dispatch({ type: "LOADING_ERROR", error })
+        dispatch({ type: "GANT_LOADING_ERROR", error })
       }
     }
   },
-  DOWNLOAD_IDLES: (bDate: string, eDate: string, currentShop: string): AppThunkAction<KnownAction> => async (dispatch, getState) => {
+  DOWNLOAD_IDLES: (bDate: string, eDate: string, currentShop: string): AppThunkAction<Promise<void>> => async (dispatch, getState) => {
     const state = getState().gant
     if (!state.loading) {
       try {
-        dispatch({ type: 'START_LOADING' })
+        dispatch({ type: 'GANT_START_LOADING' })
         const idles = await db.getGantIdlesAsync(bDate, eDate, currentShop)
 
-        dispatch({ type: "SET_IDLES", idles, currentShop })
+        dispatch({ type: "GANT_SET_IDLES", idles, currentShop })
       } catch (error) {
         console.log(error)
-        dispatch({ type: "LOADING_ERROR", error })
+        dispatch({ type: "GANT_LOADING_ERROR", error })
       }
     }
   },
-  CLEAR_IDLES: () => ({ type: "CLEAR_IDLES" })
 };
 
 
 /////////////////////////////////////// REDUCER
 
-export const reducer: Reducer<GantState> = (state: GantState | undefined = InitialState, incomingAction: Action): GantState => {
+export const reducer: Reducer<GantState> = (state: GantState = InitialState, incomingAction: Action): GantState => {
   const action = incomingAction as KnownAction;
 
   switch (action.type) {
-    case "START_LOADING": return ({ ...state, loading: true })
-    case 'SET_SHOPS': return ({ ...state, shops: action.shops, loading: false, error: undefined })
-    case 'SET_IDLES': return ({ ...state, idles: action.idles, loading: false, currentShop: action.currentShop, error: undefined })
-    case "LOADING_ERROR": return ({ ...state, error: action.error, loading: false, })
-    case "CLEAR_IDLES": return ({ ...state, idles: undefined })
+    case "GANT_START_LOADING": return ({ ...state, loading: true })
+    case 'GANT_SET_SHOPS': return ({ ...state, shops: action.shops, loading: false, error: undefined })
+    case 'GANT_SET_IDLES': return ({ ...state, idles: action.idles, loading: false, currentShop: action.currentShop, error: undefined })
+    case "GANT_LOADING_ERROR": return ({ ...state, error: action.error, loading: false, })
 
-    default: return InitialState
+    default: return state
   }
 };

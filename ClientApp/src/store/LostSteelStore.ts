@@ -33,7 +33,7 @@ export type KnownAction = StartLoading | SetLosts | LoadingError
 /////////////////////////////////////// ACTION CREATORS
 
 export const actionCreators = {
-  DOWNLOAD_LOSTS: (bDate: string, eDate: string, newShop: string): AppThunkAction<KnownAction> => async (dispatch, getState) => {
+  DOWNLOAD_LOSTS: (bDate: string, eDate: string, newShop: string): AppThunkAction<Promise<void>> => async (dispatch, getState) => {
     const state = getState().lostSteel
 
     if (!state.loading) {
@@ -61,7 +61,7 @@ export const actionCreators = {
 
 /////////////////////////////////////// REDUCER
 
-export const reducer: Reducer<LostState> = (state: LostState | undefined = InitialState, incomingAction: Action): LostState => {
+export const reducer: Reducer<LostState> = (state: LostState = InitialState, incomingAction: Action): LostState => {
   const action = incomingAction as KnownAction;
 
   switch (action.type) {
@@ -69,6 +69,6 @@ export const reducer: Reducer<LostState> = (state: LostState | undefined = Initi
     case 'SET_LOSTS': return ({ ...state, lostSteel: action.losts, loading: false, currentShop: action.newShop, error: undefined })
     case "LOADING_ERROR": return ({ ...state, error: action.error, loading: false, })
 
-    default: return InitialState
+    default: return state
   }
 };
