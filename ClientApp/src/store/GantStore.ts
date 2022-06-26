@@ -1,7 +1,6 @@
 import { Action, Reducer } from 'redux';
 import { IdleSet } from "../models/types/gant";
 import db from "../models/handlers/DbHandler"
-import { actionCreators as statsActionCreators } from "./StatsStore";
 import { AppThunkAction } from "store";
 
 

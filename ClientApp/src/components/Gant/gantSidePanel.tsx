@@ -1,17 +1,12 @@
 import "../Layout/sidepanel.scss"
 import moment from "moment";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import M from 'materialize-css/dist/js/materialize.js'
 import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
 import { useActions, useStateSelector } from "../../store";
 
 
 
-type State = {
-  bDateEl?: HTMLInputElement
-  eDateEl?: HTMLInputElement
-  loadingEl?: HTMLDivElement
-}
 
 
 const datepickerOptions = {
@@ -33,12 +28,10 @@ const datepickerOptions = {
 
 
 export default () => {
+  const bDateRef = useRef<HTMLInputElement>(null)
+  const eDateRef = useRef<HTMLInputElement>(null)
 
-  const [state, setState] = useState<State>({
-    bDateEl: undefined,
-    eDateEl: undefined,
-    loadingEl: undefined,
-  })
+  const [loadingEl, setLoadingEl] = useState<HTMLDivElement | undefined>()
 
   const {
     currentShop,
@@ -48,33 +41,30 @@ export default () => {
   } = useStateSelector(appState => appState.gant)
 
   const { DOWNLOAD_SHOPS, DOWNLOAD_IDLES } = useActions().gant
-  const { DOWNLOAD_IPS } = useActions().stats
 
 
   useEffect(() => {
     const dropdown = document.getElementById("dd-trigger") as HTMLUListElement
     const shopM = M.Dropdown.init(dropdown)
 
-    const bDateEl = document.getElementById("bDate") as HTMLInputElement
-    const eDateEl = document.getElementById("eDate") as HTMLInputElement
-    const shopEl = document.getElementsByClassName("dd-hint")[0] as HTMLDivElement
+    //bDateEl = document.getElementById("bDate") as HTMLInputElement
+    //eDateEl = document.getElementById("eDate") as HTMLInputElement
     const loadingEl = document.getElementById("loading") as HTMLDivElement
+    const shopEl = document.getElementsByClassName("dd-hint")[0] as HTMLDivElement
 
-
-    const dpBeginM = M.Datepicker.init(bDateEl, { ...datepickerOptions, defaultDate: moment().toDate() })
-    const dpEndM = M.Datepicker.init(eDateEl, { ...datepickerOptions, defaultDate: moment().toDate() })
+    const dpBeginM = M.Datepicker.init(bDateRef.current!, { ...datepickerOptions, defaultDate: moment().toDate() })
+    const dpEndM = M.Datepicker.init(eDateRef.current!, { ...datepickerOptions, defaultDate: moment().toDate() })
 
     //// datepickers doesn't see component state
     const datepickerDoneBtns = document.querySelectorAll('.datepicker-done')
     datepickerDoneBtns.forEach(el => (el as HTMLElement).onclick = () => {
-      const bDate = moment(bDateEl!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
-      const eDate = moment(eDateEl!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
+      const bDate = moment(bDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
+      const eDate = moment(eDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
       bDate <= eDate && DOWNLOAD_IDLES(bDate, eDate, shopEl.textContent!)
     })
 
-    setState(state => ({ ...state, bDateEl, eDateEl, loadingEl }))
-
-    DOWNLOAD_SHOPS()
+    setLoadingEl(loadingEl)
+    shops.length < 1 && DOWNLOAD_SHOPS()
 
     return () => {
       shopM && shopM.destroy()
@@ -96,15 +86,15 @@ export default () => {
   }, [error])
 
   useEffect(() => {
-    state.loadingEl && (state.loadingEl.style.opacity = loading ? "1" : "0")
+    loadingEl && (loadingEl.style.opacity = loading ? "1" : "0")
     //eslint-disable-next-line  
   }, [loading])
 
 
   const clickShop = (e: any) => {
     const newShop = e ? (e.target as HTMLElement).textContent! : "Аглопроизводство"
-    const bDate = moment(state.bDateEl!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
-    const eDate = moment(state.eDateEl!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
+    const bDate = moment(bDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
+    const eDate = moment(eDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
 
     currentShop !== newShop && DOWNLOAD_IDLES(bDate, eDate, newShop)
   }
@@ -125,11 +115,11 @@ export default () => {
     </li>
     <div className="sidepanel-datepickers">
       <li className="input-field">
-        <input type="text" className="datepicker" id="bDate" autoComplete="off" />
+        <input type="text" className="datepicker" id="bDate" ref={bDateRef} autoComplete="off" />
         <label htmlFor="bDate">НАЧАЛО</label>
       </li>
       <li className="input-field">
-        <input type="text" className="datepicker" id="eDate" autoComplete="off" />
+        <input type="text" className="datepicker" id="eDate" ref={eDateRef} autoComplete="off" />
         <label htmlFor="eDate">ОКОНЧАНИЕ</label>
       </li>
     </div>
