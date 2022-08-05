@@ -18,7 +18,7 @@ export const drawChart = (data: LostSteel[]) => {
   let chart = am4core.create(chartDiv, am4charts.XYChart);
   chart.data = data
 
-  //chart.hiddenState.properties.opacity = 1; // this creates initial fade-in
+  chart.hiddenState.properties.opacity = 0.6; // this disables initial fade-in
 
   chart.padding(40, 40, 20, 20)
   chartDiv.style.maxWidth = `${data.length * 50 + 200}px`
@@ -56,8 +56,8 @@ export const drawChart = (data: LostSteel[]) => {
     series.dataFields.valueY = percent;
     series.dataFields.dateX = "SHIFT";
     series.sequencedInterpolation = true;
-    series.hiddenState.transitionDuration = 100     // скорость изменения значений на графике
-    series.defaultState.transitionDuration = 100
+    series.hiddenState.transitionDuration = 0     // скорость изменения значений на графике
+    series.defaultState.transitionDuration = 0
     series.fillOpacity = 0.7
 
     // Make it stacked
