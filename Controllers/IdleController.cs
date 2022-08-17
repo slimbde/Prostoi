@@ -68,7 +68,7 @@ namespace Prostoi.Controllers
         await Task.Yield();
         WebClient client = new WebClient();
         client.UseDefaultCredentials = true;
-        string content = client.DownloadString($"http://10.2.59.20:81/api/Idle/GetCcmIdleDowntimeWeight?bDate={bDate}&eDate={eDate}&ccmNo={ccmNo}");
+        string content = client.DownloadString($"http://10.2.59.20/api/Idle/GetCcmIdleDowntimeWeight?bDate={bDate}&eDate={eDate}&ccmNo={ccmNo}");
 
         return Ok(content);
       }
