@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import M from 'materialize-css/dist/js/materialize.js'
 import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
 import moment from "moment";
-import { useActions, useStateSelector } from "store";
+import { useActions, useStateSelector } from "store-toolkit/hooks";
+
 
 
 
@@ -57,7 +58,7 @@ export default () => {
     datepickerDoneBtns.forEach(el => (el as HTMLElement).onclick = () => {
       const bDate = moment(bDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
       const eDate = moment(eDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
-      bDate <= eDate && DOWNLOAD_USAGES(bDate, eDate, ipEl.textContent!)
+      bDate <= eDate && DOWNLOAD_USAGES({ bDate, eDate, ip: ipEl.textContent! })
     })
 
 
@@ -102,7 +103,7 @@ export default () => {
     const bDate = moment(bDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
     const eDate = moment(eDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
 
-    currentIp !== newIp && DOWNLOAD_USAGES(bDate, eDate, newIp)
+    currentIp !== newIp && DOWNLOAD_USAGES({ bDate, eDate, ip: newIp })
   }
 
 

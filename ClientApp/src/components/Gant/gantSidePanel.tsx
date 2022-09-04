@@ -3,7 +3,8 @@ import moment from "moment";
 import React, { useEffect, useRef, useState } from 'react';
 import M from 'materialize-css/dist/js/materialize.js'
 import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
-import { useActions, useStateSelector } from "../../store";
+import { useActions, useStateSelector } from "store-toolkit/hooks";
+
 
 
 
@@ -60,7 +61,7 @@ export default () => {
     datepickerDoneBtns.forEach(el => (el as HTMLElement).onclick = () => {
       const bDate = moment(bDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
       const eDate = moment(eDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
-      bDate <= eDate && DOWNLOAD_IDLES(bDate, eDate, shopEl.textContent!)
+      bDate <= eDate && DOWNLOAD_IDLES({ bDate, eDate, currentShop: shopEl.textContent! })
     })
 
     setLoadingEl(loadingEl)
@@ -96,7 +97,7 @@ export default () => {
     const bDate = moment(bDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
     const eDate = moment(eDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
 
-    currentShop !== newShop && DOWNLOAD_IDLES(bDate, eDate, newShop)
+    currentShop !== newShop && DOWNLOAD_IDLES({ bDate, eDate, currentShop: newShop })
   }
 
 

@@ -8,9 +8,10 @@ import 'materialize-css/dist/js/materialize.js';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { ConnectedRouter } from 'connected-react-router';
-import { store, history } from "store/configureStore";
+import { BrowserRouter } from 'react-router-dom'
+import { store } from "store-toolkit";
 import App from './App';
+
 
 if (window.NodeList && !NodeList.prototype.forEach) {
   NodeList.prototype.forEach = function (callback, thisArg) {
@@ -25,8 +26,8 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 
 ReactDOM.render(
   <Provider store={store}>
-    <ConnectedRouter history={history}>
+    <BrowserRouter>
       <App />
-    </ConnectedRouter>
+    </BrowserRouter>
   </Provider>,
   document.getElementById('root'));

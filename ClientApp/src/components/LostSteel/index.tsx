@@ -2,10 +2,10 @@ import * as React from 'react'
 import * as am4core from "@amcharts/amcharts4/core";
 import { drawChart } from './drawChart'
 import LostSteelSidePanel from "./LostSteelSidePanel";
-import { useStateSelector } from '../../store';
 import { LostSteelTable } from './LostSteelTable';
 import '../Layout/sidepanel.scss'
 import './lostSteel.scss'
+import { useStateSelector } from "store-toolkit/hooks";
 
 
 

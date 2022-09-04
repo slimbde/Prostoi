@@ -3,7 +3,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
 import M from 'materialize-css/dist/js/materialize.js'
 import moment from "moment";
-import { useActions, useStateSelector } from "../../store";
+import { useActions, useStateSelector } from "store-toolkit/hooks";
+
 
 
 
@@ -60,7 +61,7 @@ const LostSteelSidePanel: React.FC = () => {
     datepickerDoneBtns.forEach(el => (el as HTMLElement).onclick = () => {
       const bDate = moment(bDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
       const eDate = moment(eDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
-      bDate <= eDate && DOWNLOAD_LOSTS(bDate, eDate, shopEl.textContent!)
+      bDate <= eDate && DOWNLOAD_LOSTS({ bDate, eDate, newShop: shopEl.textContent! })
     })
 
 
@@ -96,7 +97,7 @@ const LostSteelSidePanel: React.FC = () => {
     const bDate = moment(bDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
     const eDate = moment(eDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
 
-    currentShop !== newShop && DOWNLOAD_LOSTS(bDate, eDate, newShop)
+    currentShop !== newShop && DOWNLOAD_LOSTS({ bDate, eDate, newShop })
   }
 
 
