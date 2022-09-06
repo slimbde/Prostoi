@@ -1,10 +1,10 @@
 import "../Layout/sidepanel.scss"
 import moment from "moment";
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import M from 'materialize-css/dist/js/materialize.js'
 import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
-import { useActions, useStateSelector } from "../../store";
-
+import { useActions, useStateSelector } from "store-toolkit/hooks";
+import { useGetShopsQuery } from "store-toolkit/api.idle";
 
 
 
@@ -31,26 +31,18 @@ export default () => {
   const bDateRef = useRef<HTMLInputElement>(null)
   const eDateRef = useRef<HTMLInputElement>(null)
 
-  const [loadingEl, setLoadingEl] = useState<HTMLDivElement | undefined>()
 
   const {
     currentShop,
-    loading,
-    error,
-    shops,
   } = useStateSelector(appState => appState.gant)
+  const { SET_CURRENT_SHOP, SET_DATES } = useActions().gant
 
-  const { DOWNLOAD_SHOPS, DOWNLOAD_IDLES } = useActions().gant
+  const { isFetching, data: shops, error } = useGetShopsQuery()
 
 
   useEffect(() => {
     const dropdown = document.getElementById("dd-trigger") as HTMLUListElement
     const shopM = M.Dropdown.init(dropdown)
-
-    //bDateEl = document.getElementById("bDate") as HTMLInputElement
-    //eDateEl = document.getElementById("eDate") as HTMLInputElement
-    const loadingEl = document.getElementById("loading") as HTMLDivElement
-    const shopEl = document.getElementsByClassName("dd-hint")[0] as HTMLDivElement
 
     const dpBeginM = M.Datepicker.init(bDateRef.current!, { ...datepickerOptions, defaultDate: moment().toDate() })
     const dpEndM = M.Datepicker.init(eDateRef.current!, { ...datepickerOptions, defaultDate: moment().toDate() })
@@ -60,11 +52,8 @@ export default () => {
     datepickerDoneBtns.forEach(el => (el as HTMLElement).onclick = () => {
       const bDate = moment(bDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
       const eDate = moment(eDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
-      bDate <= eDate && DOWNLOAD_IDLES(bDate, eDate, shopEl.textContent!)
+      bDate <= eDate && SET_DATES({ bDate, eDate })
     })
-
-    setLoadingEl(loadingEl)
-    shops.length < 1 && DOWNLOAD_SHOPS()
 
     return () => {
       shopM && shopM.destroy()
@@ -73,43 +62,43 @@ export default () => {
     }
   }, [])
 
+
+
   useEffect(() => {
+    if (!shops) return
     if (shops.length < 1) return
-    clickShop(null)
-    //eslint-disable-next-line  
+    SET_CURRENT_SHOP(shops[0])
   }, [shops])
 
   useEffect(() => {
     if (!error) return
-    M.toast({ html: error.message })
+    M.toast({ html: (error as any).data })
     //eslint-disable-next-line  
   }, [error])
 
   useEffect(() => {
-    loadingEl && (loadingEl.style.opacity = loading ? "1" : "0")
+    const loadingEl = document.getElementById("loading") as HTMLDivElement
+    loadingEl && (loadingEl.style.opacity = isFetching ? "1" : "0")
     //eslint-disable-next-line  
-  }, [loading])
+  }, [isFetching])
 
 
   const clickShop = (e: any) => {
     const newShop = e ? (e.target as HTMLElement).textContent! : "Аглопроизводство"
-    const bDate = moment(bDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
-    const eDate = moment(eDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
-
-    currentShop !== newShop && DOWNLOAD_IDLES(bDate, eDate, newShop)
+    currentShop !== newShop && SET_CURRENT_SHOP(newShop)
   }
 
 
 
 
-  return <ul className={`sidepanel${loading ? " inactive" : ""}`}>
+  return <ul className={`sidepanel${isFetching ? " inactive" : ""}`}>
     <li className="input-field" id="dd-trigger" data-target="dropdown3">
       <a className="dropdown-trigger" href="#" data-target="dropdown3">
         ЦЕХ
         <ArrowDownIcon className="menu-icon" />
         <div className="dd-hint">{currentShop}</div>
       </a>
-      <ul id="dropdown3" className="dropdown-content z-depth-5">{shops.map(shop =>
+      <ul id="dropdown3" className="dropdown-content z-depth-5">{shops && shops.map(shop =>
         <li key={shop} onClick={e => clickShop(e)}>{shop}</li>
       )}</ul>
     </li>
