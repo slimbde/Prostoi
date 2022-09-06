@@ -3,6 +3,7 @@ import M from 'materialize-css/dist/js/materialize.js'
 import ArrowDownIcon from '@material-ui/icons/ArrowDropDown'
 import moment from "moment";
 import { useActions, useStateSelector } from "store-toolkit/hooks";
+import { useGetUsageIpsQuery } from "store-toolkit/api.stats";
 
 
 
@@ -29,28 +30,19 @@ export default () => {
   const bDateRef = useRef<HTMLInputElement>(null)
   const eDateRef = useRef<HTMLInputElement>(null)
 
-  const [loadingEl, setLoadingEl] = useState<HTMLDivElement | undefined>()
-
   const {
-    loading,
     currentIp,
-    error,
-    ips,
   } = useStateSelector(appState => appState.stats)
 
-  const { DOWNLOAD_IPS, DOWNLOAD_USAGES } = useActions().stats
+  const { SET_CURRENT_IP, SET_DATES } = useActions().stats
+  const { isFetching, error, data: ips } = useGetUsageIpsQuery()
 
 
   useEffect(() => {
-    const ipEl = document.getElementsByClassName("ip-hint")[0] as HTMLAnchorElement
-    const loadingEl = document.getElementById("loading") as HTMLDivElement
-
-    setLoadingEl(loadingEl)
-
     const dropdown = document.getElementById("dd-trigger") as HTMLUListElement
     const ipM = M.Dropdown.init(dropdown)
 
-    const dpBeginM = M.Datepicker.init(bDateRef.current!, { ...datepickerOptions, defaultDate: moment("2020-01-01").toDate() })
+    const dpBeginM = M.Datepicker.init(bDateRef.current!, { ...datepickerOptions, defaultDate: moment().subtract(2, "week").toDate() })
     const dpEndM = M.Datepicker.init(eDateRef.current!, { ...datepickerOptions, defaultDate: moment().toDate() })
 
     //// datepickers doesn't see component state
@@ -58,7 +50,7 @@ export default () => {
     datepickerDoneBtns.forEach(el => (el as HTMLElement).onclick = () => {
       const bDate = moment(bDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
       const eDate = moment(eDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
-      bDate <= eDate && DOWNLOAD_USAGES({ bDate, eDate, ip: ipEl.textContent! })
+      bDate <= eDate && SET_DATES({ bDate, eDate })
     })
 
 
@@ -69,7 +61,6 @@ export default () => {
     todayBtn.onclick = (e) => { dpBeginM.gotoDate(new Date()) }
     dpFooter.appendChild(todayBtn)
 
-    ips.length < 1 && DOWNLOAD_IPS()
 
     return () => {
       ipM && ipM.destroy()
@@ -80,35 +71,34 @@ export default () => {
 
 
   useEffect(() => {
-    if (ips.length < 1) return
-    clickIp(null)
+    if (!ips) return
+    if (ips && ips.length < 1) return
+    SET_CURRENT_IP("ВСЕ")
     //eslint-disable-next-line  
   }, [ips])
 
   useEffect(() => {
     if (!error) return
-    M.toast({ html: error.message })
+    M.toast({ html: (error as any).data })
     //eslint-disable-next-line  
   }, [error])
 
   useEffect(() => {
-    loadingEl && (loadingEl.style.opacity = loading ? "1" : "0")
+    const loadingEl = document.getElementById("loading") as HTMLDivElement
+    loadingEl && (loadingEl.style.opacity = isFetching ? "1" : "0")
     //eslint-disable-next-line  
-  }, [loading])
+  }, [isFetching])
 
 
 
   const clickIp = (e: any) => {
     const newIp = e ? (e.target as HTMLElement).textContent! : "ВСЕ"
-    const bDate = moment(bDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
-    const eDate = moment(eDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
-
-    currentIp !== newIp && DOWNLOAD_USAGES({ bDate, eDate, ip: newIp })
+    currentIp !== newIp && SET_CURRENT_IP(newIp)
   }
 
 
 
-  return <ul className={`sidepanel${loading ? " inactive" : ""}`}>
+  return <ul className={`sidepanel${isFetching ? " inactive" : ""}`}>
     <li className="input-field" id="dd-trigger" data-target="dropdown3" >
       <a className="dropdown-trigger" href="#" data-target="dropdown3">
         IP
@@ -117,7 +107,7 @@ export default () => {
       </a>
       <ul id="dropdown3" className="dropdown-content z-depth-5">
         <li key={"all"} onClick={e => clickIp(e)}>ВСЕ</li>
-        {ips.map(ip => <li key={ip} onClick={e => clickIp(e)}>{ip}</li>)}
+        {ips && ips.map(ip => <li key={ip} onClick={e => clickIp(e)}>{ip}</li>)}
       </ul>
     </li>
     <div className="sidepanel-datepickers">

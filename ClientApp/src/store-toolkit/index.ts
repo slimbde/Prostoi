@@ -2,6 +2,8 @@ import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit'
 import { gantSlice } from "components/Gant/gant.slice"
 import { lostSteelSlice } from "components/LostSteel/lostSteel.slice"
 import { statsSlice } from "components/Stats/stats.slice"
+import { idleApi } from "./api.idle"
+import { statsApi } from "./api.stats"
 
 
 
@@ -11,7 +13,11 @@ export const store = configureStore({
     gant: gantSlice.reducer,
     lostSteel: lostSteelSlice.reducer,
     stats: statsSlice.reducer,
+    [idleApi.reducerPath]: idleApi.reducer,
+    [statsApi.reducerPath]: statsApi.reducer,
   },
+
+  middleware: (options) => options().concat(idleApi.middleware, statsApi.middleware)
 })
 
 export type RootState = ReturnType<typeof store.getState>

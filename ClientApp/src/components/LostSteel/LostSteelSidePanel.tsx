@@ -32,26 +32,17 @@ const LostSteelSidePanel: React.FC = () => {
   const bDateRef = useRef<HTMLInputElement>(null)
   const eDateRef = useRef<HTMLInputElement>(null)
 
-  const [loadingEl, setLoadingEl] = useState<HTMLDivElement | undefined>()
-
   const {
     currentShop,
-    loading,
-    error,
     shops,
   } = useStateSelector(appState => appState.lostSteel)
 
-  const { DOWNLOAD_LOSTS } = useActions().lostSteel
-
+  const { SET_CURRENT_SHOP, SET_DATES } = useActions().lostSteel
 
   useEffect(() => {
     const dropdown = document.getElementById("dd-trigger") as HTMLUListElement
     const shopM = M.Dropdown.init(dropdown)
 
-    const shopEl = document.getElementsByClassName("dd-hint")[0] as HTMLDivElement
-    const loadingEl = document.getElementById("loading") as HTMLDivElement
-
-    setLoadingEl(loadingEl)
 
     const dpBeginM = M.Datepicker.init(bDateRef.current!, { ...datepickerOptions, defaultDate: moment().subtract(2, "week").toDate() })
     const dpEndM = M.Datepicker.init(eDateRef.current!, { ...datepickerOptions, defaultDate: moment().subtract(1, "day").toDate() })
@@ -61,9 +52,10 @@ const LostSteelSidePanel: React.FC = () => {
     datepickerDoneBtns.forEach(el => (el as HTMLElement).onclick = () => {
       const bDate = moment(bDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
       const eDate = moment(eDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
-      bDate <= eDate && DOWNLOAD_LOSTS({ bDate, eDate, newShop: shopEl.textContent! })
+      bDate <= eDate && SET_DATES({ bDate, eDate })
     })
 
+    SET_CURRENT_SHOP(shops[0])
 
     return () => {
       shopM && shopM.destroy()
@@ -73,36 +65,14 @@ const LostSteelSidePanel: React.FC = () => {
   }, [])
 
 
-  useEffect(() => {
-    if (!bDateRef.current) return
-    clickShop(null)
-    //eslint-disable-next-line
-  }, [bDateRef.current])
-
-
-  useEffect(() => {
-    if (!error) return
-    M.toast({ html: error.message })
-    //eslint-disable-next-line  
-  }, [error])
-
-  useEffect(() => {
-    loadingEl && (loadingEl.style.opacity = loading ? "1" : "0")
-    //eslint-disable-next-line  
-  }, [loading])
-
-
   const clickShop = async (e: any) => {
     const newShop = e ? (e.target as HTMLElement).textContent! : "МНЛЗ-5"
-    const bDate = moment(bDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
-    const eDate = moment(eDateRef.current!.value, "DD.MM.YYYY").format("YYYY-MM-DD")
-
-    currentShop !== newShop && DOWNLOAD_LOSTS({ bDate, eDate, newShop })
+    currentShop !== newShop && SET_CURRENT_SHOP(newShop)
   }
 
 
 
-  return <ul className={`sidepanel${loading ? " inactive" : ""}`}>
+  return <ul className={`sidepanel`}>
     <li className="input-field" id="dd-trigger" data-target="dropdown3">
       <a className="dropdown-trigger" href="#" data-target="dropdown3">
         ЦЕХ
